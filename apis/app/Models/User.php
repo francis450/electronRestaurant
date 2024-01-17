@@ -18,8 +18,11 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
+        'fullname',
+        'username',
+        'phone',
         'email',
+        'role',
         'password',
     ];
 
@@ -42,4 +45,12 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    // Get users roles
+    public function role($id)
+    {
+        return $this->where('id', $id)->first()->role;
+    }
+
+    // Get users username and password for authenticatio
 }
