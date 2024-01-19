@@ -17,11 +17,11 @@ return new class extends Migration
             $table->string('item_name');
             $table->string('category');
             $table->foreignId('unit_of_measurement_id')->constrained('units_of_measurements','id');
-            $table->integer('current_quantity');
-            $table->integer('par_level');
-            $table->integer('reorder_point');
-            $table->string('supplier');
-            $table->decimal('cost_per_unit', 8, 2);
+            $table->integer('current_quantity')->nullable();
+            $table->integer('par_level')->nullable();
+            $table->integer('reorder_point')->nullable();
+            $table->string('supplier')->nullable();
+            $table->decimal('cost_per_unit', 8, 2)->nullable();
             $table->date('expiration_date')->nullable();
 
             $table->timestamps();
