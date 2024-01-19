@@ -3,9 +3,12 @@ import ChefHat from "../assets/chef-hat.png";
 import { LockIcon, UserIcon } from "../reusables/svgs/svgs";
 import Input from "../reusables/forms/input";
 import { StatusModalContext } from "../components/App/App";
+import useAxios from "../hooks/useAxios";
 
 export const Login = () => {
-  const { statusData, setStatusData } = useContext(StatusModalContext);
+  const { setStatusData } = useContext(StatusModalContext);
+  const { postData } = useAxios();
+
   const [credentials, setCredentials] = React.useState({
     username: "",
     password: "",
@@ -17,17 +20,9 @@ export const Login = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    try {
-      setStatusData((prev) => ({
-        ...prev,
-        status: true,
-        message: "Success Majamaa",
-        type: "success",
-      }));
-    } catch (err) {
-      console.log(err);
-    }
-  };
+    const url = "http://localhost:8000/api/authenticate";
+    postData(url, credentials, setStatusData);
+  }
 
   return (
     <>
