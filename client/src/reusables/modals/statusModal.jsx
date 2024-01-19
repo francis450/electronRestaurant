@@ -30,12 +30,9 @@ function StatusModal({ statusData, setStatusData }) {
   }, [statusData, setStatusData]);
 
   useEffect(() => {
-    console.log("statusData", statusData);
     if (statusData.type === "success") {
-      console.log("success");
       setColor("green-700");
     } else if (statusData.type === "error") {
-      console.log("error");
       setColor("red-700");
     } else if (statusData.type === "warning") {
       setColor("yellow-700");
@@ -57,7 +54,7 @@ function StatusModal({ statusData, setStatusData }) {
             >
               <CloseStatusModalIcon className="w-5 h-5" />
             </div>
-            <p className={`text-start text-${color}`}>Success Majamaa</p>
+            <p className={`text-start text-${color}`}>{statusData.message}</p>
           </div>
         </div>
       )}
