@@ -34,6 +34,6 @@ Route::controller(UserController::class)->group(function(){
 
 Route::controller(InventoryController::class)->group(function(){
     Route::post('/newInventoryItem', 'store1Item');
-    Route::get('/items', 'index');
-    Route::get('/item/{id}', 'show');
+    Route::get('/inventoryItems', 'index');
+    Route::get('/inventoryItem/{id}', 'show');
 });
