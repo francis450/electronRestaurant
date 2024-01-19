@@ -2,6 +2,7 @@ import { createContext, useState } from "react";
 import { Login } from "../../pages/login";
 import "./App.css";
 import StatusModal from "../../reusables/modals/statusModal";
+import Dashboard from "../../pages/dashboard";
 
 export const StatusModalContext = createContext();
 
@@ -12,8 +13,6 @@ function App() {
     type: "",
   });
 
-  console.log(statusData);
-
   return (
     <StatusModalContext.Provider value={{ statusData, setStatusData }}>
       <div className="App bg-[#282c34] min-h-screen">
@@ -21,6 +20,7 @@ function App() {
           <StatusModal statusData={statusData} setStatusData={setStatusData} />
         )}
         <Login />
+        <Dashboard />
       </div>
     </StatusModalContext.Provider>
   );
