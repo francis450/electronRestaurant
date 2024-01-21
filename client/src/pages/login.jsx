@@ -2,12 +2,26 @@ import React, { useContext } from "react";
 import ChefHat from "../assets/chef-hat.png";
 import { LockIcon, UserIcon } from "../reusables/svgs/svgs";
 import Input from "../reusables/forms/input";
-import { StatusModalContext } from "../components/App/App";
+import { AuthContext, StatusModalContext } from "../components/App/App";
 import useAxios from "../hooks/useAxios";
+import { useNavigate } from "react-router-dom";
 
 export const Login = () => {
-  const { setStatusData } = useContext(StatusModalContext);
   const { postData } = useAxios();
+  const { setAuth } = useContext(AuthContext);
+  const navigate = useNavigate();
+  const { setStatusData } = useContext(StatusModalContext);
+
+  const callback = (res) => {
+    let auth = {
+      id: 1,
+      user: "Admin",
+      token: "sfsfnsowwewe23ewdsffsferjfueigeefsfs32324212i1on",
+    };
+    setAuth(auth);
+    sessionStorage.setItem("auth", JSON.stringify(auth));
+    navigate("/dashboard");
+  };
 
   const [credentials, setCredentials] = React.useState({
     username: "",
@@ -21,8 +35,8 @@ export const Login = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     const url = "http://localhost:8000/api/authenticate";
-    postData(url, credentials, setStatusData);
-  }
+    postData(url, credentials, setStatusData, callback);
+  };
 
   return (
     <>
