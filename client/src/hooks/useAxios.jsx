@@ -7,7 +7,7 @@ function useAxios() {
   const [loading, setLoading] = useState(false);
 
   // function to post data to the server
-  const postData = async (url, body, setStatusData) => {
+  const postData = async (url, body, setStatusData, callback) => {
     setLoading(true);
     try {
       const response = await axios.post(url, body);
@@ -18,6 +18,7 @@ function useAxios() {
           message: response.data.message,
           type: "success",
         }));
+        callback(response.data);
       } else {
         setStatusData((prev) => ({
           ...prev,
@@ -28,6 +29,7 @@ function useAxios() {
       }
       setData(response.data);
       setLoading(false);
+      return response;
     } catch (error) {
       setError(error);
       setLoading(false);
