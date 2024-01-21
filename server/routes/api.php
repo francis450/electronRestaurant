@@ -1,7 +1,9 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\RegController;
+use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -23,3 +25,15 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::post('/authenticate', [AuthController::class, 'authenticate']);
 
 Route::post('/register', [RegController::class, 'register']);
+
+Route::controller(UserController::class)->group(function(){
+    Route::get('/users', 'index');
+    Route::get('/user/{id}', 'show');
+});
+
+
+Route::controller(InventoryController::class)->group(function(){
+    Route::post('/newInventoryItem', 'store1Item');
+    Route::get('/inventoryItems', 'index');
+    Route::get('/inventoryItem/{id}', 'show');
+});
