@@ -11,7 +11,7 @@ export const AuthContext = createContext();
 
 let router = createBrowserRouter([
   {
-    path: "/login",
+    path: "/",
     element: <Login />,
   },
   {
