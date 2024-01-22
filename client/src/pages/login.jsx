@@ -1,0 +1,100 @@
+import React, { useContext } from "react";
+import ChefHat from "../assets/chef-hat.png";
+import { LockIcon, UserIcon } from "../reusables/svgs/svgs";
+import Input from "../reusables/forms/input";
+import { AuthContext, StatusModalContext } from "../components/App/App";
+import useAxios from "../hooks/useAxios";
+import { useNavigate } from "react-router-dom";
+
+export const Login = () => {
+  const { postData } = useAxios();
+  const { setAuth } = useContext(AuthContext);
+  const navigate = useNavigate();
+  const { setStatusData } = useContext(StatusModalContext);
+
+  const callback = (res) => {
+    let auth = {
+      id: 1,
+      user: "Admin",
+      token: "sfsfnsowwewe23ewdsffsferjfueigeefsfs32324212i1on",
+    };
+    setAuth(auth);
+    sessionStorage.setItem("auth", JSON.stringify(auth));
+    navigate("/dashboard");
+  };
+
+  const [credentials, setCredentials] = React.useState({
+    username: "",
+    password: "",
+  });
+
+  const handleChange = (e) => {
+    setCredentials((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const url = "http://localhost:8000/api/authenticate";
+    postData(url, credentials, setStatusData, callback);
+  };
+
+  return (
+    <>
+      <section className="logo-section flex flex-col items-center justify-center gap-4 pt-12">
+        <img
+          src={ChefHat}
+          alt="chef hat"
+          width={62}
+          className="bg-[#D9D9D9] p-2 rounded-full"
+        />
+        <h1 className="text-2xl font-bold text-[#61dafb]">
+          Mustafah's Restaurant
+        </h1>
+        <h2 className="text-xl font-semibold text-white">Login</h2>
+      </section>
+      <section className="login-section flex justify-center">
+        <form
+          className="login-form w-[400px] flex flex-col items-center"
+          onSubmit={handleSubmit}
+        >
+          <div className="form-group flex flex-col items-start gap-1 mt-2">
+            <label htmlFor="username" className="text-white">
+              Username
+            </label>
+            <Input
+              type={"text"}
+              name={"username"}
+              value={credentials.username}
+              onchange={handleChange}
+              placeholder={"username"}
+            >
+              <UserIcon className={"w-6 h-6"} />
+            </Input>
+          </div>
+          <div className="form-group flex flex-col items-start gap-1 mt-2">
+            <label htmlFor="password" className="text-white">
+              Password
+            </label>
+            <Input
+              type={"password"}
+              name={"password"}
+              value={credentials.password}
+              onchange={handleChange}
+              placeholder={"password"}
+            >
+              <LockIcon className={"w-6 h-6"} />
+            </Input>
+          </div>
+          <div className="flex justify-end w-[350px]">
+            <button
+              type="submit"
+              className="outline outline-2 outline-[#61dafb] bg-[#61dafb] w-full text-[#282c34] outline-offset-2 mt-8 text-xl py-0.5 px-5 rounded-[10px]"
+            >
+              Login
+            </button>
+          </div>
+        </form>
+      </section>
+    </>
+  );
+};

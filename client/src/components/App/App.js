@@ -1,24 +1,54 @@
-import logo from '../../logo.svg';
-import './App.css';
+import { createContext, useState } from "react";
+import { Login } from "../../pages/login";
+import "./App.css";
+import StatusModal from "../../reusables/modals/statusModal";
+import Dashboard from "../../pages/dashboard";
+import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import PrivateRoutes from "../../reusables/routes/PrivateRoutes";
+
+export const StatusModalContext = createContext();
+export const AuthContext = createContext();
+
+let router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Login />,
+  },
+  {
+    element: <PrivateRoutes />,
+    children: [
+      {
+        path: "dashboard",
+        element: <Dashboard />,
+      },
+    ],
+  },
+]);
 
 function App() {
+  const [statusData, setStatusData] = useState({
+    status: false,
+    message: "",
+    type: "",
+  });
+
+  const [auth, setAuth] = useState({
+    id: null,
+    user: "",
+    token: "",
+  });
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <StatusModalContext.Provider value={{ statusData, setStatusData }}>
+      <div className="App bg-[#282c34] min-h-screen">
+        {statusData.status && (
+          <StatusModal statusData={statusData} setStatusData={setStatusData} />
+        )}
+        <AuthContext.Provider value={{ auth, setAuth }}>
+          <RouterProvider router={router} />
+        </AuthContext.Provider>
+      </div>
+    </StatusModalContext.Provider>
   );
 }
 
