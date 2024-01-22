@@ -43,4 +43,6 @@ Route::controller(SuppliersController::class)->group(function(){
     Route::post('/newSupplier', 'store');
     Route::get('/suppliers', 'index');
     Route::get('supplier/{id}', 'show');
+    Route::delete('supplier/{id}', 'destroy');
+    Route::post('editSupplier/{id}', 'update');
 });
