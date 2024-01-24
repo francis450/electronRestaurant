@@ -57,7 +57,7 @@ export const Login = () => {
           className="login-form w-[400px] flex flex-col items-center"
           onSubmit={handleSubmit}
         >
-          <div className="form-group flex flex-col items-start gap-1 mt-2">
+          <div className="form-group flex flex-col items-start gap-1 mt-2 w-full">
             <label htmlFor="username" className="text-white">
               Username
             </label>
@@ -71,7 +71,7 @@ export const Login = () => {
               <UserIcon className={"w-6 h-6"} />
             </Input>
           </div>
-          <div className="form-group flex flex-col items-start gap-1 mt-2">
+          <div className="form-group flex flex-col items-start gap-1 mt-2 w-full">
             <label htmlFor="password" className="text-white">
               Password
             </label>
@@ -85,7 +85,7 @@ export const Login = () => {
               <LockIcon className={"w-6 h-6"} />
             </Input>
           </div>
-          <div className="flex justify-end w-[350px]">
+          <div className="flex justify-end w-full">
             <button
               type="submit"
               className="outline outline-2 outline-[#61dafb] bg-[#61dafb] w-full text-[#282c34] outline-offset-2 mt-8 text-xl py-0.5 px-5 rounded-[10px]"

@@ -34,16 +34,11 @@ export default function Authenticated({ header, children }) {
         <div className="md:max-w-[95%] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-[8vh]">
             <div className="flex">
-              <div className="shrink-0 flex items-center">
+              <div className="shrink-0 flex items-center gap-4">
                 <a href="/">
                   <ApplicationLogo className="block h-9 w-auto fill-current text-gray-800" />
                 </a>
-              </div>
-
-              <div className="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                <NavLink href={""} active={""}>
-                  Dashboard
-                </NavLink>
+                {header}
               </div>
             </div>
 
@@ -88,7 +83,7 @@ export default function Authenticated({ header, children }) {
       </nav>
       <div data-theme="cupcake" className="block h-[90vh] text-[#D3D3D3]">
         <div className="w-full grid grid-cols-6 gap-2">
-          <div className="col-span-1 bg-[#222222] h-[91.75vh]">
+          <div className="col-span-1 bg-[#222222] h-[91.75vh] pt-10">
             <MenuList />
           </div>
           <div className="col-span-5 w-full px-3">{children}</div>

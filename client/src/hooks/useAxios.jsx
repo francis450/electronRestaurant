@@ -1,7 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 
-function useAxios() {
+function useAxios(url) {
   const [data, setData] = useState();
   const [error, setError] = useState();
   const [loading, setLoading] = useState(false);
@@ -11,11 +11,11 @@ function useAxios() {
     setLoading(true);
     try {
       const response = await axios.post(url, body);
-      if (response.status === 200) {
+      if (response.status >= 200 && response.status < 300) {
         setStatusData((prev) => ({
           ...prev,
           status: true,
-          message: response.data.message,
+          message: response.data.message ? response.data.message : "Request was successful",
           type: "success",
         }));
         callback(response.data);
@@ -36,7 +36,7 @@ function useAxios() {
       setStatusData((prev) => ({
         ...prev,
         status: true,
-        message: "Invalid credentials!",
+        message: "Incorrect or duplicate values added!",
         type: "error",
       }));
     }
@@ -44,16 +44,10 @@ function useAxios() {
 
   // function to get data from the server
   const getData = async (url) => {
-    setLoading(true);
-    try {
-      const response = await axios.get(url);
-      setData(response.data);
-      setLoading(false);
-    } catch (error) {
-      setError(error);
-      setLoading(false);
-    }
+    return await axios.get(url).then(res => setData(res.data))
   };
+  
+  if (url) getData(url)
 
   // return the data, error, and loading states and the functions
   return { data, error, loading, postData, getData };
