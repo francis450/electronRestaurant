@@ -1,6 +1,4 @@
 import React, { useContext, useState } from "react";
-import Input from "../../reusables/forms/input";
-import { DefaultModal } from "../../reusables/modals/defaultModal";
 import useAxios from "../../hooks/useAxios";
 import { StatusModalContext } from "../App/App";
 import { SuppliersTable } from "./SuppliersTable";

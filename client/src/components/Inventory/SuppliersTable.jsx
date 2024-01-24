@@ -15,7 +15,7 @@ export const SuppliersTable = () => {
       console.log(data);
     };
     getSuppliers();
-  }, [statusData]);
+  }, [statusData, data]);
 
   return (
     <div className="w-full overflow-x-auto suppliers-table-div">
