@@ -15,7 +15,9 @@ function useAxios(url) {
         setStatusData((prev) => ({
           ...prev,
           status: true,
-          message: response.data.message ? response.data.message : "Request was successful",
+          message: response.data.message
+            ? response.data.message
+            : "Request was successful",
           type: "success",
         }));
         callback(response.data);
@@ -42,15 +44,37 @@ function useAxios(url) {
     }
   };
 
-  // function to get data from the server
-  const getData = async (url) => {
-    return await axios.get(url).then(res => setData(res.data))
+  // function to delete
+  const deleteData = async (url, setStatusData) => {
+    // delete data
+    setLoading(true);
+    try {
+      const response = await axios.delete(url);
+      setData(response.data);
+      console.log(response);
+      setStatusData((prev) => ({
+        ...prev,
+        status: true,
+        message: response.data.message
+          ? response.data.message
+          : "Request was successful",
+        type: "success",
+      }));
+      setLoading(false);
+    } catch (error) {
+      setError(error);
+      setLoading(false);
+      setStatusData((prev) => ({
+        ...prev,
+        status: true,
+        message: "Incorrect or duplicate values added!",
+        type: "error",
+      }));
+    }
   };
-  
-  if (url) getData(url)
 
   // return the data, error, and loading states and the functions
-  return { data, error, loading, postData, getData };
+  return { data, error, loading, postData, deleteData };
 }
 
 export default useAxios;

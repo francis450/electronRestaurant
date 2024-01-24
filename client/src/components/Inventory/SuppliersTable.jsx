@@ -4,7 +4,7 @@ import axios from "axios";
 import { StatusModalContext } from "../App/App";
 
 export const SuppliersTable = () => {
-  const { statusData } = useContext(StatusModalContext);
+  const { statusData, setStatusData } = useContext(StatusModalContext);
   const [data, setData] = useState({});
 
   useEffect(() => {
@@ -15,11 +15,11 @@ export const SuppliersTable = () => {
       console.log(data);
     };
     getSuppliers();
-  }, [statusData, data]);
+  }, [statusData]);
 
   return (
     <div className="w-full overflow-x-auto suppliers-table-div">
-      <Table data={data} />
+      <Table data={data} setStatusData={setStatusData} />
     </div>
   );
 };

@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import Input from "../forms/input";
 import SupplierModal from "../../components/Inventory/SupplierModal";
+import useAxios from "../../hooks/useAxios";
 
-export const Table = ({ data }) => {
+export const Table = ({ data, setStatusData }) => {
   const [suppliers, setSuppliers] = useState([]);
+  const { deleteData } = useAxios();
   const [supplierData, setSuppliertData] = useState({
     id: "",
     name: "",
@@ -14,6 +16,7 @@ export const Table = ({ data }) => {
     kra_pin: "",
     customer_unit_serial_number: "",
   });
+
   const [isSupplierModalOpen, setIsSupplierFormModalOpen] = useState(false);
   const [filteredSuppliers, setFilteredSuppliers] = useState([]);
   const [search, setSearch] = useState({
@@ -41,6 +44,13 @@ export const Table = ({ data }) => {
   const openModal = (supplier) => {
     setIsSupplierFormModalOpen(true);
     setSuppliertData((prev) => ({ ...prev, ...supplier }));
+  };
+
+  const deleteSupplier = (supplier) => {
+    deleteData(
+      `http://localhost:8000/api/supplier/${supplier.id}`,
+      setStatusData
+    );
   };
 
   useEffect(() => {
@@ -151,7 +161,10 @@ export const Table = ({ data }) => {
                 >
                   view
                 </button>
-                <button className="bg-red-700 py-0.25 px-3 rounded-md text-white">
+                <button
+                  className="bg-red-700 py-0.25 px-3 rounded-md text-white"
+                  onClick={() => deleteSupplier(supplier)}
+                >
                   Delete
                 </button>
               </div>
