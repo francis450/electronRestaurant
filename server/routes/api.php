@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\InventoryController;
+use App\Http\Controllers\MenuController;
 use App\Http\Controllers\RegController;
 use App\Http\Controllers\SuppliersController;
 use App\Http\Controllers\UserController;
@@ -45,4 +46,12 @@ Route::controller(SuppliersController::class)->group(function(){
     Route::get('supplier/{id}', 'show');
     Route::delete('supplier/{id}', 'destroy');
     Route::post('editSupplier/{id}', 'update');
+});
+
+Route::controller(MenuController::class)->group(function(){
+    Route::post('/menu', 'store');
+    Route::get('/menu', 'index');
+    Route::get('menu/{id}', 'show');
+    Route::delete('menu/{id}', 'destroy');
+    Route::put('menu/{id}', 'update');
 });
