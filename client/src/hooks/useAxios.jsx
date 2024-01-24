@@ -51,7 +51,6 @@ function useAxios(url) {
     try {
       const response = await axios.delete(url);
       setData(response.data);
-      console.log(response);
       setStatusData((prev) => ({
         ...prev,
         status: true,

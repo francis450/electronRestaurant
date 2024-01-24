@@ -12,7 +12,6 @@ export const SuppliersTable = () => {
       await axios
         .get("http://localhost:8000/api/suppliers")
         .then((res) => setData(res.data));
-      console.log(data);
     };
     getSuppliers();
   }, [statusData]);
