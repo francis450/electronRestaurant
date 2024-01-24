@@ -11,7 +11,7 @@ const Dashboard = () => {
   return (
     <Authenticated
       user={auth.user}
-      header={<div className="max-w-7xl py-6 px-2 lg:px-8">Dashboard</div>}
+      header={<h1 className="text-2xl text-white">Dashboard</h1>}
     >
       <div className="pt-4">
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 align-center w-full my-2 md:h-[20vh]">
