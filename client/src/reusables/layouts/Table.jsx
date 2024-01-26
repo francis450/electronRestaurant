@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Input from "../forms/input";
-import SupplierModal from "../../components/Inventory/SupplierModal";
 import useAxios from "../../hooks/useAxios";
+import SupplierModal from "../../components/Inventory/suppliers/SupplierModal";
 
 export const Table = ({ data, setStatusData }) => {
   const [suppliers, setSuppliers] = useState([]);

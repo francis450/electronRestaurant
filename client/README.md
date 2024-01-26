@@ -53,3 +53,41 @@ npm install
 
 # Start both react and electron apps
 npm run dev
+## Inventory Routes
+
+
+### Create a New Inventory Item
+
+- **URL:** `/newInventoryItem`
+- **HTTP Method:** `POST`
+- **Payload Options:**
+```json
+{
+        "item_id": "",
+        "item_name": "",
+        "category": "",
+        "unit_of_measurement_id": "",
+        "current_quantity": "",
+        "par_level": "",
+        "reorder_point": "",
+        "supplier": "",
+        "cost_per_unit":"",
+        "expiration_date": "",
+}
+```
+
+### List Inventory Items
+
+- **URL:** `/inventoryItems`
+- **HTTP Method:** `GET`
+- **Description:** Retrieve a list of all inventory items.
+
+### Show Inventory Item Details
+
+- **URL:** `/inventoryItem/{id}`
+- **HTTP Method:** `GET`
+- **Parameters:**
+  - `{id}`: The unique identifier of the inventory item.
+- **Description:** Retrieve details of a specific inventory item identified by its ID.
+
+---
