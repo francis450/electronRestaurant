@@ -2,26 +2,55 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Inventory;
+use App\Models\Supplier;
+use App\Models\UnitsOfMeasurement;
 use Illuminate\Http\Request;
 
 class InventoryController extends Controller
 {
     public function index()
     {
-        // Retrieve all inventory
         $inventory = Inventory::all();
 
-        return response()->json(['users' => $inventory], 200,['']);
+        $categoryIds = $inventory->pluck('category_id')->unique();
+        $unitOfMeasurementIds = $inventory->pluck('unit_of_measurement_id')->unique();
+        $supplierIds = $inventory->pluck('supplier')->unique();
+
+
+        // get category and unit of measurement names
+        $categories = Category::whereIn('id', $categoryIds)->get();
+        $unitOfMeasurements = UnitsOfMeasurement::whereIn('id', $unitOfMeasurementIds)->get();
+        $suppliers = Supplier::whereIn('id', $supplierIds)->get();
+
+        // add category and unit of measurement names to inventory items
+        foreach ($inventory as $item) {
+            $item->category_name = $categories->where('id', $item->category_id)->first()->name;
+            $item->unit_of_measurement_name = $unitOfMeasurements->where('id', $item->unit_of_measurement_id)->first()->name;
+            $item->unit_of_measurement_symbol = $unitOfMeasurements->where('id', $item->unit_of_measurement_id)->first()->symbol;
+            $item->supplier_name = $suppliers->where('id', $item->supplier)->first()->name;
+        }
+
+        return response()->json(['Items' => $inventory], 200);
     }
 
     public function show($id)
     {
-        $inventory = Inventory::findOrFail($id);
+        $inventory = Inventory::find($id);
 
         if (!$inventory) {
             return response()->json(['message' => 'Item not found'], 404);
         }
+
+        $category = Category::where('id', $inventory->category_id)->first();
+        $unitOfMeasurement = UnitsOfMeasurement::where('id', $inventory->unit_of_measurement_id)->first();
+        $supplier = Supplier::where('id', $inventory->supplier)->first();
+
+        $inventory->category_name = $category->name;
+        $inventory->unit_of_measurement_name = $unitOfMeasurement->name;
+        $inventory->unit_of_measurement_symbol = $unitOfMeasurement->symbol;
+        $inventory->supplier_name = $supplier->name;
 
         return response()->json(['user' => $inventory], 200);
     }
@@ -31,7 +60,7 @@ class InventoryController extends Controller
         $res = $request->validate([
             'item_id' => 'unique:inventory',
             'item_name' => 'required|string',
-            'category' => 'required|string',
+            'category_id' => 'required|string',
             'unit_of_measurement_id' => 'required',
             'current_quantity' => 'nullable',
             'par_level' => 'nullable',
@@ -43,7 +72,7 @@ class InventoryController extends Controller
         $item = Inventory::create([
             'item_id' => $request->input('item_id'),
             'item_name' => $request->input('item_name'),
-            'category' => $request->input('category'),
+            'category_id' => $request->input('category_id'),
             'unit_of_measurement_id' => $request->input('unit_of_measurement_id'),
             'current_quantity' => $request->input('current_quantity'),
             'par_level' => $request->input('par_level'),

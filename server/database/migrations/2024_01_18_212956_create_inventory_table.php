@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->string('item_id')->unique();
             $table->string('item_name');
-            $table->string('category');
             $table->foreignId('unit_of_measurement_id')->constrained('units_of_measurements','id');
             $table->integer('current_quantity')->nullable();
             $table->integer('par_level')->nullable();
