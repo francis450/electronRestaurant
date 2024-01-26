@@ -2,17 +2,35 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Inventory;
+use App\Models\UnitsOfMeasurement;
 use Illuminate\Http\Request;
 
 class InventoryController extends Controller
 {
     public function index()
     {
-        // Retrieve all inventory
+        // Retrieve inventory items with their unit of measurement and category names
+        // $inventory = Inventory::with('unitOfMeasurement', 'category')->get();
+
         $inventory = Inventory::all();
 
-        return response()->json(['users' => $inventory], 200,['']);
+        // get items' category and unit of measurement ids
+        $categoryIds = $inventory->pluck('category')->unique();
+        $unitOfMeasurementIds = $inventory->pluck('unit_of_measurement_id')->unique();
+
+        // get category and unit of measurement names
+        $categories = Category::whereIn('id', $categoryIds)->get();
+        $unitOfMeasurements = UnitsOfMeasurement::whereIn('id', $unitOfMeasurementIds)->get();
+
+        // add category and unit of measurement names to inventory items
+        foreach ($inventory as $item) {
+            $item->name = $categories->where('id', $item->category)->first()->name;
+            $item->unit_of_measurement_name = $unitOfMeasurements->where('id', $item->unit_of_measurement_id)->first()->name;
+        }
+
+        return response()->json(['Items' => $inventory], 200);
     }
 
     public function show($id)
