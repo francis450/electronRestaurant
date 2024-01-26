@@ -20,7 +20,7 @@ class Inventory extends Model
     protected $fillable = [
         'item_id',
         'item_name',
-        'category',
+        'category_id',
         'unit_of_measurement_id',
         'current_quantity',
         'par_level',
