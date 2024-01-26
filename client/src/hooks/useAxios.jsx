@@ -6,6 +6,29 @@ function useAxios(url) {
   const [error, setError] = useState();
   const [loading, setLoading] = useState(false);
 
+  const handleError = (setStatusData) => {
+    setError(error);
+    setLoading(false);
+    setStatusData((prev) => ({
+      ...prev,
+      status: true,
+      message: "Incorrect or duplicate values added!",
+      type: "error",
+    }));
+  }
+
+  // function to getData
+  const getData = async (url, setStatusData, setCallerData) => {
+    setLoading(true)
+    try {
+      await axios.get(url).then((res) => {
+        setCallerData(res.data)
+      })
+    } catch (error) {
+      handleError(setStatusData)
+    }
+  }
+
   // function to post data to the server
   const postData = async (url, body, setStatusData, callback) => {
     setLoading(true);
@@ -33,14 +56,7 @@ function useAxios(url) {
       setLoading(false);
       return response;
     } catch (error) {
-      setError(error);
-      setLoading(false);
-      setStatusData((prev) => ({
-        ...prev,
-        status: true,
-        message: "Incorrect or duplicate values added!",
-        type: "error",
-      }));
+      handleError(setStatusData)
     }
   };
 
@@ -61,19 +77,12 @@ function useAxios(url) {
       }));
       setLoading(false);
     } catch (error) {
-      setError(error);
-      setLoading(false);
-      setStatusData((prev) => ({
-        ...prev,
-        status: true,
-        message: "Incorrect or duplicate values added!",
-        type: "error",
-      }));
+      handleError(setStatusData)
     }
   };
 
   // return the data, error, and loading states and the functions
-  return { data, error, loading, postData, deleteData };
+  return { data, error, loading, getData, postData, deleteData };
 }
 
 export default useAxios;
