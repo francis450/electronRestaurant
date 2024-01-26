@@ -21,6 +21,81 @@ This API serves as the core engine for managing menus, inventory, orders, and mo
 7. Start the development server: `php artisan serve`
 
 ## API Endpoints
+### Units of Measurement
+
+#### Adding a new unit of measurement
+
+- **URL:** `/unitofmeasure`
+- **HTTP Method:** `POST`
+- **Payload Options:**
+```json
+{
+    "name": "pounds",
+    "symbol": "lb",
+    "type": "base", //enum['base','subunit']
+    "conversion_factor": "16" //1 pound = 16 ounces
+}
+
+{
+  "name": "ounces",
+  "symbol": "ou",
+  "type": "subunit", //enum['base','subunit']
+  "conversion_factor": "1/16", //1 ounce = 16 ounces
+  "subunit_id": "1"// it references the pound above
+}
+```
+
+#### To List all unit of measurement
+
+- **URL:** `/unitsofmeasure`
+- **HTTP Method:** `GET`
+- **Description:** Retrieve a list of all units of measurement(both base and subunits)
+
+
+### Menu Items Categories
+
+#### Adding a new category
+
+- **URL:** `/category`
+- **HTTP Method:** `POST`
+- **Payload Options:**
+```json
+{
+    "name": "Breakfast"
+}
+```
+#### To List all Categories
+
+- **URL:** `/categories`
+- **HTTP Method:** `GET`
+- **Description:** Retrieve a list of all categories of menu items
+
+#### To Get specific category using id
+
+- **URL:** `/category/{id}`
+- **HTTP Method:** `GET`
+- **Parameters:**
+  - `{id}`: The unique identifier for a menu item category
+- **Description:** Retrieve details of a specific category identified by the ID.
+
+#### Update specific menu item details using id
+
+- **URL:** `/category/{id}`
+- **HTTP Method:** `POST`
+- **Parameters:**
+  - `{id}`: The unique identifier for a menu item category
+- **Description:** Edit any details of a specific category identified by the ID.
+
+#### Delete specific menu item using id
+
+- **URL:** `/category/{id}`
+- **HTTP Method:** `DELETE`
+- **Parameters:**
+  - `{id}`: The unique identifier for a menu item category
+- **Description:** Deletes details of a specific category identified by the ID.
+
+---
+
 
 ### Menus
 
