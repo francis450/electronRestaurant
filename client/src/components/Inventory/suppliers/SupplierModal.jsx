@@ -1,8 +1,8 @@
 import React, { useContext } from "react";
-import { DefaultModal } from "../../reusables/modals/defaultModal";
-import Input from "../../reusables/forms/input";
-import useAxios from "../../hooks/useAxios";
-import { StatusModalContext } from "../App/App";
+import { DefaultModal } from "../../../reusables/modals/defaultModal";
+import Input from "../../../reusables/forms/input";
+import useAxios from "../../../hooks/useAxios";
+import { StatusModalContext } from "../../App/App";
 
 const SupplierModal = ({
   formData,
@@ -20,7 +20,7 @@ const SupplierModal = ({
 
   const handleUpdate = (e) => {
     e.preventDefault();
-    const url = `http://localhost:8000/api/editSupplier/${formData.id}`;
+    const url = `${process.env.REACT_APP_LOCAL_SERVER_URL}/editSupplier/${formData.id}`;
     postData(url, formData, setStatusData, callback);
   };
 
@@ -62,7 +62,7 @@ const SupplierModal = ({
             <Input
               type={"number"}
               name={"phone_number"}
-              placeholder={"Enter name"}
+              placeholder={"Enter pnone"}
               value={formData.phone_number}
               onchange={handleChange}
             />
@@ -76,7 +76,7 @@ const SupplierModal = ({
             <Input
               type={"email"}
               name={"email"}
-              placeholder={"Enter name"}
+              placeholder={"Enter email"}
               value={formData.email}
               onchange={handleChange}
             />

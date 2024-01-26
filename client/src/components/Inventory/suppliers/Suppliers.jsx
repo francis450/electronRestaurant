@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
-import useAxios from "../../hooks/useAxios";
-import { StatusModalContext } from "../App/App";
+import useAxios from "../../../hooks/useAxios";
+import { StatusModalContext } from "../../App/App";
 import { SuppliersTable } from "./SuppliersTable";
 import SupplierModal from "./SupplierModal";
 
@@ -53,7 +53,7 @@ const Suppliers = () => {
       <section className="add-supplier-section">
         <div className="flex justify-end">
           <button
-            className="btn py-2 px-3 bg-red-200 text-[#222] mt-2 rounded-md"
+            className="btn py-1 px-3 bg-red-200 text-[#222] mt-2 rounded-md"
             onClick={() => openModal()}
           >
             Add Supplier
