@@ -5,6 +5,8 @@ import useAxios from "../../../hooks/useAxios";
 import { StatusModalContext } from "../../App/App";
 import CustomSelect from "../../../reusables/forms/select";
 import { useSuppliers } from "../../../hooks/useSuppliers";
+import { useUnitsOfMeasure } from "../../../hooks/useUnitsOfMeasure";
+import { useCategories } from "../../../hooks/useCategories";
 
 const ItemModal = ({
   formData,
@@ -18,7 +20,11 @@ const ItemModal = ({
     closeModal();
   };
   const { suppliers } = useSuppliers();
+  const { unitsOfMeasure } = useUnitsOfMeasure();
+  const { categories } = useCategories();
   const [mappedSuppliers, setMappedSuppliers] = useState([]);
+  const [mappedCategories, setMappedCategories] = useState([]);
+  const [mappedUnitsOfMeasure, setMappedUnitsOfMeasure] = useState([]);
   const { postData } = useAxios();
   const { setStatusData } = useContext(StatusModalContext);
 
@@ -33,8 +39,12 @@ const ItemModal = ({
       value: supplier.id,
       label: `${supplier.name} - ${supplier.phone_number}`,
     }));
+    const mappedSelectUnitsMeasure = unitsOfMeasure?.map(u => ({value: u.id, label: u.name}))
+    const mappedSelectCategories = categories?.map(category => ({value: category.id, label: category.name}))
+    setMappedCategories(mappedSelectCategories)
     setMappedSuppliers(mappedSelectSuppliers);
-  }, [suppliers]);
+    setMappedUnitsOfMeasure(mappedSelectUnitsMeasure)
+  }, [suppliers, categories, unitsOfMeasure]);
 
   return (
     <DefaultModal
@@ -65,7 +75,7 @@ const ItemModal = ({
             </label>
             <CustomSelect
               name="category"
-              value={formData.category}
+              options={mappedCategories}
               handleChange={handleCustomSelectChange}
             />
           </div>
@@ -76,7 +86,7 @@ const ItemModal = ({
               </label>
               <CustomSelect
                 name="unit_of_measurement_id"
-                value={formData.unit_of_measurement_id}
+                options={mappedUnitsOfMeasure}
                 handleChange={handleCustomSelectChange}
               />
             </div>

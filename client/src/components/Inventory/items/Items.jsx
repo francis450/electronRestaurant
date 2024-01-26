@@ -1,11 +1,12 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import useAxios from "../../../hooks/useAxios";
 import { StatusModalContext } from "../../App/App";
 import ItemModal from "./ItemModal";
+import ItemTable from "./ItemsTable";
 
 const Items = () => {
   const { postData } = useAxios();
-  const { setStatusData } = useContext(StatusModalContext);
+  const { statusData, setStatusData } = useContext(StatusModalContext);
 
   const [formData, setFormData] = useState({
     item_id: "",
@@ -80,7 +81,7 @@ const Items = () => {
         )}
       </section>
       <section className="Items-table-section">
-        {/* <ItemsTable /> */}
+        <ItemTable statusData={statusData} />
       </section>
     </>
   );
