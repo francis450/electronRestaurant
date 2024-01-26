@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\RegController;
@@ -54,4 +55,25 @@ Route::controller(MenuController::class)->group(function(){
     Route::get('menu/{id}', 'show');
     Route::delete('menu/{id}', 'destroy');
     Route::put('menu/{id}', 'update');
+});
+
+Route::get('/unitsofmeasure', function(){
+    return \App\Models\UnitsOfMeasurement::all();
+});
+
+Route::post('/unitofmeasure', function(Request $request){
+    $baseUnit = \App\Models\UnitsOfMeasurement::create($request->all());
+    return response()->json([
+        'message' => 'successfully added unit',
+        'unit' => $baseUnit,
+        'status' => 'success'
+    ], 201);
+});
+
+Route::controller(CategoriesController::class)->group(function(){
+    Route::get('/categories', 'index');
+    Route::get('/category/{id}', 'show');
+    Route::post('/category', 'store');
+    Route::delete('/category/{id}', 'destroy');
+    Route::put('/category/{id}', 'update');
 });
