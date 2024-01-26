@@ -17,9 +17,9 @@ class InventoryFactory extends Factory
     public function definition(): array
     {
         return [
-            'item_id' => fake()->randomNumber,
+            'item_id' => fake()->unique()->randomNumber,
             'item_name' => fake()->lastName,
-            'category' => fake()->numberBetween(1,2),
+            'category_id' => fake()->numberBetween(1,2),
             'unit_of_measurement_id' => fake()->numberBetween(1,2),
             'current_quantity' => fake()->randomNumber(3),
             'par_level' => fake()->randomNumber(1),
