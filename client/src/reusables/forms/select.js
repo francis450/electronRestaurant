@@ -1,7 +1,8 @@
+import { useEffect, useState } from "react";
 import Select from "react-select";
 
 const defaultOptions = [
-  { value: "1", label: "Blues" },
+  { value: "1", label: "Blues", isSelected: true },
   { value: "2", label: "Rock" },
   { value: "3", label: "Jazz" },
   { value: "4", label: "Orchestra" },
@@ -14,7 +15,15 @@ const defaultOptions = [
   { value: "11", label: "Orchestration" },
 ];
 
-const CustomSelect = ({ name, value, options = defaultOptions, handleChange}) => {
+const CustomSelect = ({
+  name,
+  value,
+  options = defaultOptions,
+  handleChange,
+  editing,
+}) => {
+  const [selected, setSelected] = useState(null);
+
   const customStyles = {
     option: (defaultStyles, state) => {
       return {
@@ -30,7 +39,7 @@ const CustomSelect = ({ name, value, options = defaultOptions, handleChange}) =>
         ...defaultStyles,
         color: state.hasValue ? "#000" : "#212529",
         backgroundColor: "#D9D9D9",
-        borderRadius: "10px",
+        borderRadius: "0.375rem",
         borderColor: "#D9D9D9",
         textAlign: "left",
         border: "none",
@@ -40,9 +49,32 @@ const CustomSelect = ({ name, value, options = defaultOptions, handleChange}) =>
     singleValue: (defaultStyles) => ({ ...defaultStyles, color: "#453" }),
   };
 
+  useEffect(() => {
+    options.map((option) => {
+      if (value && option.value == value) {
+        setSelected(option);
+      }
+    });
+  }, [options, value]);
+
   return (
-    <div className="w-full rounded-lg">
-      <Select name={name} options={options} styles={customStyles} onChange={(e) => handleChange(e, name)} />
+    <div className="w-full rounded-md">
+      {editing ? (
+        <Select
+          name={name}
+          options={options}
+          value={selected}
+          styles={customStyles}
+          onChange={(e) => handleChange(e, name)}
+        />
+      ) : (
+        <Select
+          name={name}
+          options={options}
+          styles={customStyles}
+          onChange={(e) => handleChange(e, name)}
+        />
+      )}
     </div>
   );
 };
