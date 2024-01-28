@@ -1,12 +1,14 @@
-import React, { useEffect, useState } from "react";
-import Input from "../../../reusables/forms/input";
+import React, { useEffect, useRef, useState } from "react";
 import ItemModal from "./ItemModal";
 import useAxios from "../../../hooks/useAxios";
+import ReactDataGrid from '@inovua/reactdatagrid-community'
+import '@inovua/reactdatagrid-community/index.css'
 
-export const Table = ({ data, statusData, setStatusData }) => {
-  const [ suppliers, setSuppliers ] = useState([]);
+export const Table = ({ children, data, isSupplierModalOpen, setIsSupplierFormModalOpen, setStatusData }) => {
+  const [currentPage, setCurrentPage] = useState(2);
+  const [suppliers, setSuppliers] = useState([]);
   const { deleteData } = useAxios();
-  const [ supplierData, setSuppliertData ] = useState({
+  const [supplierData, setSuppliertData] = useState({
     id: "",
     name: "",
     contact_name: "",
@@ -16,34 +18,27 @@ export const Table = ({ data, statusData, setStatusData }) => {
     kra_pin: "",
     customer_unit_serial_number: "",
   });
+  
 
-  const [isSupplierModalOpen, setIsSupplierFormModalOpen] = useState(false);
   const [filteredSuppliers, setFilteredSuppliers] = useState([]);
-  const [search, setSearch] = useState({
-    name: "",
-    contact_name: "",
-    email: "",
-    phone_number: "",
-  });
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setSearch((prev) => ({ ...prev, [name]: value }));
-    setFilteredSuppliers(
-      suppliers.filter((s) =>
-        s[name].toLowerCase().includes(value.toLowerCase())
-      )
-    );
-  };
 
   const handleChangeEditChange = (e) => {
     setSuppliertData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
+
+  const handleCustomSelectChange = (e, name) => {
+    setSuppliertData((prev) => ({ ...prev, [name]: e.value}))
+  }
+
   const closeModal = () => setIsSupplierFormModalOpen(false);
   const openModal = (supplier) => {
     setIsSupplierFormModalOpen(true);
     setSuppliertData((prev) => ({ ...prev, ...supplier }));
+  };
+
+  const handleClickView = (item) => {
+    openModal(item)
   };
 
   const deleteSupplier = (supplier) => {
@@ -53,159 +48,119 @@ export const Table = ({ data, statusData, setStatusData }) => {
     );
   };
 
+  const [searchText, setSearchText] = useState('');
+  const [gridRef, setGridRef] = useState(null);
+  const searchTextRef = useRef(searchText);
+  searchTextRef.current = searchText;
+
+  const onSearchChange = ({ target: { value } }) => {
+    const visibleColumns = gridRef.current.visibleColumns;
+    setSearchText(value);
+
+    const newDataSource = suppliers.filter(p => {
+      return visibleColumns.reduce((acc, col) => {
+        const v = (p[col.id] + '').toLowerCase() // get string value
+        return acc || v.indexOf(value.toLowerCase()) != -1 // make the search case insensitive
+      }, false)
+    });
+
+    setFilteredSuppliers(newDataSource);
+  }
+
+  const renderActions = ({ data }) => {
+    return (
+      <div className="table_cell flex gap-2 justify-center">
+        <button
+          className="bg-green-700 py-0.25 px-3 rounded-md text-white"
+          onClick={() => handleClickView(data)}
+        >
+          View
+        </button>
+        <button
+          className="bg-red-700 py-0.25 px-3 rounded-md text-white"
+          onClick={() => deleteSupplier(data)}
+        >
+          Delete
+        </button>
+      </div>
+    );
+  };
+
   useEffect(() => {
-    setSuppliers(data.inventoryItems);
-    setFilteredSuppliers(data.inventoryItems);
+    setSuppliers(data.Items);
+    setFilteredSuppliers(data.Items);
   }, [data]);
 
   return (
-    <div className="table" id="results">
-      <div className="theader">
-        <div className="table_header">Item Name</div>
-        <div className="table_header">Category</div>
-        <div className="table_header">Supplier</div>
-        <div className="table_header">Units of Measurement</div>
-        <div className="table_header">Par Level</div>
-        <div className="table_header">Reorder Point</div>
-        <div className="table_header">Expiry Date</div>
-        <div className="table_header">Actions</div>
+    <>
+    <div className="flex justify-between items-center  mt-3 mb-1">
+        <label><input value={searchText} onChange={onSearchChange} className="py-1 border-none focus:outline-none text-[#222] rounded-md px-2" placeholder="search ..."/></label>
+        {children}
+        {isSupplierModalOpen && (
+        <ItemModal
+          formData={supplierData}
+          handleChange={handleChangeEditChange}
+          closeModal={closeModal}
+          handleCustomSelectChange={handleCustomSelectChange}
+          editing={true}
+        />
+      )}
       </div>
-      <div className="table_row">
-        <div className="table_small">
-          <div className="table_cell">Company Name</div>
-          <div className="table_cell flex justify-center">
-            <div className="w-8/12">
-              <Input
-                type="text"
-                name={"name"}
-                placeholder={"Search ..."}
-                height={24}
-                value={search.name}
-                onchange={handleChange}
-              />
-            </div>
-          </div>
-        </div>
-        <div className="table_small">
-          <div className="table_cell">Contact Name</div>
-          <div className="table_cell flex justify-center">
-            <div className="w-8/12">
-              <Input
-                type="text"
-                name={"contact_name"}
-                placeholder={"Search ..."}
-                height={24}
-                value={search.contact_name}
-                onchange={handleChange}
-              />
-            </div>
-          </div>
-        </div>
-        <div className="table_small">
-          <div className="table_cell">Email</div>
-          <div className="table_cell flex justify-center">
-            <div className="w-8/12">
-              <Input
-                type="text"
-                name={"email"}
-                placeholder={"Search ..."}
-                height={24}
-                value={search.email}
-                onchange={handleChange}
-              />
-            </div>
-          </div>
-        </div>
-        <div className="table_small">
-          <div className="table_cell">Email</div>
-          <div className="table_cell flex justify-center">-</div>
-        </div>
-        <div className="table_small">
-          <div className="table_cell">Email</div>
-          <div className="table_cell flex justify-center">-</div>
-        </div>
-        <div className="table_small">
-          <div className="table_cell">Email</div>
-          <div className="table_cell flex justify-center">-</div>
-        </div>
-        <div className="table_small">
-          <div className="table_cell">Phone Number</div>
-          <div className="table_cell flex justify-center">
-            <div className="w-8/12">
-              <Input
-                type="text"
-                name={"phone_number"}
-                placeholder={"Search ..."}
-                height={24}
-                value={search.phone_number}
-                onchange={handleChange}
-              />
-            </div>
-          </div>
-        </div>
-        <div className="table_small">
-          <div className="table_cell">Phone Number</div>
-          <div className="table_cell bg-slate-300">clear search</div>
-        </div>
-      </div>
-      {suppliers &&
-        filteredSuppliers.map((supplier) => (
-          <div className="table_row" key={supplier.id}>
-            <div className="table_small">
-              <div className="table_cell">Item Name</div>
-              <div className="table_cell">{supplier.item_name}</div>
-            </div>
-            <div className="table_small">
-              <div className="table_cell">Category</div>
-              <div className="table_cell">{supplier.category}</div>
-            </div>
-            <div className="table_small">
-              <div className="table_cell">Supplier</div>
-              <div className="table_cell">{supplier.supplier}</div>
-            </div>
-            <div className="table_small">
-              <div className="table_cell">Units of Measurement</div>
-              <div className="table_cell">{supplier.unit_of_measurement_id}</div>
-            </div>
-            <div className="table_small">
-              <div className="table_cell">PAR Level</div>
-              <div className="table_cell">{supplier.par_level}</div>
-            </div>
-            <div className="table_small">
-              <div className="table_cell">Reorder Ponts</div>
-              <div className="table_cell">{supplier.reorder_point}</div>
-            </div>
-            <div className="table_small">
-              <div className="table_cell">Expiry Date</div>
-              <div className="table_cell">{supplier.expiration_date ? supplier.expiration_date : "No Expiry"}</div>
-            </div>
-            <div className="table_small">
-              <div className="table_cell">Actions</div>
-              <div className="table_cell flex gap-2 justify-center">
-                <button
-                  className="bg-green-700 py-0.25 px-3 rounded-md text-white"
-                  onClick={() => openModal(supplier)}
-                >
-                  view
-                </button>
-                <button
-                  className="bg-red-700 py-0.25 px-3 rounded-md text-white"
-                  onClick={() => deleteSupplier(supplier)}
-                >
-                  Delete
-                </button>
-              </div>
-            </div>
-            {isSupplierModalOpen && (
-              <ItemModal
-                formData={supplierData}
-                handleChange={handleChangeEditChange}
-                closeModal={closeModal}
-                id={supplier.id}
-              />
-            )}
-          </div>
-        ))}
-    </div>
+    <ReactDataGrid
+        onReady={setGridRef}
+        idProperty="id"
+        columns={[
+          { name: 'id', header: 'ID', defaultVisible: false },
+          { name: 'item_name', header: 'Item Name', defaultFlex: 1, minWidth: 150 },
+          { name: 'category_name', header: 'Category', defaultFlex: 1, minWidth: 150 },
+          { name: 'supplier_name', header: 'Supplier', defaultFlex: 1, minWidth: 300 },
+          { name: 'unit_of_measurement_id', header: 'Units of Measurement' },
+          { name: 'par_level', header: 'Par Level' },
+          { name: 'reorder_point', header: 'Reorder Point' },
+          { name: 'expiration_date', header: 'Expiry Date' },
+          { name: 'actions', header: 'Actions', render: renderActions}
+        ]}
+        dataSource={filteredSuppliers || []}
+        pagination
+        defaultLimit={10}
+        paginationShowPageSizeSelector
+        paginationPageSizeOptions={[5, 10, 20, 50, 100]}
+        paginationToolbarProps={{
+          style: {
+            border: 'none',
+            borderRadius: 0,
+            borderBottom: '1px solid rgba(0,0,0,.1)',
+          },
+        }}
+        paginationProps={{
+          style: {
+            border: 'none',
+            borderRadius: 0,
+            borderTop: '1px solid rgba(0,0,0,.1)',
+          },
+        }}
+        paginationShowPages
+        paginationMode="default"
+        paginationNext={<span>Next</span>}
+        paginationPrev={<span>Prev</span>}
+        paginationPageInputProps={{
+          style: {
+            border: 'none',
+            borderRadius: 0,
+            borderBottom: '1px solid rgba(0,0,0,.1)',
+          },
+        }}
+        paginationShowPagesToolbar
+        paginationShowSizeChanger
+        paginationShowTotal
+        paginationTotal={<span>Rows: {filteredSuppliers?.length}</span>}
+        paginationRowsPerPageOptions={[5, 10, 20, 50, 100]}
+        paginationCurrentPage={currentPage}
+        onPaginationChange={({ page }) => {
+          setCurrentPage(page);
+        }}
+        className="h-[50.10vh]"
+     />
+</>
   );
 };

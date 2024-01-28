@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import useAxios from "../../../hooks/useAxios";
 import { StatusModalContext } from "../../App/App";
 import ItemModal from "./ItemModal";
@@ -11,7 +11,7 @@ const Items = () => {
   const [formData, setFormData] = useState({
     item_id: "",
     item_name: "",
-    category: "",
+    category_id: "",
     unit_of_measurement_id: "",
     current_quantity: "",
     par_level: "",
@@ -39,7 +39,7 @@ const Items = () => {
       ...prev,
       item_id: "",
       item_name: "",
-      category: "",
+      category_id: "",
       unit_of_measurement_id: "",
       current_quantity: "",
       par_level: "",
@@ -54,23 +54,21 @@ const Items = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(formData);
     const url = `${process.env.REACT_APP_LOCAL_SERVER_URL}/newInventoryItem`;
     postData(url, formData, setStatusData, callback);
   };
 
   return (
     <>
-      <section className="add-Item-section">
-        <div className="flex justify-end">
+      <section className="Items-table-section">
+        <ItemTable statusData={statusData}>
           <button
-            className="btn py-1 px-3 bg-red-200 text-[#222] mt-2 rounded-md"
-            onClick={() => openModal()}
-          >
+              className="btn py-1 px-3 bg-red-200 text-[#222] rounded-md"
+              onClick={() => openModal()}
+            >
             Add Item
           </button>
-        </div>
-        {isItemModalOpen && (
+          {isItemModalOpen && (
           <ItemModal
             formData={formData}
             closeModal={closeModal}
@@ -79,9 +77,7 @@ const Items = () => {
             handleCustomSelectChange={handleCustomSelectChange}
           />
         )}
-      </section>
-      <section className="Items-table-section">
-        <ItemTable statusData={statusData} />
+        </ItemTable>
       </section>
     </>
   );

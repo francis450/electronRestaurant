@@ -15,6 +15,7 @@ const ItemModal = ({
   handleSubmit,
   handleCustomSelectChange,
   id = null,
+  editing = false,
 }) => {
   const callback = () => {
     closeModal();
@@ -39,21 +40,27 @@ const ItemModal = ({
       value: supplier.id,
       label: `${supplier.name} - ${supplier.phone_number}`,
     }));
-    const mappedSelectUnitsMeasure = unitsOfMeasure?.map(u => ({value: u.id, label: u.name}))
-    const mappedSelectCategories = categories?.map(category => ({value: category.id, label: category.name}))
-    setMappedCategories(mappedSelectCategories)
+    const mappedSelectUnitsMeasure = unitsOfMeasure?.map((u) => ({
+      value: u.id,
+      label: u.name,
+    }));
+    const mappedSelectCategories = categories?.map((category) => ({
+      value: category.id,
+      label: category.name,
+    }));
+    setMappedCategories(mappedSelectCategories);
     setMappedSuppliers(mappedSelectSuppliers);
-    setMappedUnitsOfMeasure(mappedSelectUnitsMeasure)
+    setMappedUnitsOfMeasure(mappedSelectUnitsMeasure);
   }, [suppliers, categories, unitsOfMeasure]);
 
   return (
     <DefaultModal
       header={"Add Inventory Item Form"}
       closeModal={closeModal}
-      height={55}
+      height={44}
     >
       <form>
-        <div className="form-group flex justify-center gap-2 mt-3 px-4">
+        <div className="form-group flex justify-center gap-2 mt-1 px-4">
           <div className="flex flex-col gap-1 items-start w-full">
             <label htmlFor="item_name" className="text-[black]">
               Item Name
@@ -68,15 +75,17 @@ const ItemModal = ({
             />
           </div>
         </div>
-        <div className="form-group flex justify-center gap-2 mt-3 px-4">
+        <div className="form-group flex justify-center gap-2 mt-1 px-4">
           <div className="flex flex-col gap-1 items-start w-full">
             <label htmlFor="category" className="text-[black]">
               Category
             </label>
             <CustomSelect
-              name="category"
+              name="category_id"
               options={mappedCategories}
               handleChange={handleCustomSelectChange}
+              value={formData.category_id ? formData.category_id : null}
+              editing={editing}
             />
           </div>
           <div className="flex gap-2 items-start w-full">
@@ -88,11 +97,17 @@ const ItemModal = ({
                 name="unit_of_measurement_id"
                 options={mappedUnitsOfMeasure}
                 handleChange={handleCustomSelectChange}
+                value={
+                  formData.unit_of_measurement_id
+                    ? formData.unit_of_measurement_id
+                    : null
+                }
+                editing={editing}
               />
             </div>
           </div>
         </div>
-        <div className="form-group flex justify-center gap-2 mt-3 px-4">
+        <div className="form-group flex justify-center gap-2 mt-1 px-4">
           <div className="flex flex-col gap-1 items-start w-full">
             <label htmlFor="username" className="text-[black]">
               Current Quantity
@@ -104,7 +119,6 @@ const ItemModal = ({
               value={formData.current_quantity}
               onchange={handleChange}
               required={true}
-              height={38}
             />
           </div>
           <div className="flex flex-col gap-1 items-start w-full">
@@ -133,7 +147,7 @@ const ItemModal = ({
           </div>
         </div>
 
-        <div className="form-group flex justify-center gap-2 mt-3 px-4">
+        <div className="form-group flex justify-center gap-2 mt-1 px-4">
           <div className="flex flex-col gap-1 items-start w-full">
             <label htmlFor="item_id" className="text-[black]">
               Item ID
@@ -171,7 +185,7 @@ const ItemModal = ({
             />
           </div>
         </div>
-        <div className="form-group flex justify-center gap-2 mt-3 px-4">
+        <div className="form-group flex justify-center gap-2 mt-1 px-4">
           <div className="flex flex-col gap-1 items-start w-full">
             <label htmlFor="username" className="text-[black]">
               Supplier
@@ -181,15 +195,17 @@ const ItemModal = ({
                 options={mappedSuppliers}
                 name="supplier"
                 handleChange={handleCustomSelectChange}
+                value={formData.supplier ? formData.supplier : null}
+                editing={editing}
               />
             }
           </div>
         </div>
 
-        <div className="px-4 mt-3 flex justify-end">
+        <div className="px-4 mt-1 flex justify-end">
           <button
-            className="btn py-2 px-4 bg-green-700 text-[white] mt-2 rounded-lg"
-            onClick={id ? handleUpdate : handleSubmit}
+            className="btn py-1 px-2 bg-green-700 text-[white] mt-1 rounded-lg"
+            onClick={formData.id ? handleUpdate : handleSubmit}
           >
             {id ? "Update" : "Submit"}
           </button>
