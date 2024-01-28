@@ -60,7 +60,7 @@ export const Table = ({ children, data, isSupplierModalOpen, setIsSupplierFormMo
     const newDataSource = suppliers.filter(p => {
       return visibleColumns.reduce((acc, col) => {
         const v = (p[col.id] + '').toLowerCase() // get string value
-        return acc || v.indexOf(value.toLowerCase()) != -1 // make the search case insensitive
+        return acc || v.indexOf(value.toLowerCase()) !== -1 // make the search case insensitive
       }, false)
     });
 

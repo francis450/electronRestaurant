@@ -32,10 +32,6 @@ export const Table = ({
     setSuppliertData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const handleCustomSelectChange = (e, name) => {
-    setSuppliertData((prev) => ({ ...prev, [name]: e.value }));
-  };
-
   const closeModal = () => setIsSupplierFormModalOpen(false);
   const openModal = (supplier) => {
     setIsSupplierFormModalOpen(true);
@@ -65,7 +61,7 @@ export const Table = ({
     const newDataSource = suppliers.filter((p) => {
       return visibleColumns.reduce((acc, col) => {
         const v = (p[col.id] + "").toLowerCase(); // get string value
-        return acc || v.indexOf(value.toLowerCase()) != -1; // make the search case insensitive
+        return acc || v.indexOf(value.toLowerCase()) !== -1; // make the search case insensitive
       }, false);
     });
 
@@ -94,7 +90,6 @@ export const Table = ({
   useEffect(() => {
     setSuppliers(data.suppliers);
     setFilteredSuppliers(data.suppliers);
-    console.log(data);
   }, [data]);
 
   return (
