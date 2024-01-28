@@ -50,16 +50,15 @@ const Suppliers = () => {
 
   return (
     <>
-      <section className="add-supplier-section">
-        <div className="flex justify-end">
-          <button
+      <section className="suppliers-table-section">
+        <SuppliersTable>
+        <button
             className="btn py-1 px-3 bg-red-200 text-[#222] mt-2 rounded-md"
             onClick={() => openModal()}
           >
             Add Supplier
           </button>
-        </div>
-        {isSupplierModalOpen && (
+          {isSupplierModalOpen && (
           <SupplierModal
             formData={formData}
             closeModal={closeModal}
@@ -67,9 +66,7 @@ const Suppliers = () => {
             handleSubmit={handleSubmit}
           />
         )}
-      </section>
-      <section className="suppliers-table-section">
-        <SuppliersTable />
+        </SuppliersTable>
       </section>
     </>
   );

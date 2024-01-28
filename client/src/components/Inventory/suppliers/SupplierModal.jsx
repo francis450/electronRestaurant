@@ -10,8 +10,8 @@ const SupplierModal = ({
   handleChange,
   handleSubmit,
   id = null,
+  editing=false
 }) => {
-
   const callback = () => {
     closeModal();
   };
@@ -20,14 +20,15 @@ const SupplierModal = ({
 
   const handleUpdate = (e) => {
     e.preventDefault();
+    console.log('submitting data');
     const url = `${process.env.REACT_APP_LOCAL_SERVER_URL}/editSupplier/${formData.id}`;
     postData(url, formData, setStatusData, callback);
   };
 
   return (
-    <DefaultModal header={"Add Supplier Form"} closeModal={closeModal}>
+    <DefaultModal header={"Add Supplier Form"} closeModal={closeModal} height={43}>
       <form>
-        <div className="form-group flex justify-center gap-2 mt-3 px-4">
+        <div className="form-group flex justify-center gap-2 mt-1 px-4">
           <div className="flex flex-col gap-1 items-start w-full">
             <label htmlFor="username" className="text-[black]">
               Supplier's Company
@@ -36,13 +37,13 @@ const SupplierModal = ({
               type={"text"}
               name={"name"}
               placeholder={"Enter company name"}
-              value={formData.name}
+              value={formData.name ? formData.name : ""}
               onchange={handleChange}
               required={true}
             />
           </div>
         </div>
-        <div className="form-group flex justify-center gap-2 mt-3 px-4">
+        <div className="form-group flex justify-center gap-2 mt-1 px-4">
           <div className="flex flex-col gap-1 items-start w-full">
             <label htmlFor="username" className="text-[black]">
               Contact's Name
@@ -51,7 +52,7 @@ const SupplierModal = ({
               type={"text"}
               name={"contact_name"}
               placeholder={"Enter contact name"}
-              value={formData.contact_name}
+              value={formData.contact_name ? formData.contact_name : ""}
               onchange={handleChange}
             />
           </div>
@@ -63,12 +64,12 @@ const SupplierModal = ({
               type={"number"}
               name={"phone_number"}
               placeholder={"Enter pnone"}
-              value={formData.phone_number}
+              value={formData.phone_number ? formData.phone_number : ""}
               onchange={handleChange}
             />
           </div>
         </div>
-        <div className="form-group flex justify-center gap-2 mt-3 px-4">
+        <div className="form-group flex justify-center gap-2 mt-1 px-4">
           <div className="flex flex-col gap-1 items-start w-full">
             <label htmlFor="username" className="text-[black]">
               Supplier's Email
@@ -77,12 +78,12 @@ const SupplierModal = ({
               type={"email"}
               name={"email"}
               placeholder={"Enter email"}
-              value={formData.email}
+              value={formData.email ? formData.email : ""}
               onchange={handleChange}
             />
           </div>
         </div>
-        <div className="form-group flex justify-center gap-2 mt-3 px-4">
+        <div className="form-group flex justify-center gap-2 mt-1 px-4">
           <div className="flex flex-col gap-1 items-start w-full">
             <label htmlFor="username" className="text-[black]">
               Supplier's KRA Pin
@@ -91,7 +92,7 @@ const SupplierModal = ({
               type={"text"}
               name={"kra_pin"}
               placeholder={"Enter KRA pin"}
-              value={formData.kra_pin}
+              value={formData.kra_pin ? formData.kra_pin : ""}
               onchange={handleChange}
             />
           </div>
@@ -103,12 +104,12 @@ const SupplierModal = ({
               type={"text"}
               name={"address"}
               placeholder={"Enter Address"}
-              value={formData.address}
+              value={formData.address ? formData.address : ""}
               onchange={handleChange}
             />
           </div>
         </div>
-        <div className="form-group flex justify-center gap-2 mt-3 px-4">
+        <div className="form-group flex justify-center gap-2 mt-1 px-4">
           <div className="flex flex-col gap-1 items-start w-full">
             <label htmlFor="username" className="text-[black]">
               Customer Unit Serial Number
@@ -117,17 +118,17 @@ const SupplierModal = ({
               type={"number"}
               name={"customer_unit_serial_number"}
               placeholder={"Enter Serial Number"}
-              value={formData.customer_unit_serial_number}
+              value={formData.customer_unit_serial_number ? formData.customer_unit_serial_number : ""}
               onchange={handleChange}
             />
           </div>
         </div>
-        <div className="px-4 mt-3 flex justify-end">
+        <div className="px-4 mt-1 flex justify-end">
           <button
-            className="btn py-2 px-4 bg-green-700 text-[white] mt-2 rounded-lg"
-            onClick={id ? handleUpdate : handleSubmit}
+            className="btn py-2 px-4 bg-green-700 text-[white] mt-1 rounded-lg"
+            onClick={editing ? handleUpdate : handleSubmit}
           >
-            {id ? "Update" : "Submit"}
+            {editing ? "Update" : "Submit"}
           </button>
         </div>
       </form>
