@@ -14,7 +14,6 @@ export const useInventory = () => {
           setLoading(true);
           try {
             const res = await axios.get(`${process.env.REACT_APP_LOCAL_SERVER_URL}/inventoryItems`);
-            console.log(res.data, inventory);
             setInventory(res.data);
           } catch (error) {
             setError(true)

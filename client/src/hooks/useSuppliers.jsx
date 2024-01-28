@@ -1,7 +1,9 @@
 import axios from "axios"
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
+import { StatusModalContext } from "../components/App/App"
 
 export const useSuppliers = () => {
+  const {statusData} = useContext(StatusModalContext)
     const [suppliers, setSuppliers] = useState({ suppliers: [] })
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState(false)
@@ -20,7 +22,7 @@ export const useSuppliers = () => {
           }
         }
         fetchSuppliers();
-    }, [])
+    }, [statusData])
     
     return {
         loading,

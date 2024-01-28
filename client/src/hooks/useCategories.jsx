@@ -7,7 +7,6 @@ export const useCategories = () => {
     const [error, setError] = useState(false)
 
     useEffect(() => {
-        console.log('Updating categories');
         const fetchCategories =async () => {
           setError(false);
           setLoading(true);
