@@ -60,7 +60,7 @@ class InventoryController extends Controller
         $res = $request->validate([
             'item_id' => 'unique:inventory',
             'item_name' => 'required|string',
-            'category_id' => 'required|string',
+            'category_id' => 'required',
             'unit_of_measurement_id' => 'required',
             'current_quantity' => 'nullable',
             'par_level' => 'nullable',
