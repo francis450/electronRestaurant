@@ -13,6 +13,6 @@ class IngredientsTableSeeder extends Seeder
      */
     public function run(): void
     {
-        Ingredient::factory()->count(1)->create();
+        Ingredient::factory()->count(5)->create();
     }
 }
