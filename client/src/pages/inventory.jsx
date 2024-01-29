@@ -1,7 +1,8 @@
 import { useContext, useState } from "react";
 import { AuthContext } from "../components/App/App";
 import Authenticated from "../reusables/layouts/AuthenticaedLayout";
-import Suppliers from "../components/Inventory/Suppliers";
+import Suppliers from "../components/Inventory/suppliers/Suppliers";
+import Items from "../components/Inventory/items/Items";
 
 const Inventory = () => {
   const { auth } = useContext(AuthContext);
@@ -30,7 +31,7 @@ const Inventory = () => {
           Suppliers
         </span>
       </div>
-      {tab === 1 && <></>}
+      {tab === 1 && <Items />}
       {tab === 2 && <Suppliers />}
     </Authenticated>
   );
