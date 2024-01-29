@@ -20,7 +20,6 @@ function createWindow() {
         if (res.ok) {
           loading = false;
           mainWindow.loadURL("http://localhost:3000");
-          console.log("ok - page loaded successfully");
         }
 
       })

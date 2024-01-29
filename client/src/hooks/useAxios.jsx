@@ -6,6 +6,29 @@ function useAxios(url) {
   const [error, setError] = useState();
   const [loading, setLoading] = useState(false);
 
+  const handleError = (setStatusData) => {
+    setError(error);
+    setLoading(false);
+    setStatusData((prev) => ({
+      ...prev,
+      status: true,
+      message: "Incorrect or duplicate values added!",
+      type: "error",
+    }));
+  }
+
+  // function to getData
+  const getData = async (url, setStatusData, setCallerData) => {
+    setLoading(true)
+    try {
+      await axios.get(url).then((res) => {
+        setCallerData(res.data)
+      })
+    } catch (error) {
+      handleError(setStatusData)
+    }
+  }
+
   // function to post data to the server
   const postData = async (url, body, setStatusData, callback) => {
     setLoading(true);
@@ -15,7 +38,9 @@ function useAxios(url) {
         setStatusData((prev) => ({
           ...prev,
           status: true,
-          message: response.data.message ? response.data.message : "Request was successful",
+          message: response.data.message
+            ? response.data.message
+            : "Request was successful",
           type: "success",
         }));
         callback(response.data);
@@ -31,26 +56,33 @@ function useAxios(url) {
       setLoading(false);
       return response;
     } catch (error) {
-      setError(error);
-      setLoading(false);
-      setStatusData((prev) => ({
-        ...prev,
-        status: true,
-        message: "Incorrect or duplicate values added!",
-        type: "error",
-      }));
+      handleError(setStatusData)
     }
   };
 
-  // function to get data from the server
-  const getData = async (url) => {
-    return await axios.get(url).then(res => setData(res.data))
+  // function to delete
+  const deleteData = async (url, setStatusData) => {
+    // delete data
+    setLoading(true);
+    try {
+      const response = await axios.delete(url);
+      setData(response.data);
+      setStatusData((prev) => ({
+        ...prev,
+        status: true,
+        message: response.data.message
+          ? response.data.message
+          : "Request was successful",
+        type: "success",
+      }));
+      setLoading(false);
+    } catch (error) {
+      handleError(setStatusData)
+    }
   };
-  
-  if (url) getData(url)
 
   // return the data, error, and loading states and the functions
-  return { data, error, loading, postData, getData };
+  return { data, error, loading, getData, postData, deleteData };
 }
 
 export default useAxios;
