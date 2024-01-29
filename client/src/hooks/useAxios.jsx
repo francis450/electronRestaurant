@@ -60,6 +60,37 @@ function useAxios(url) {
     }
   };
 
+    // function to post data to the server
+    const putData = async (url, body, setStatusData, callback) => {
+      setLoading(true);
+      try {
+        const response = await axios.put(url, body);
+        if (response.status >= 200 && response.status < 300) {
+          setStatusData((prev) => ({
+            ...prev,
+            status: true,
+            message: response.data.message
+              ? response.data.message
+              : "Request was successful",
+            type: "success",
+          }));
+          callback(response.data);
+        } else {
+          setStatusData((prev) => ({
+            ...prev,
+            status: true,
+            message: response.data.message,
+            type: "error",
+          }));
+        }
+        setData(response.data);
+        setLoading(false);
+        return response;
+      } catch (error) {
+        handleError(setStatusData)
+      }
+    };
+
   // function to delete
   const deleteData = async (url, setStatusData) => {
     // delete data
@@ -82,7 +113,7 @@ function useAxios(url) {
   };
 
   // return the data, error, and loading states and the functions
-  return { data, error, loading, getData, postData, deleteData };
+  return { data, error, loading, getData, postData, putData, deleteData };
 }
 
 export default useAxios;

@@ -14,7 +14,6 @@ const ItemModal = ({
   handleChange,
   handleSubmit,
   handleCustomSelectChange,
-  id = null,
   editing = false,
 }) => {
   const callback = () => {
@@ -26,13 +25,13 @@ const ItemModal = ({
   const [mappedSuppliers, setMappedSuppliers] = useState([]);
   const [mappedCategories, setMappedCategories] = useState([]);
   const [mappedUnitsOfMeasure, setMappedUnitsOfMeasure] = useState([]);
-  const { postData } = useAxios();
+  const { putData } = useAxios();
   const { setStatusData } = useContext(StatusModalContext);
 
   const handleUpdate = (e) => {
     e.preventDefault();
-    const url = `http://localhost:8000/api/editSupplier/${formData.id}`;
-    postData(url, formData, setStatusData, callback);
+    const url = `http://localhost:8000/api/category/${formData.id}`;
+    putData(url, formData, setStatusData, callback);
   };
 
   useEffect(() => {
@@ -205,9 +204,9 @@ const ItemModal = ({
         <div className="px-4 mt-1 flex justify-end">
           <button
             className="btn py-1 px-2 bg-green-700 text-[white] mt-1 rounded-lg"
-            onClick={formData.id ? handleUpdate : handleSubmit}
+            onClick={editing ? handleUpdate : handleSubmit}
           >
-            {id ? "Update" : "Submit"}
+            {editing ? "Update" : "Submit"}
           </button>
         </div>
       </form>
