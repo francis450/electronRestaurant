@@ -17,8 +17,8 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->decimal('price',8,2);
             $table->unsignedBigInteger('category_id')->constrained('categories');
-            $table->string('img_url')->nullable();
-            $table->enum('status', ['available','unavailable']);
+            $table->string('img')->nullable();
+            $table->boolean('is_available')->default(true);
             $table->text('note')->nullable();;
             $table->foreign('category_id')->references('id')->on('categories');
             $table->timestamps();
