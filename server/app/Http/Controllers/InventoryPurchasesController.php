@@ -15,18 +15,20 @@ class InventoryPurchasesController extends Controller
      */
     public function index()
     {
-        $receipts = InventoryPurchaseReceipt::all();
-        
-        $supplierIds = $receipts->pluck('supplier_id')->unique();
+        $receipts = InventoryPurchaseReceipt::select('id','receipt_number','supplier_id','date','total_cost','payment_method')
+                ->with(['supplier:id,contact_name','items:id,inventory_item_id,quantity,unit_price,subtotal'])
+                ->get();
 
-        $suppliers = Supplier::whereIn('id', $supplierIds)->get();
+        // $supplierIds = $receipts->pluck('supplier_id')->unique();
 
-        foreach ($receipts as $receipt) {
-            $receipt->supplier_name = $suppliers->where('id', $receipt->supplier_id)->first()->name;
-        }
+        // $suppliers = Supplier::whereIn('id', $supplierIds)->get();
+
+        // foreach ($receipts as $receipt) {
+        //     $receipt->supplier_name = $suppliers->where('id', $receipt->supplier_id)->first()->name;
+        // }
 
         return response()->json([
-            'receipts' => $receipts,
+            'data' => $receipts,
             'status' => 'success'
         ]);
     }
@@ -47,17 +49,10 @@ class InventoryPurchasesController extends Controller
         ]);
         
         // create the purchase receipt
-        $receipt = InventoryPurchaseReceipt::create($request->only('receipt_number', 'supplier_id', 'date', 'total_cost', 'payment_method'));
+        $receipt = InventoryPurchaseReceipt::create($request->all());
         $purchaseItems = array();
         
         foreach ($request->input('items', []) as $itemData) {
-            $request->validate([
-                'product_id' => 'required',
-                'quantity' => 'required',
-                'unit_price' => 'required'
-            ]);
-            
-
             // update inventory quantity
             $inventoryItem = Inventory::find($itemData['product_id']);                        
 
@@ -83,11 +78,9 @@ class InventoryPurchasesController extends Controller
         }
 
         return response()->json([
-            'receipt' => $receipt,
-            'no_of_items' => $receipt->items(),
-            'items' => json_encode($purchaseItems),
+            'data' => 'Item Added Successfully',
             'status' => 'success'
-        ], 200);
+        ], 201);
     }
 
     public function show(string $id)
