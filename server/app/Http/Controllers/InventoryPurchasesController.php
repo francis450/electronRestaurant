@@ -15,17 +15,21 @@ class InventoryPurchasesController extends Controller
      */
     public function index()
     {
-        $receipts = InventoryPurchaseReceipt::select('id','receipt_number','supplier_id','date','total_cost','payment_method')
-                ->with(['supplier:id,contact_name','items:id,inventory_item_id,quantity,unit_price,subtotal'])
-                ->get();
+        $receipts = InventoryPurchaseReceipt::all();
 
-        // $supplierIds = $receipts->pluck('supplier_id')->unique();
+        foreach ($receipts as $receipt) {
+            $supplier = Supplier::find($receipt->supplier_id);
+            $receipt->supplier_name = $supplier->name;
+        }
 
-        // $suppliers = Supplier::whereIn('id', $supplierIds)->get();
-
-        // foreach ($receipts as $receipt) {
-        //     $receipt->supplier_name = $suppliers->where('id', $receipt->supplier_id)->first()->name;
-        // }
+        foreach ($receipts as $receipt) {
+            $items = InventoryPurchaseItem::where('purchase_receipt_id', $receipt->id)->get();
+            foreach ($items as $item) {
+                $inventoryItem = Inventory::where('id', $item->inventory_item_id)->first();
+                $item->inventory_name = $inventoryItem->item_name;
+            }
+            $receipt->items = $items;
+        }
 
         return response()->json([
             'data' => $receipts,
@@ -86,7 +90,7 @@ class InventoryPurchasesController extends Controller
     public function show(string $id)
     {
         $receipt = InventoryPurchaseReceipt::find($id);
-        
+
         if(!$receipt){
             return response()->json([
                 "data" => "Receipt Not Found",
@@ -98,11 +102,17 @@ class InventoryPurchasesController extends Controller
 
         $receipt->supplier_name = $supplier->name;
 
-        if(!$receipt) {
-            return response()->json([
-                "data" => "Receipt Not Found"
-            ], 404);
+        // get items
+        $items = InventoryPurchaseItem::where('purchase_receipt_id', $receipt->id)->get();
+
+        // get items' names from inventory table
+        foreach ($items as $item) {
+            $inventoryItem = Inventory::where('id', $item->inventory_item_id)->first();
+            $item->item_name = $inventoryItem->item_name;
         }
+
+        // add items to the receipt body
+        $receipt->items = $items;
 
         return response()->json([
             'data' => $receipt,
