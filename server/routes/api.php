@@ -40,6 +40,7 @@ Route::controller(InventoryController::class)->group(function(){
     Route::post('/newInventoryItem', 'store1Item');
     Route::get('/inventoryItems', 'index');
     Route::get('/inventoryItem/{id}', 'show');
+    Route::put('/inventoryItem/{id}', 'update');
 });
 
 Route::controller(SuppliersController::class)->group(function(){
@@ -80,8 +81,8 @@ Route::controller(CategoriesController::class)->group(function(){
 });
 
 Route::controller(InventoryPurchasesController::class)->group(function(){
-    Route::get('/inventoryPurchases', 'index');
-    Route::get('/inventoryPurchase/{id}', 'show');
-    Route::post('/inventoryPurchase', 'store');
-    Route::delete('/inventoryPurchase/{id}', 'destroy');
+    Route::get('/purchases', 'index');
+    Route::get('/purchase/{id}', 'show');
+    Route::post('/purchase', 'store');
+    Route::delete('/purchase/{id}', 'destroy');
 });

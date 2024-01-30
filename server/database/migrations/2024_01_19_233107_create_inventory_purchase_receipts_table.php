@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('receipt_number')->unique();
             $table->unsignedBigInteger('supplier_id')->constrainted('suppliers', 'id');
-            $table->date('date')->default(now());
+            $table->date('date');
             $table->decimal('total_cost', 10, 2);
             $table->string('payment_method')->nullable();
             $table->text('notes')->nullable();
