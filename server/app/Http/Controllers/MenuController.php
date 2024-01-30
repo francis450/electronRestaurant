@@ -14,12 +14,19 @@ class MenuController extends Controller
      * Display a listing of the resource.
      */
     public function index()
-    {
-        //List all menu items available
-        $item = MenuItem::all();
+    {   
+        $items = MenuItem::select('id', 'name', 'description', 'price', 'is_available', 'img', 'category_id')
+            ->with(['category:id,name', 'ingredients:id,menu_item_id,inventory_item_id,quantity,cost'])
+            ->get();
+
+        foreach ($items as $item) {
+            foreach ($item->ingredients as $ingredient) {
+                $ingredient->ingredient_name = Inventory::find($ingredient->inventory_item_id)->item_name;
+            }
+        }
 
         return response()->json([
-            'items' => $item,
+            'data' => $items,
             'status' => 'success'
         ]);
     }
@@ -31,17 +38,34 @@ class MenuController extends Controller
     {
         $request->validate([
             'name' => 'required',
-            'description' => 'string',
-            'price' => 'decimal:2',
+            'price' => 'required|numeric',
             'category_id' => 'integer',
+        ], [
+            'name.required' => 'Name is required',
+            'price.decimal' => 'Price must be a number',
+            'category_id.integer' => 'Category ID must be an integer'
         ]);
 
-        $item = MenuItem::create($request->only(['name', 'description', "price", "category_id", "img_url", "status", 'note']));
+        $imageName = null;
+        if ($request->hasFile('image')) {
+            $request->validate([
+                'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            ]);
+
+            $imageName = time().'.'.$request->image->extension();  
+            $request->image->move(public_path('images'), $imageName);
+            $imageName = '/images/'.$imageName;
+
+            $request->merge([
+                'img' => $imageName
+            ]);
+        }
+
+        $item = MenuItem::create($request->only(['name', 'description', "price", "category_id", "img", "is_available", 'note']));
 
         $menuItems = array();
         $errs = array();
         foreach ($request->input('ingredients', []) as $ingredient) {
-            // find the item in the inventory
             $inventoryItem = Inventory::find($ingredient['inventory_item_id']);
 
             if (!$inventoryItem) {
@@ -53,7 +77,7 @@ class MenuController extends Controller
                 'inventory_item_id' => $ingredient['inventory_item_id'],
                 'menu_item_id' => $item->id,
                 'quantity' => $ingredient['quantity'],
-                'cost' => $item->price/$ingredient['quantity']
+                'cost' => $item->price/$ingredient['quantity']  
             ]);
 
             $menuItems[] = $newIngredient;
@@ -65,8 +89,7 @@ class MenuController extends Controller
             ]);
         }
         return response()->json([
-            'Menu item' => $item,
-            'Ingredients' => $menuItems,
+            'data' => 'Menu Item created successfully',
             'status' => 'success'
         ],201);
     }
@@ -76,19 +99,21 @@ class MenuController extends Controller
      */
     public function show(string $id)
     {
-        $item = MenuItem::find($id);
-
+        // get the menu item with the specified id and return it with its category and ingredients and their inventory item names as well
+        $item = MenuItem::select('id', 'name', 'description', 'price', 'is_available', 'img', 'category_id')
+            ->with(['category:id,name', 'ingredients:id,menu_item_id,inventory_item_id,quantity,cost'])
+            ->find($id);        
+        
         if (!$item) {
             return response()->json(['message' => 'Menu Item Not Found'], 404);
         }
-        
-        // $itsIngredients = DB::statement("SELECT * FROM ingredients WHERE menu_item_id = '$item->id'");
 
-        $allIngredients = DB::table('ingredients')->where('menu_item_id', $item->id)->get()->all();
+        foreach ($item->ingredients as $ingredient) {
+            $ingredient->ingredient_name = Inventory::find($ingredient->inventory_item_id)->item_name;
+        }
         
         return response()->json([
-            'menu_item' => $item,
-            'ingredients' => $allIngredients,
+            'data' => $item,
             'status' => 'success'
         ], 200);
     }
@@ -108,8 +133,7 @@ class MenuController extends Controller
         $item->update($request->all());
 
         return response()->json([
-            'item' => $item,
-            'message' => 'Updated successfully',
+            'data' => 'Updated successfully',
             'status' => 'success'
         ], 200);
     }
@@ -128,7 +152,8 @@ class MenuController extends Controller
         $item->delete();
 
         return response()->json([
-            'message' => "Item Deleted Successfull"
+            'data' => "Item Deleted Successfull",
+            'status' => 'success'
         ], 200);
     }
 }
