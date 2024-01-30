@@ -14,12 +14,17 @@ class MenuItem extends Model
         'description',
         'price',
         'category_id',
-        'img_url',
-        'status',
+        'img',
+        'is_available',
         'note',
     ];
 
     public function category() {
-        return $this->belongsTo(Category::class, 'id');
+        return $this->belongsTo(Category::class, 'category_id');
+    }
+
+    public function ingredients()
+    {
+        return $this->hasMany(Ingredient::class, 'menu_item_id');
     }
 }
