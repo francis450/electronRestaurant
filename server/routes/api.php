@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\InventoryController;
+use App\Http\Controllers\InventoryPurchasesController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\RegController;
 use App\Http\Controllers\SuppliersController;
@@ -76,4 +77,11 @@ Route::controller(CategoriesController::class)->group(function(){
     Route::post('/category', 'store');
     Route::delete('/category/{id}', 'destroy');
     Route::put('/category/{id}', 'update');
+});
+
+Route::controller(InventoryPurchasesController::class)->group(function(){
+    Route::get('/inventoryPurchases', 'index');
+    Route::get('/inventoryPurchase/{id}', 'show');
+    Route::post('/inventoryPurchase', 'store');
+    Route::delete('/inventoryPurchase/{id}', 'destroy');
 });
