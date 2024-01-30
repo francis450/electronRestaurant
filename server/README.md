@@ -320,7 +320,7 @@ This API serves as the core engine for managing menus, inventory, orders, and mo
               "supplier_id": "2",
               "date": "2024-01-30",
               "total_cost": 1540,
-              "payment_method": "",
+              "payment_method": "cash", // cash, bank, debit
               "items": [
                 {
                   "product_id": "1",
