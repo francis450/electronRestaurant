@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
-
 import useAxios from "../../../hooks/useAxios";
 import ReactDataGrid from "@inovua/reactdatagrid-community";
 import "@inovua/reactdatagrid-community/index.css";
 import SupplierModal from "./SupplierModal";
+import { Pencil, Trash } from "../../../reusables/svgs/svgs";
 
 export const Table = ({
   children,
@@ -12,10 +12,11 @@ export const Table = ({
   setIsSupplierFormModalOpen,
   setStatusData,
 }) => {
+  const { deleteData } = useAxios();
   const [currentPage, setCurrentPage] = useState(2);
   const [suppliers, setSuppliers] = useState([]);
-  const { deleteData } = useAxios();
-  const [supplierData, setSuppliertData] = useState({
+  const [filteredSuppliers, setFilteredSuppliers] = useState([]);
+  const [supplierData, setSupplierData] = useState({
     id: "",
     name: "",
     contact_name: "",
@@ -26,16 +27,14 @@ export const Table = ({
     customer_unit_serial_number: "",
   });
 
-  const [filteredSuppliers, setFilteredSuppliers] = useState([]);
-
   const handleChangeEditChange = (e) => {
-    setSuppliertData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    setSupplierData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
   const closeModal = () => setIsSupplierFormModalOpen(false);
   const openModal = (supplier) => {
     setIsSupplierFormModalOpen(true);
-    setSuppliertData((prev) => ({ ...prev, ...supplier }));
+    setSupplierData((prev) => ({ ...prev, ...supplier }));
   };
 
   const handleClickView = (item) => {
@@ -70,18 +69,20 @@ export const Table = ({
 
   const renderActions = ({ data }) => {
     return (
-      <div className="table_cell flex gap-2 justify-center">
+      <div className="table_cell flex gap-4 justify-center">
         <button
-          className="bg-green-700 py-0.25 px-3 rounded-md text-white"
+          className="bg-yellow-500 py-0.25 px-2 rounded-md flex items-center gap-1 pr-1 text-[#222]"
           onClick={() => handleClickView(data)}
         >
-          View
+          Edit
+          <Pencil className="w-4 h-4" />
         </button>
         <button
-          className="bg-red-700 py-0.25 px-3 rounded-md text-white"
+          className="bg-red-700 py-0.25 px-2 rounded-md text-white flex gap-1 items-center pr-1"
           onClick={() => deleteSupplier(data)}
         >
           Delete
+          <Trash className="w-4 h-4" />
         </button>
       </div>
     );
@@ -89,7 +90,7 @@ export const Table = ({
 
   useEffect(() => {
     setSuppliers(data.suppliers);
-    setFilteredSuppliers(data.suppliers);
+    setFilteredSuppliers(data.suppliers.map((supplier, index) => ({ ...supplier, index: index + 1 })));
   }, [data]);
 
   return (
@@ -114,14 +115,16 @@ export const Table = ({
         )}
       </div>
       <ReactDataGrid
+        style={{fontSize: '1.0rem'}}
         onReady={setGridRef}
         idProperty="id"
         columns={[
+          { name: "index", header: "No.", defaultWidth: 80 },
           { name: "name", header: "Company Name", defaultFlex: 1 },
           { name: "contact_name", header: "Contact Name", defaultFlex: 1 },
           { name: "email", header: "Email", defaultFlex: 1 },
           { name: "phone_number", header: "Phone Number", defaultFlex: 1 },
-          { name: "actions", header: "Actions", render: renderActions },
+          { name: "actions", header: "Actions", minWidth: 200, render: renderActions },
         ]}
         dataSource={filteredSuppliers || []}
         pagination
@@ -162,7 +165,7 @@ export const Table = ({
         onPaginationChange={({ page }) => {
           setCurrentPage(page);
         }}
-        className="h-[50.10vh]"
+        className="h-[50.15vh] text-xl"
       />
     </>
   );

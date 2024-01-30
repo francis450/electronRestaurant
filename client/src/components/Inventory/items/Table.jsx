@@ -1,44 +1,42 @@
 import React, { useEffect, useRef, useState } from "react";
 import ItemModal from "./ItemModal";
 import useAxios from "../../../hooks/useAxios";
-import ReactDataGrid from '@inovua/reactdatagrid-community'
-import '@inovua/reactdatagrid-community/index.css'
+import ReactDataGrid from "@inovua/reactdatagrid-community";
+import "@inovua/reactdatagrid-community/index.css";
+import { Pencil, Trash } from "../../../reusables/svgs/svgs";
 
-export const Table = ({ children, data, isSupplierModalOpen, setIsSupplierFormModalOpen, setStatusData }) => {
-  const [currentPage, setCurrentPage] = useState(2);
-  const [suppliers, setSuppliers] = useState([]);
+export const Table = ({
+  children,
+  data,
+  isSupplierModalOpen,
+  setIsSupplierFormModalOpen,
+  setStatusData,
+}) => {
   const { deleteData } = useAxios();
-  const [supplierData, setSuppliertData] = useState({
-    id: "",
-    name: "",
-    contact_name: "",
-    email: "",
-    phone_number: "",
-    address: "",
-    kra_pin: "",
-    customer_unit_serial_number: "",
-  });
-  
-
-  const [filteredSuppliers, setFilteredSuppliers] = useState([]);
+  const [currentPage, setCurrentPage] = useState(2);
+  const [inventoryItems, setInventoryItems] = useState([]);
+  const [inventoryItemsData, setInventoryItemsData] = useState({});
+  const [filteredInventoryItems, setFilteredInventoryItems] = useState([]);
 
   const handleChangeEditChange = (e) => {
-    setSuppliertData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    setInventoryItemsData((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
   };
 
-
   const handleCustomSelectChange = (e, name) => {
-    setSuppliertData((prev) => ({ ...prev, [name]: e.value}))
-  }
+    setInventoryItemsData((prev) => ({ ...prev, [name]: e.value }));
+  };
 
   const closeModal = () => setIsSupplierFormModalOpen(false);
   const openModal = (supplier) => {
     setIsSupplierFormModalOpen(true);
-    setSuppliertData((prev) => ({ ...prev, ...supplier }));
+    setInventoryItemsData((prev) => ({ ...prev, ...supplier }));
   };
 
   const handleClickView = (item) => {
-    openModal(item)
+    openModal(item);
   };
 
   const deleteSupplier = (supplier) => {
@@ -48,7 +46,7 @@ export const Table = ({ children, data, isSupplierModalOpen, setIsSupplierFormMo
     );
   };
 
-  const [searchText, setSearchText] = useState('');
+  const [searchText, setSearchText] = useState("");
   const [gridRef, setGridRef] = useState(null);
   const searchTextRef = useRef(searchText);
   searchTextRef.current = searchText;
@@ -57,86 +55,112 @@ export const Table = ({ children, data, isSupplierModalOpen, setIsSupplierFormMo
     const visibleColumns = gridRef.current.visibleColumns;
     setSearchText(value);
 
-    const newDataSource = suppliers.filter(p => {
+    const newDataSource = inventoryItems.filter((p) => {
       return visibleColumns.reduce((acc, col) => {
-        const v = (p[col.id] + '').toLowerCase() // get string value
-        return acc || v.indexOf(value.toLowerCase()) !== -1 // make the search case insensitive
-      }, false)
+        const v = (p[col.id] + "").toLowerCase(); // get string value
+        return acc || v.indexOf(value.toLowerCase()) !== -1; // make the search case insensitive
+      }, false);
     });
 
-    setFilteredSuppliers(newDataSource);
-  }
+    setFilteredInventoryItems(newDataSource.map((item, index) => ({ ...item, index: index + 1 })));
+  };
 
   const renderActions = ({ data }) => {
     return (
-      <div className="table_cell flex gap-2 justify-center">
+      <div className="table_cell flex gap-4 justify-center">
         <button
-          className="bg-green-700 py-0.25 px-3 rounded-md text-white"
+          className="bg-yellow-500 py-0.25 px-2 rounded-md flex items-center gap-1 pr-1 text-[#222]"
           onClick={() => handleClickView(data)}
         >
-          View
+          Edit
+          <Pencil className="w-4 h-4" />
         </button>
         <button
-          className="bg-red-700 py-0.25 px-3 rounded-md text-white"
+          className="bg-red-700 py-0.25 px-2 rounded-md text-white flex gap-1 items-center pr-1"
           onClick={() => deleteSupplier(data)}
         >
           Delete
+          <Trash className="w-4 h-4" />
         </button>
       </div>
     );
   };
 
   useEffect(() => {
-    setSuppliers(data.Items);
-    setFilteredSuppliers(data.Items);
+    setInventoryItems(data.Items);
+    setFilteredInventoryItems(data.Items?.map((item, index) => ({ ...item, index: index + 1 })));
   }, [data]);
 
   return (
     <>
-    <div className="flex justify-between items-center  mt-3 mb-1">
-        <label><input value={searchText} onChange={onSearchChange} className="py-1 border-none focus:outline-none text-[#222] rounded-md px-2" placeholder="search ..."/></label>
+      <div className="flex justify-between items-center  mt-3 mb-1">
+        <label>
+          <input
+            value={searchText}
+            onChange={onSearchChange}
+            className="py-1 border-none focus:outline-none text-[#222] rounded-md px-2"
+            placeholder="search ..."
+          />
+        </label>
         {children}
         {isSupplierModalOpen && (
-        <ItemModal
-          formData={supplierData}
-          handleChange={handleChangeEditChange}
-          closeModal={closeModal}
-          handleCustomSelectChange={handleCustomSelectChange}
-          editing={true}
-        />
-      )}
+          <ItemModal
+            formData={inventoryItemsData}
+            handleChange={handleChangeEditChange}
+            closeModal={closeModal}
+            handleCustomSelectChange={handleCustomSelectChange}
+            editing={true}
+          />
+        )}
       </div>
-    <ReactDataGrid
+      <ReactDataGrid
+        style={{fontSize: '1.0rem'}}
         onReady={setGridRef}
         idProperty="id"
         columns={[
-          { name: 'id', header: 'ID', defaultVisible: false },
-          { name: 'item_name', header: 'Item Name', defaultFlex: 1, minWidth: 150 },
-          { name: 'category_name', header: 'Category', defaultFlex: 1, minWidth: 150 },
-          { name: 'supplier_name', header: 'Supplier', defaultFlex: 1, minWidth: 300 },
-          { name: 'unit_of_measurement_id', header: 'Units of Measurement' },
-          { name: 'par_level', header: 'Par Level' },
-          { name: 'reorder_point', header: 'Reorder Point' },
-          { name: 'expiration_date', header: 'Expiry Date' },
-          { name: 'actions', header: 'Actions', render: renderActions}
+          { name: "index", header: "No.", defaultWidth: 80 },
+          { name: "id", header: "ID", defaultVisible: false },
+          {
+            name: "item_name",
+            header: "Item Name",
+            defaultFlex: 1,
+            minWidth: 150,
+          },
+          {
+            name: "category_name",
+            header: "Category",
+            defaultFlex: 1,
+            minWidth: 150,
+          },
+          {
+            name: "supplier_name",
+            header: "Supplier",
+            defaultFlex: 1,
+            minWidth: 300,
+          },
+          { name: "unit_of_measurement_id", header: "Units of Measurement" },
+          { name: "par_level", header: "Par Level" },
+          { name: "reorder_point", header: "Reorder Point" },
+          { name: "expiration_date", header: "Expiry Date" },
+          { name: "actions", header: "Actions", minWidth: 200, render: renderActions },
         ]}
-        dataSource={filteredSuppliers || []}
+        dataSource={filteredInventoryItems || []}
         pagination
         defaultLimit={10}
         paginationShowPageSizeSelector
         paginationPageSizeOptions={[5, 10, 20, 50, 100]}
         paginationToolbarProps={{
           style: {
-            border: 'none',
+            border: "none",
             borderRadius: 0,
-            borderBottom: '1px solid rgba(0,0,0,.1)',
+            borderBottom: "1px solid rgba(0,0,0,.1)",
           },
         }}
         paginationProps={{
           style: {
-            border: 'none',
+            border: "none",
             borderRadius: 0,
-            borderTop: '1px solid rgba(0,0,0,.1)',
+            borderTop: "1px solid rgba(0,0,0,.1)",
           },
         }}
         paginationShowPages
@@ -145,22 +169,22 @@ export const Table = ({ children, data, isSupplierModalOpen, setIsSupplierFormMo
         paginationPrev={<span>Prev</span>}
         paginationPageInputProps={{
           style: {
-            border: 'none',
+            border: "none",
             borderRadius: 0,
-            borderBottom: '1px solid rgba(0,0,0,.1)',
+            borderBottom: "1px solid rgba(0,0,0,.1)",
           },
         }}
         paginationShowPagesToolbar
         paginationShowSizeChanger
         paginationShowTotal
-        paginationTotal={<span>Rows: {filteredSuppliers?.length}</span>}
+        paginationTotal={<span>Rows: {filteredInventoryItems?.length}</span>}
         paginationRowsPerPageOptions={[5, 10, 20, 50, 100]}
         paginationCurrentPage={currentPage}
         onPaginationChange={({ page }) => {
           setCurrentPage(page);
         }}
-        className="h-[50.10vh]"
-     />
-</>
+        className="h-[50.15vh] text-xl"
+      />
+    </>
   );
 };

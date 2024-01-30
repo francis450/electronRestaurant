@@ -1,8 +1,9 @@
 import React, { useContext, useState } from "react";
 import useAxios from "../../../hooks/useAxios";
 import { StatusModalContext } from "../../App/App";
-import { SuppliersTable } from "./SuppliersTable";
+import { TableContainer } from "./TableContainer";
 import SupplierModal from "./SupplierModal";
+import { Plus } from "../../../reusables/svgs/svgs";
 
 const Suppliers = () => {
   const { postData } = useAxios();
@@ -51,12 +52,13 @@ const Suppliers = () => {
   return (
     <>
       <section className="suppliers-table-section">
-        <SuppliersTable>
+        <TableContainer>
         <button
-            className="btn py-1 px-3 bg-red-200 text-[#222] mt-2 rounded-md"
+            className="btn py-1 px-3 bg-red-200 text-[#222] mt-2 rounded-md flex gap-1"
             onClick={() => openModal()}
           >
             Add Supplier
+            <Plus />
           </button>
           {isSupplierModalOpen && (
           <SupplierModal
@@ -66,7 +68,7 @@ const Suppliers = () => {
             handleSubmit={handleSubmit}
           />
         )}
-        </SuppliersTable>
+        </TableContainer>
       </section>
     </>
   );

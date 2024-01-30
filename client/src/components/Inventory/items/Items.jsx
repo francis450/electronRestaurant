@@ -2,7 +2,8 @@ import React, { useContext, useState } from "react";
 import useAxios from "../../../hooks/useAxios";
 import { StatusModalContext } from "../../App/App";
 import ItemModal from "./ItemModal";
-import ItemTable from "./ItemsTable";
+import TableContainer from "./TableContainer";
+import { Plus } from "../../../reusables/svgs/svgs";
 
 const Items = () => {
   const { postData } = useAxios();
@@ -61,12 +62,13 @@ const Items = () => {
   return (
     <>
       <section className="Items-table-section">
-        <ItemTable statusData={statusData}>
+        <TableContainer statusData={statusData}>
           <button
-              className="btn py-1 px-3 bg-red-200 text-[#222] rounded-md"
+              className="btn py-1 px-3 bg-red-200 text-[#222] rounded-md flex gap-1"
               onClick={() => openModal()}
             >
             Add Item
+            <Plus />
           </button>
           {isItemModalOpen && (
           <ItemModal
@@ -77,7 +79,7 @@ const Items = () => {
             handleCustomSelectChange={handleCustomSelectChange}
           />
         )}
-        </ItemTable>
+        </TableContainer>
       </section>
     </>
   );

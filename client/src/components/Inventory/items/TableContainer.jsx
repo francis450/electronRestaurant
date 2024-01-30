@@ -1,16 +1,12 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { useInventory } from "../../../hooks/useInventory";
 import { Table } from "./Table";
 import { StatusModalContext } from "../../App/App";
 
-const ItemTable = ({ children }) => {
+const TableContainer = ({ children }) => {
   const { inventory } = useInventory();
   const { statusData, setStatusData } = useContext(StatusModalContext);
   const [isSupplierModalOpen, setIsSupplierFormModalOpen] = useState(false);
-
-  useEffect(() => {
-    console.log("reloading inventory items");
-  }, [statusData]);
 
   return (
     <div className="w-full overflow-x-auto suppliers-table-div">
@@ -27,4 +23,4 @@ const ItemTable = ({ children }) => {
   );
 };
 
-export default ItemTable;
+export default TableContainer;
