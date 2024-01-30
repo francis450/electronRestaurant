@@ -7,6 +7,7 @@ use App\Models\Inventory;
 use App\Models\Supplier;
 use App\Models\UnitsOfMeasurement;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class InventoryController extends Controller
 {
@@ -56,7 +57,7 @@ class InventoryController extends Controller
     }
 
     public function store1Item(Request $request)
-    {   
+    {
         $res = $request->validate([
             'item_id' => 'unique:inventory',
             'item_name' => 'required|string',
@@ -84,13 +85,66 @@ class InventoryController extends Controller
         return response()->json(['data' => $item], 201, $res);
     }
 
-    public function storeBulk(Request $request){
-        // bulk validation
+    public function storeBulk(Request $request)
+    {
+        // Validate the bulk data
+        $bulkData = $request->validate([
+            '*.item_id' => 'unique:inventory,item_id', // unique validation for each item_id
+            '*.item_name' => 'required|string',
+            '*.category_id' => 'required',
+            '*.unit_of_measurement_id' => 'required',
+            '*.current_quantity' => 'nullable',
+            '*.par_level' => 'nullable',
+            '*.reorder_point' => 'nullable',
+            '*.supplier' => 'nullable',
+            '*.cost_per_unit' => 'nullable',
+        ]);
 
-        // bulk insertion
+        // Start a database transaction
+        DB::beginTransaction();
 
-        // response
+        try {
+            // Perform bulk insertion
+            $items = [];
+            foreach ($bulkData as $data) {
+                $items[] = Inventory::create($data);
+            }
+
+            // Commit the transaction
+            DB::commit();
+
+            // Return a JSON response with the inserted items
+            return response()->json(['data' => $items], 201);
+        } catch (\Exception $e) {
+            // Rollback the transaction in case of an error
+            DB::rollback();
+
+            // Return an error response
+            return response()->json(['error' => 'Bulk insertion failed'], 500);
+        }
     }
 
-    
+    public function update(Request $request, $id)
+    {
+        $validatedData = $request->validate([
+            'item_name' => 'required|string',
+            'category_id' => 'required',
+            'unit_of_measurement_id' => 'required',
+            'current_quantity' => 'nullable',
+            'par_level' => 'nullable',
+            'reorder_point' => 'nullable',
+            'supplier' => 'nullable',
+            'cost_per_unit' => 'nullable',
+        ]);
+
+        $item = Inventory::find($id);
+
+        if (!$item) {
+            return response()->json(['error' => 'Item not found'], 404);
+        }
+
+        $item->update($validatedData);
+
+        return response()->json(['data' => $item], 200);
+    }
 }
