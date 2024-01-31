@@ -20,7 +20,12 @@ const CustomSelect = ({
   value,
   options = defaultOptions,
   handleChange,
+  placeholder = "Select ...",
   editing,
+  styles = {
+    optionStyles: {},
+    controlStyles: {}
+  }
 }) => {
   const [selected, setSelected] = useState(null);
 
@@ -31,22 +36,39 @@ const CustomSelect = ({
         textAlign: "left",
         color: state.isSelected ? "#212529" : "#222",
         backgroundColor: state.isSelected ? "#a0a0a0" : "#D9D9D9",
+        ...styles.optionStyles
       };
     },
+    control: (provided, state) => ({
+      ...provided,
+      background: '#D9D9D9',
+      borderColor: '#9e9e9e',
+      minHeight: '34px',
+      height: '34px',
+      textAlign: "left",
+      borderRadius: "0.375rem",
+      border: "none",
+      boxShadow: "none",
+      ...styles.controlStyles
+    }),
 
-    control: (defaultStyles, state) => {
-      return {
-        ...defaultStyles,
-        color: state.hasValue ? "#000" : "#212529",
-        backgroundColor: "#D9D9D9",
-        borderRadius: "0.375rem",
-        borderColor: "#D9D9D9",
-        textAlign: "left",
-        border: "none",
-        boxShadow: "none",
-      };
-    },
-    singleValue: (defaultStyles) => ({ ...defaultStyles, color: "#453" }),
+    valueContainer: (provided, state) => ({
+      ...provided,
+      height: '34px',
+      padding: '0 6px'
+    }),
+
+    input: (provided, state) => ({
+      ...provided,
+      margin: '0px',
+    }),
+    indicatorSeparator: state => ({
+      display: 'none',
+    }),
+    indicatorsContainer: (provided, state) => ({
+      ...provided,
+      height: '34px',
+    }),
   };
 
   useEffect(() => {
@@ -67,6 +89,7 @@ const CustomSelect = ({
           value={selected}
           styles={customStyles}
           onChange={(e) => handleChange(e, name)}
+          placeholder={placeholder}
         />
       ) : (
         <Select
@@ -74,6 +97,7 @@ const CustomSelect = ({
           options={options}
           styles={customStyles}
           onChange={(e) => handleChange(e, name)}
+          placeholder={placeholder}
         />
       )}
     </div>
