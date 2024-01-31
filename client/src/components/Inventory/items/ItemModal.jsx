@@ -30,8 +30,20 @@ const ItemModal = ({
 
   const handleUpdate = (e) => {
     e.preventDefault();
-    const url = `http://localhost:8000/api/category/${formData.id}`;
-    putData(url, formData, setStatusData, callback);
+    const url = `http://localhost:8000/api/inventoryItem/${formData.id}`;
+    putData(
+      url,
+      {
+        item_name: formData.item_name,
+        category_id: formData.category_id,
+        par_level: formData.par_level,
+        reorder_point: formData.reorder_point,
+        supplier: formData.supplier,
+        unit_of_measurement_id: formData.unit_of_measurement_id,
+      },
+      setStatusData,
+      callback
+    );
   };
 
   useEffect(() => {
