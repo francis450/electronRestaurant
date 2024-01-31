@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import useAxios from "../../../hooks/useAxios";
 import ReactDataGrid from "@inovua/reactdatagrid-community";
 import "@inovua/reactdatagrid-community/index.css";
-import { Pencil } from "../../../reusables/svgs/svgs";
+import {  Visit } from "../../../reusables/svgs/svgs";
 import PurchaseItemsModal from "./PurchaseItemsModal";
 
 export const Table = ({
@@ -70,7 +70,7 @@ export const Table = ({
           onClick={() => handleClickView(data)}
         >
           View
-          <Pencil className="w-4 h-4" />
+          <Visit className="w-5 h-5" />
         </button>
       </div>
     );

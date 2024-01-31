@@ -4,6 +4,7 @@ import CustomSelect from "../../../reusables/forms/select";
 import { useInventory } from "../../../hooks/useInventory";
 import useAxios from "../../../hooks/useAxios";
 import { StatusModalContext } from "../../App/App";
+import { ArrowLeft, Plus, ReceiptIcon, Trash } from "../../../reusables/svgs/svgs";
 
 const AddReceipt = ({ setIsAddReceiptSection, editing = false }) => {
   const { suppliers } = useSuppliers();
@@ -199,12 +200,14 @@ const AddReceipt = ({ setIsAddReceiptSection, editing = false }) => {
                 />
               </td>
               <td className="border border-gray-300">
+                <div className="flex justify-center">
                 <button
                   onClick={() => handleRemoveRow(purchase.id)}
-                  className="bg-red-500 text-white px-3 py-1 rounded-md"
+                  className="bg-red-500 text-sm text-white px-3 py-0.5 rounded-md flex items-center gap-1"
                 >
-                  Remove
+                  Remove <Trash className="w-4 h-4" />
                 </button>
+                </div>
               </td>
             </tr>
           ))}
@@ -213,21 +216,21 @@ const AddReceipt = ({ setIsAddReceiptSection, editing = false }) => {
       <div className="flex justify-end gap-3">
         <button
           onClick={() => setIsAddReceiptSection(false)}
-          className="mt-3 bg-[#61dafb] text-[#222] py-1 px-3 rounded-md"
+          className="mt-3 bg-[#61dafb] text-[#222] py-1 px-3 rounded-md flex items-center gap-1"
         >
-          Go Back
+          <ArrowLeft className="w-4 h-4" /> Go Back
         </button>
         <button
           onClick={handleAddRow}
-          className="mt-3 bg-orange-300 text-[#222] py-1 px-3 rounded-md"
+          className="mt-3 bg-orange-300 text-[#222] py-1 px-3 rounded-md flex items-center gap-1"
         >
-          Add Row
+          <Plus className="w-4 h-4" /> Add Row 
         </button>
         <button
           onClick={handleSubmit}
-          className="mt-3 bg-green-700 text-[#fff] py-1 px-3 rounded-md"
+          className="mt-3 bg-green-700 text-[#fff] py-1 px-3 rounded-md flex items-center gap-1"
         >
-          Add Receipt
+         <ReceiptIcon /> Add Receipt
         </button>
       </div>
     </div>
