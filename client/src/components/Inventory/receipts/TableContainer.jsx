@@ -1,22 +1,21 @@
 import React, { useContext, useState } from "react";
-import { useInventory } from "../../../hooks/useInventory";
 import { Table } from "./Table";
 import { StatusModalContext } from "../../App/App";
+import { useReceipts } from "../../../hooks/useReceipts";
 
 const TableContainer = ({ children }) => {
-  const { inventory } = useInventory();
+  const { receipts } = useReceipts();
   const { statusData, setStatusData } = useContext(StatusModalContext);
-  const [isInventoryItemModalOpen, setIsInventoryItemFormModalOpen] =
-    useState(false);
+  const [isSupplierModalOpen, setIsSupplierFormModalOpen] = useState(false);
 
   return (
     <div className="w-full overflow-x-auto suppliers-table-div">
       <Table
-        data={inventory}
+        data={receipts}
         statusData={statusData}
         setStatusData={setStatusData}
-        isInventoryItemModalOpen={isInventoryItemModalOpen}
-        setIsInventoryItemFormModalOpen={setIsInventoryItemFormModalOpen}
+        isSupplierModalOpen={isSupplierModalOpen}
+        setIsSupplierFormModalOpen={setIsSupplierFormModalOpen}
       >
         {children}
       </Table>

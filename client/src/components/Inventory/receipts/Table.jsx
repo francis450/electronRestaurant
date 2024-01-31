@@ -1,47 +1,44 @@
 import React, { useEffect, useRef, useState } from "react";
-import ItemModal from "./ItemModal";
 import useAxios from "../../../hooks/useAxios";
 import ReactDataGrid from "@inovua/reactdatagrid-community";
 import "@inovua/reactdatagrid-community/index.css";
-import { Pencil, Trash } from "../../../reusables/svgs/svgs";
+import {  Visit } from "../../../reusables/svgs/svgs";
+import PurchaseItemsModal from "./PurchaseItemsModal";
 
 export const Table = ({
   children,
   data,
-  isInventoryItemModalOpen,
-  setIsInventoryItemFormModalOpen,
+  isSupplierModalOpen,
+  setIsSupplierFormModalOpen,
   setStatusData,
 }) => {
   const { deleteData } = useAxios();
   const [currentPage, setCurrentPage] = useState(2);
-  const [inventoryItems, setInventoryItems] = useState([]);
-  const [inventoryItemsData, setInventoryItemsData] = useState({});
-  const [filteredInventoryItems, setFilteredInventoryItems] = useState([]);
+  const [suppliers, setSuppliers] = useState([]);
+  const [filteredSuppliers, setFilteredSuppliers] = useState([]);
+  const [supplierData, setSupplierData] = useState({});
 
   const handleChangeEditChange = (e) => {
-    setInventoryItemsData((prev) => ({
+    setSupplierData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  };
+
+  const closeModal = () => setIsSupplierFormModalOpen(false);
+  const openModal = (supplier) => {
+    setIsSupplierFormModalOpen(true);
+    setSupplierData((prev) => ({
       ...prev,
-      [e.target.name]: e.target.value,
+      items: supplier.items,
+      receipt_number: supplier.receipt_number,
     }));
-  };
-
-  const handleCustomSelectChange = (e, name) => {
-    setInventoryItemsData((prev) => ({ ...prev, [name]: e.value }));
-  };
-
-  const closeModal = () => setIsInventoryItemFormModalOpen(false);
-  const openModal = (inventoryItem) => {
-    setIsInventoryItemFormModalOpen(true);
-    setInventoryItemsData((prev) => ({ ...prev, ...inventoryItem }));
   };
 
   const handleClickView = (item) => {
     openModal(item);
   };
 
-  const deleteInventoryItem = (inventoryItem) => {
+  const deleteSupplier = (supplier) => {
     deleteData(
-      `${process.env.REACT_APP_LOCAL_SERVER_URL}/inventoryItem/${inventoryItem.id}`,
+      `http://localhost:8000/api/supplier/${supplier.id}`,
       setStatusData
     );
   };
@@ -55,16 +52,14 @@ export const Table = ({
     const visibleColumns = gridRef.current.visibleColumns;
     setSearchText(value);
 
-    const newDataSource = inventoryItems.filter((p) => {
+    const newDataSource = suppliers.filter((p) => {
       return visibleColumns.reduce((acc, col) => {
         const v = (p[col.id] + "").toLowerCase(); // get string value
         return acc || v.indexOf(value.toLowerCase()) !== -1; // make the search case insensitive
       }, false);
     });
 
-    setFilteredInventoryItems(
-      newDataSource.map((item, index) => ({ ...item, index: index + 1 }))
-    );
+    setFilteredSuppliers(newDataSource);
   };
 
   const renderActions = ({ data }) => {
@@ -74,25 +69,16 @@ export const Table = ({
           className="bg-yellow-500 py-0.25 px-2 rounded-md flex items-center gap-1 pr-1 text-[#222]"
           onClick={() => handleClickView(data)}
         >
-          Edit
-          <Pencil className="w-4 h-4" />
-        </button>
-        <button
-          className="bg-red-700 py-0.25 px-2 rounded-md text-white flex gap-1 items-center pr-1"
-          onClick={() => deleteInventoryItem(data)}
-        >
-          Delete
-          <Trash className="w-4 h-4" />
+          View
+          <Visit className="w-5 h-5" />
         </button>
       </div>
     );
   };
 
   useEffect(() => {
-    setInventoryItems(data.Items);
-    setFilteredInventoryItems(
-      data.Items?.map((item, index) => ({ ...item, index: index + 1 }))
-    );
+    setSuppliers(data.data);
+    setFilteredSuppliers(data.data);
   }, [data]);
 
   return (
@@ -107,12 +93,11 @@ export const Table = ({
           />
         </label>
         {children}
-        {isInventoryItemModalOpen && (
-          <ItemModal
-            formData={inventoryItemsData}
+        {isSupplierModalOpen && (
+          <PurchaseItemsModal
+            items={supplierData}
             handleChange={handleChangeEditChange}
             closeModal={closeModal}
-            handleCustomSelectChange={handleCustomSelectChange}
             editing={true}
           />
         )}
@@ -122,30 +107,11 @@ export const Table = ({
         onReady={setGridRef}
         idProperty="id"
         columns={[
-          { name: "index", header: "No.", defaultWidth: 80 },
-          { name: "id", header: "ID", defaultVisible: false },
-          {
-            name: "item_name",
-            header: "Item Name",
-            defaultFlex: 1,
-            minWidth: 150,
-          },
-          {
-            name: "category_name",
-            header: "Category",
-            defaultFlex: 1,
-            minWidth: 150,
-          },
-          {
-            name: "supplier_name",
-            header: "Supplier",
-            defaultFlex: 1,
-            minWidth: 300,
-          },
-          { name: "unit_of_measurement_name", header: "Units of Measurement" },
-          { name: "par_level", header: "Par Level" },
-          { name: "reorder_point", header: "Reorder Point" },
-          { name: "expiration_date", header: "Expiry Date" },
+          { name: "receipt_number", header: "Receipt Number", defaultFlex: 1 },
+          { name: "supplier_name", header: "Supplier", defaultFlex: 1 },
+          { name: "payment_method", header: "Payment Method", defaultFlex: 1 },
+          { name: "total_cost", header: "Total Cost", defaultFlex: 1 },
+          { name: "date", header: "Date Created", defaultFlex: 1 },
           {
             name: "actions",
             header: "Actions",
@@ -153,7 +119,7 @@ export const Table = ({
             render: renderActions,
           },
         ]}
-        dataSource={filteredInventoryItems || []}
+        dataSource={filteredSuppliers || []}
         pagination
         defaultLimit={10}
         paginationShowPageSizeSelector
@@ -186,7 +152,7 @@ export const Table = ({
         paginationShowPagesToolbar
         paginationShowSizeChanger
         paginationShowTotal
-        paginationTotal={<span>Rows: {filteredInventoryItems?.length}</span>}
+        paginationTotal={<span>Rows: {filteredSuppliers?.length}</span>}
         paginationRowsPerPageOptions={[5, 10, 20, 50, 100]}
         paginationCurrentPage={currentPage}
         onPaginationChange={({ page }) => {
