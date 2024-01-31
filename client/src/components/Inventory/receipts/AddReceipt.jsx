@@ -1,13 +1,41 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
+import { useSuppliers } from "../../../hooks/useSuppliers";
+import CustomSelect from "../../../reusables/forms/select";
+import { useInventory } from "../../../hooks/useInventory";
+import useAxios from "../../../hooks/useAxios";
+import { StatusModalContext } from "../../App/App";
 
-const AddReceipt = () => {
-  const [receiptName, setReceiptName] = useState("");
+const AddReceipt = ({ setIsAddReceiptSection, editing = false }) => {
+  const { suppliers } = useSuppliers();
+  const { inventory } = useInventory();
+  const { postData } = useAxios();
+  const { setStatusData } = useContext(StatusModalContext);
+  const [mappedSuppliers, setMappedSuppliers] = useState([]);
+  const [mappedInventoryItems, setMappedInventoryItems] = useState([]);
+  const [receiptDetails, setReceiptDetails] = useState({
+    receipt_number: "",
+    supplier_id: "",
+    date: "",
+    total_cost: "",
+    payment_method: "",
+  });
   const [purchases, setPurchases] = useState([
-    { item: "", quantity: "", price: "" },
+    { id: 1, product_id: "", quantity: "", unit_price: "" },
   ]);
 
+  const handleChange = (e) => {
+    setReceiptDetails((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  };
+
+  const handleCustomSelectChange = (e, name) => {
+    setReceiptDetails((prev) => ({ ...prev, [name]: e.value }));
+  };
+
   const handleAddRow = () => {
-    setPurchases([...purchases, { item: "", quantity: "", price: "" }]);
+    setPurchases([
+      ...purchases,
+      { id: purchases.length + 1, item: "", quantity: "", unit_price: "" },
+    ]);
   };
 
   const handleRemoveRow = (id) => {
@@ -20,21 +48,104 @@ const AddReceipt = () => {
     setPurchases(updatedPurchases);
   };
 
+  const callback = () => setIsAddReceiptSection(false);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const url = `${process.env.REACT_APP_LOCAL_SERVER_URL}/purchase`;
+    postData(
+      url,
+      { ...receiptDetails, items: purchases },
+      setStatusData,
+      callback
+    );
+  };
+
+  useEffect(() => {
+    const mappedSelectSuppliers = suppliers?.suppliers?.map((supplier) => ({
+      value: supplier.id,
+      label: `${supplier.name} - ${supplier.phone_number}`,
+    }));
+    const mappedInventoryItems = inventory?.Items?.map((item) => ({
+      value: item.id,
+      label: `${item.item_name} - ${item.item_id}`,
+    }));
+    setMappedSuppliers(mappedSelectSuppliers);
+    setMappedInventoryItems(mappedInventoryItems);
+  }, [suppliers, inventory]);
+
   return (
     <div className="">
-      <div className="flex my-2">
+      <div className="grid md:grid-cols-5 gap-2 mt-2 mb-1">
         <input
           type="text"
-          placeholder="Receipt Name"
-          value={receiptName}
-          onChange={(e) => setReceiptName(e.target.value)}
+          name="receipt_number"
+          placeholder="Receipt Number"
+          value={receiptDetails.receipt_number}
+          onChange={handleChange}
+          className="py-1 border-none focus:outline-none text-[#222] rounded-md px-2"
+        />
+        <input
+          type="number"
+          name="total_cost"
+          placeholder="Total"
+          value={receiptDetails.total_cost}
+          onChange={handleChange}
           className="form-control py-1 px-2 focus:outline-none rounded-md text-[#222]"
+        />
+        <input
+          type="date"
+          name="date"
+          placeholder="Date of Purchase"
+          value={receiptDetails.date}
+          onChange={handleChange}
+          className="form-control py-1 px-2 focus:outline-none rounded-md text-[#222]"
+        />
+        <CustomSelect
+          options={[
+            { value: "cash", label: "Cash" },
+            { value: "mpesa", label: "Mpesa" },
+            { value: "bank", label: "Bank" },
+          ]}
+          name="payment_method"
+          handleChange={handleCustomSelectChange}
+          value={
+            receiptDetails.payment_method ? receiptDetails.payment_method : null
+          }
+          placeholder="Select Payment Method"
+          editing={editing}
+          styles={{
+            optionStyles: {
+              background: "white",
+            },
+            controlStyles: {
+              background: "white",
+            },
+          }}
+        />
+        <CustomSelect
+          options={mappedSuppliers}
+          name="supplier_id"
+          handleChange={handleCustomSelectChange}
+          value={receiptDetails.supplier_id ? receiptDetails.supplier_id : null}
+          placeholder="Select Supplier"
+          editing={editing}
+          styles={{
+            optionStyles: {
+              background: "white",
+            },
+            controlStyles: {
+              background: "white",
+            },
+          }}
         />
       </div>
       <table className="w-full border-collapse border border-1 border-slate-500">
         <thead>
           <tr>
-            <th className="border border-gray-300 px-3 py-1.5">Item</th>
+            <th className="border border-gray-300 px-3 py-1.5 w-[400px]">
+              Item
+            </th>
             <th className="border border-gray-300 px-3 py-1.5">Quantity</th>
             <th className="border border-gray-300 px-3 py-1.5">Price</th>
             <th className="border border-gray-300 px-3 py-1.5">Action</th>
@@ -44,19 +155,30 @@ const AddReceipt = () => {
           {purchases.map((purchase, index) => (
             <tr key={index}>
               <td className="border border-gray-300">
-                <input
-                  type="text"
-                  value={purchase.item}
-                  onChange={(e) =>
-                    handleInputChange(index, "item", e.target.value)
+                <CustomSelect
+                  options={mappedInventoryItems}
+                  name="product_id"
+                  handleChange={(e) =>
+                    handleInputChange(index, "product_id", e.value)
                   }
-                  className="w-full px-3 py-1 focus:outline-none"
-                  placeholder="Item Name"
+                  value={
+                    receiptDetails.product_id ? receiptDetails.product_id : null
+                  }
+                  placeholder="Select Product Item"
+                  editing={editing}
+                  styles={{
+                    optionStyles: {
+                      background: "white",
+                    },
+                    controlStyles: {
+                      background: "white",
+                    },
+                  }}
                 />
               </td>
               <td className="border border-gray-300">
                 <input
-                  type="text"
+                  type="number"
                   value={purchase.quantity}
                   onChange={(e) =>
                     handleInputChange(index, "quantity", e.target.value)
@@ -67,13 +189,13 @@ const AddReceipt = () => {
               </td>
               <td className="border border-gray-300">
                 <input
-                  type="text"
-                  value={purchase.price}
+                  type="number"
+                  value={purchase.unit_price}
                   onChange={(e) =>
-                    handleInputChange(index, "price", e.target.value)
+                    handleInputChange(index, "unit_price", e.target.value)
                   }
                   className="w-full px-3 py-1 focus:outline-none"
-                  placeholder="Price"
+                  placeholder="Unit Price"
                 />
               </td>
               <td className="border border-gray-300">
@@ -88,12 +210,24 @@ const AddReceipt = () => {
           ))}
         </tbody>
       </table>
-      <div className="flex justify-end">
+      <div className="flex justify-end gap-3">
         <button
-          onClick={handleAddRow}
+          onClick={() => setIsAddReceiptSection(false)}
           className="mt-3 bg-[#61dafb] text-[#222] py-1 px-3 rounded-md"
         >
+          Go Back
+        </button>
+        <button
+          onClick={handleAddRow}
+          className="mt-3 bg-orange-300 text-[#222] py-1 px-3 rounded-md"
+        >
           Add Row
+        </button>
+        <button
+          onClick={handleSubmit}
+          className="mt-3 bg-green-700 text-[#fff] py-1 px-3 rounded-md"
+        >
+          Add Receipt
         </button>
       </div>
     </div>
