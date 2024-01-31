@@ -41,6 +41,7 @@ Route::controller(InventoryController::class)->group(function(){
     Route::get('/inventoryItems', 'index');
     Route::get('/inventoryItem/{id}', 'show');
     Route::put('/inventoryItem/{id}', 'update');
+    Route::delete('/inventoryItem/{id}', 'destroy');
 });
 
 Route::controller(SuppliersController::class)->group(function(){
