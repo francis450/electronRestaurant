@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import useAxios from "../../../hooks/useAxios";
 import ReactDataGrid from "@inovua/reactdatagrid-community";
 import "@inovua/reactdatagrid-community/index.css";
-import {  Visit } from "../../../reusables/svgs/svgs";
+import { Trash, Visit } from "../../../reusables/svgs/svgs";
 import PurchaseItemsModal from "./PurchaseItemsModal";
 
 export const Table = ({
@@ -36,9 +36,9 @@ export const Table = ({
     openModal(item);
   };
 
-  const deleteSupplier = (supplier) => {
+  const deleteReceipt = (supplier) => {
     deleteData(
-      `http://localhost:8000/api/supplier/${supplier.id}`,
+      `${process.env.REACT_APP_LOCAL_SERVER_URL}/purchase/${supplier.id}`,
       setStatusData
     );
   };
@@ -71,6 +71,13 @@ export const Table = ({
         >
           View
           <Visit className="w-5 h-5" />
+        </button>
+        <button
+          className="bg-red-700 py-0.25 px-2 rounded-md text-white flex gap-1 items-center pr-1"
+          onClick={() => deleteReceipt(data)}
+        >
+          Delete
+          <Trash className="w-4 h-4" />
         </button>
       </div>
     );

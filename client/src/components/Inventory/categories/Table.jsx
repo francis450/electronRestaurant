@@ -2,8 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import useAxios from "../../../hooks/useAxios";
 import ReactDataGrid from "@inovua/reactdatagrid-community";
 import "@inovua/reactdatagrid-community/index.css";
-import { Visit } from "../../../reusables/svgs/svgs";
-// import PurchaseItemsModal from "./PurchaseItemsModal";
+import { Trash } from "../../../reusables/svgs/svgs";
 
 export const Table = ({
   children,
@@ -16,29 +15,10 @@ export const Table = ({
   const [currentPage, setCurrentPage] = useState(2);
   const [suppliers, setSuppliers] = useState([]);
   const [filteredSuppliers, setFilteredSuppliers] = useState([]);
-  const [supplierData, setSupplierData] = useState({});
 
-  const handleChangeEditChange = (e) => {
-    setSupplierData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-  };
-
-  const closeModal = () => setIsSupplierFormModalOpen(false);
-  const openModal = (supplier) => {
-    setIsSupplierFormModalOpen(true);
-    setSupplierData((prev) => ({
-      ...prev,
-      items: supplier.items,
-      receipt_number: supplier.receipt_number,
-    }));
-  };
-
-  const handleClickView = (item) => {
-    openModal(item);
-  };
-
-  const deleteSupplier = (supplier) => {
+  const deleteCategory = (supplier) => {
     deleteData(
-      `http://localhost:8000/api/supplier/${supplier.id}`,
+      `${process.env.REACT_APP_LOCAL_SERVER_URL}/category/${supplier.id}`,
       setStatusData
     );
   };
@@ -76,11 +56,11 @@ export const Table = ({
     return (
       <div className="table_cell flex gap-4 justify-center">
         <button
-          className="bg-yellow-500 py-0.25 px-2 rounded-md flex items-center gap-1 pr-1 text-[#222]"
-          onClick={() => handleClickView(data)}
+          className="bg-red-700 py-0.25 px-2 rounded-md text-white flex gap-1 items-center pr-1"
+          onClick={() => deleteCategory(data)}
         >
-          View
-          <Visit className="w-5 h-5" />
+          Delete
+          <Trash className="w-4 h-4" />
         </button>
       </div>
     );
@@ -108,7 +88,15 @@ export const Table = ({
         style={{ fontSize: "1.0rem" }}
         onReady={setGridRef}
         idProperty="id"
-        columns={[{ name: "name", header: "Name", defaultFlex: 1 }]}
+        columns={[
+          { name: "name", header: "Name", defaultFlex: 1 },
+          {
+            name: "actions",
+            header: "Actions",
+            minWidth: 200,
+            render: renderActions,
+          },
+        ]}
         dataSource={filteredSuppliers || []}
         editable={true}
         pagination

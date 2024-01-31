@@ -30,7 +30,7 @@ const Categories = () => {
             onChange={(e) => setName(e.target.value)}
           />
           <button
-            className="btn py-1 px-3 bg-red-200 text-[#222] rounded-md flex gap-1"
+            className="btn py-1 px-3 bg-green-700 text-[white] rounded-md flex gap-1"
             onClick={() => addCateggory()}
           >
             Add Category
