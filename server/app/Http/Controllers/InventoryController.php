@@ -126,25 +126,33 @@ class InventoryController extends Controller
 
     public function update(Request $request, $id)
     {
-        $validatedData = $request->validate([
-            'item_name' => 'required|string',
-            'category_id' => 'required',
-            'unit_of_measurement_id' => 'required',
-            'current_quantity' => 'nullable',
-            'par_level' => 'nullable',
-            'reorder_point' => 'nullable',
-            'supplier' => 'nullable',
-            'cost_per_unit' => 'nullable',
-        ]);
-
+        // find the item
         $item = Inventory::find($id);
 
         if (!$item) {
-            return response()->json(['error' => 'Item not found'], 404);
+            return response()->json(['message' => 'Item not found'], 404);
         }
 
-        $item->update($validatedData);
+        // loop through the request and update the item
+        foreach ($request->all() as $key => $value) {
+            $item->$key = $value;
+        }
+
+        $item->save();
 
         return response()->json(['data' => $item], 200);
+    }
+
+    public function destroy($id)
+    {
+        $item = Inventory::find($id);
+
+        if (!$item) {
+            return response()->json(['message' => 'Item not found'], 404);
+        }
+
+        $item->delete();
+
+        return response()->json(['message' => 'Item deleted successfully'], 200);
     }
 }
