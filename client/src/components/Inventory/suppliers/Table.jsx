@@ -43,7 +43,7 @@ export const Table = ({
 
   const deleteSupplier = (supplier) => {
     deleteData(
-      `http://localhost:8000/api/supplier/${supplier.id}`,
+      `${process.env.REACT_APP_LOCAL_SERVER_URL}/supplier/${supplier.id}`,
       setStatusData
     );
   };
@@ -90,7 +90,12 @@ export const Table = ({
 
   useEffect(() => {
     setSuppliers(data.suppliers);
-    setFilteredSuppliers(data.suppliers.map((supplier, index) => ({ ...supplier, index: index + 1 })));
+    setFilteredSuppliers(
+      data.suppliers.map((supplier, index) => ({
+        ...supplier,
+        index: index + 1,
+      }))
+    );
   }, [data]);
 
   return (
@@ -109,13 +114,13 @@ export const Table = ({
           <SupplierModal
             formData={supplierData}
             handleChange={handleChangeEditChange}
-            closeModal={closeModal} 
+            closeModal={closeModal}
             editing={true}
           />
         )}
       </div>
       <ReactDataGrid
-        style={{fontSize: '1.0rem'}}
+        style={{ fontSize: "1.0rem" }}
         onReady={setGridRef}
         idProperty="id"
         columns={[
@@ -124,7 +129,12 @@ export const Table = ({
           { name: "contact_name", header: "Contact Name", defaultFlex: 1 },
           { name: "email", header: "Email", defaultFlex: 1 },
           { name: "phone_number", header: "Phone Number", defaultFlex: 1 },
-          { name: "actions", header: "Actions", minWidth: 200, render: renderActions },
+          {
+            name: "actions",
+            header: "Actions",
+            minWidth: 200,
+            render: renderActions,
+          },
         ]}
         dataSource={filteredSuppliers || []}
         pagination

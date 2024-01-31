@@ -14,7 +14,7 @@ export const DefaultModal = ({ children, header, closeModal, height = 55 }) => {
             <CloseStatusModalIcon className="h-6 w-6" />
           </div>
         </div>
-        <div className="modal-content">{children}</div>
+        <div className="modal-content relativex`">{children}</div>
       </div>
     </div>
   );

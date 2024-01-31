@@ -4,7 +4,12 @@ import CustomSelect from "../../../reusables/forms/select";
 import { useInventory } from "../../../hooks/useInventory";
 import useAxios from "../../../hooks/useAxios";
 import { StatusModalContext } from "../../App/App";
-import { ArrowLeft, Plus, ReceiptIcon, Trash } from "../../../reusables/svgs/svgs";
+import {
+  ArrowLeft,
+  Plus,
+  ReceiptIcon,
+  Trash,
+} from "../../../reusables/svgs/svgs";
 
 const AddReceipt = ({ setIsAddReceiptSection, editing = false }) => {
   const { suppliers } = useSuppliers();
@@ -141,78 +146,82 @@ const AddReceipt = ({ setIsAddReceiptSection, editing = false }) => {
           }}
         />
       </div>
-      <table className="w-full border-collapse border border-1 border-slate-500">
-        <thead>
-          <tr>
-            <th className="border border-gray-300 px-3 py-1.5 w-[400px]">
-              Item
-            </th>
-            <th className="border border-gray-300 px-3 py-1.5">Quantity</th>
-            <th className="border border-gray-300 px-3 py-1.5">Price</th>
-            <th className="border border-gray-300 px-3 py-1.5">Action</th>
-          </tr>
-        </thead>
-        <tbody className="bg-white text-[#222]">
-          {purchases.map((purchase, index) => (
-            <tr key={index}>
-              <td className="border border-gray-300">
-                <CustomSelect
-                  options={mappedInventoryItems}
-                  name="product_id"
-                  handleChange={(e) =>
-                    handleInputChange(index, "product_id", e.value)
-                  }
-                  value={
-                    receiptDetails.product_id ? receiptDetails.product_id : null
-                  }
-                  placeholder="Select Product Item"
-                  editing={editing}
-                  styles={{
-                    optionStyles: {
-                      background: "white",
-                    },
-                    controlStyles: {
-                      background: "white",
-                    },
-                  }}
-                />
-              </td>
-              <td className="border border-gray-300">
-                <input
-                  type="number"
-                  value={purchase.quantity}
-                  onChange={(e) =>
-                    handleInputChange(index, "quantity", e.target.value)
-                  }
-                  className="w-full px-3 py-1 focus:outline-none"
-                  placeholder="Quantity"
-                />
-              </td>
-              <td className="border border-gray-300">
-                <input
-                  type="number"
-                  value={purchase.unit_price}
-                  onChange={(e) =>
-                    handleInputChange(index, "unit_price", e.target.value)
-                  }
-                  className="w-full px-3 py-1 focus:outline-none"
-                  placeholder="Unit Price"
-                />
-              </td>
-              <td className="border border-gray-300">
-                <div className="flex justify-center">
-                <button
-                  onClick={() => handleRemoveRow(purchase.id)}
-                  className="bg-red-500 text-sm text-white px-3 py-0.5 rounded-md flex items-center gap-1"
-                >
-                  Remove <Trash className="w-4 h-4" />
-                </button>
-                </div>
-              </td>
+      <div className="h-[480px] overflow-y-auto">
+        <table className="w-full border-collapse border border-1 border-slate-500">
+          <thead>
+            <tr>
+              <th className="border border-gray-300 px-3 py-1.5 w-[400px]">
+                Item
+              </th>
+              <th className="border border-gray-300 px-3 py-1.5">Quantity</th>
+              <th className="border border-gray-300 px-3 py-1.5">Price</th>
+              <th className="border border-gray-300 px-3 py-1.5">Action</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody className="bg-white text-[#222]">
+            {purchases.map((purchase, index) => (
+              <tr key={index}>
+                <td className="border border-gray-300">
+                  <CustomSelect
+                    options={mappedInventoryItems}
+                    name="product_id"
+                    handleChange={(e) =>
+                      handleInputChange(index, "product_id", e.value)
+                    }
+                    value={
+                      receiptDetails.product_id
+                        ? receiptDetails.product_id
+                        : null
+                    }
+                    placeholder="Select Product Item"
+                    editing={editing}
+                    styles={{
+                      optionStyles: {
+                        background: "white",
+                      },
+                      controlStyles: {
+                        background: "white",
+                      },
+                    }}
+                  />
+                </td>
+                <td className="border border-gray-300">
+                  <input
+                    type="number"
+                    value={purchase.quantity}
+                    onChange={(e) =>
+                      handleInputChange(index, "quantity", e.target.value)
+                    }
+                    className="w-full px-3 py-1 focus:outline-none"
+                    placeholder="Quantity"
+                  />
+                </td>
+                <td className="border border-gray-300">
+                  <input
+                    type="number"
+                    value={purchase.unit_price}
+                    onChange={(e) =>
+                      handleInputChange(index, "unit_price", e.target.value)
+                    }
+                    className="w-full px-3 py-1 focus:outline-none"
+                    placeholder="Unit Price"
+                  />
+                </td>
+                <td className="border border-gray-300">
+                  <div className="flex justify-center">
+                    <button
+                      onClick={() => handleRemoveRow(purchase.id)}
+                      className="bg-red-500 text-sm text-white px-3 py-0.5 rounded-md flex items-center gap-1"
+                    >
+                      Remove <Trash className="w-4 h-4" />
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
       <div className="flex justify-end gap-3">
         <button
           onClick={() => setIsAddReceiptSection(false)}
@@ -224,13 +233,13 @@ const AddReceipt = ({ setIsAddReceiptSection, editing = false }) => {
           onClick={handleAddRow}
           className="mt-3 bg-orange-300 text-[#222] py-1 px-3 rounded-md flex items-center gap-1"
         >
-          <Plus className="w-4 h-4" /> Add Row 
+          <Plus className="w-4 h-4" /> Add Row
         </button>
         <button
           onClick={handleSubmit}
           className="mt-3 bg-green-700 text-[#fff] py-1 px-3 rounded-md flex items-center gap-1"
         >
-         <ReceiptIcon /> Add Receipt
+          <ReceiptIcon /> Add Receipt
         </button>
       </div>
     </div>
