@@ -6,6 +6,7 @@ import Dashboard from "../../pages/dashboard";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import PrivateRoutes from "../../reusables/routes/PrivateRoutes";
 import Inventory from "../../pages/inventory";
+import Menu from "../../pages/Menu";
 
 export const StatusModalContext = createContext();
 export const AuthContext = createContext();
@@ -25,6 +26,10 @@ let router = createBrowserRouter([
       {
         path: "inventory",
         element: <Inventory />
+      },
+      {
+        path: "menu",
+        element: <Menu />
       }
     ],
   },

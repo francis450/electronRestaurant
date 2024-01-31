@@ -11,7 +11,7 @@ export default function MenuList() {
         active={"/dashboard" === location.pathname}
         className="flex items-center gap-3"
       >
-       <svg
+        <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
           viewBox="0 0 24 24"
@@ -68,6 +68,29 @@ export default function MenuList() {
           />
         </svg>
         <span className="">Orders</span>
+      </ResponsiveNavLink>
+      <ResponsiveNavLink
+        to={"/menu"}
+        active={"/menu" === location.pathname}
+        className="flex items-center gap-3"
+      >
+        <svg
+          className="w-6 h-6"
+          aria-hidden="true"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke="currentColor"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            d="M15 4h3c.6 0 1 .4 1 1v15c0 .6-.4 1-1 1H6a1 1 0 0 1-1-1V5c0-.6.4-1 1-1h3m0 3h6m-3 5h3m-6 0h0m3 4h3m-6 0h0m1-13v4h4V3h-4Z"
+          />
+        </svg>
+        <span className="">Menu</span>
       </ResponsiveNavLink>
       <ResponsiveNavLink
         to={"/inventory"}
