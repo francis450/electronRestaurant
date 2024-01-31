@@ -143,12 +143,17 @@ class InventoryController extends Controller
         return response()->json(['data' => $item], 200);
     }
 
+    // delete using soft delete
     public function destroy($id)
     {
         $item = Inventory::find($id);
 
         if (!$item) {
             return response()->json(['message' => 'Item not found'], 404);
+        }
+
+        if ($item->trashed()) { // Check if already soft-deleted
+            return response()->json(['message' => 'Item already deleted'], 409);
         }
 
         $item->delete();
