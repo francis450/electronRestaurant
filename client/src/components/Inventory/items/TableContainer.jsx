@@ -6,7 +6,8 @@ import { StatusModalContext } from "../../App/App";
 const TableContainer = ({ children }) => {
   const { inventory } = useInventory();
   const { statusData, setStatusData } = useContext(StatusModalContext);
-  const [isSupplierModalOpen, setIsSupplierFormModalOpen] = useState(false);
+  const [isInventoryItemModalOpen, setIsInventoryItemFormModalOpen] =
+    useState(false);
 
   return (
     <div className="w-full overflow-x-auto suppliers-table-div">
@@ -14,8 +15,8 @@ const TableContainer = ({ children }) => {
         data={inventory}
         statusData={statusData}
         setStatusData={setStatusData}
-        isSupplierModalOpen={isSupplierModalOpen}
-        setIsSupplierFormModalOpen={setIsSupplierFormModalOpen}
+        isInventoryItemModalOpen={isInventoryItemModalOpen}
+        setIsInventoryItemFormModalOpen={setIsInventoryItemFormModalOpen}
       >
         {children}
       </Table>

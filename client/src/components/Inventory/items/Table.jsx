@@ -8,8 +8,8 @@ import { Pencil, Trash } from "../../../reusables/svgs/svgs";
 export const Table = ({
   children,
   data,
-  isSupplierModalOpen,
-  setIsSupplierFormModalOpen,
+  isInventoryItemModalOpen,
+  setIsInventoryItemFormModalOpen,
   setStatusData,
 }) => {
   const { deleteData } = useAxios();
@@ -29,19 +29,19 @@ export const Table = ({
     setInventoryItemsData((prev) => ({ ...prev, [name]: e.value }));
   };
 
-  const closeModal = () => setIsSupplierFormModalOpen(false);
-  const openModal = (supplier) => {
-    setIsSupplierFormModalOpen(true);
-    setInventoryItemsData((prev) => ({ ...prev, ...supplier }));
+  const closeModal = () => setIsInventoryItemFormModalOpen(false);
+  const openModal = (inventoryItem) => {
+    setIsInventoryItemFormModalOpen(true);
+    setInventoryItemsData((prev) => ({ ...prev, ...inventoryItem }));
   };
 
   const handleClickView = (item) => {
     openModal(item);
   };
 
-  const deleteSupplier = (supplier) => {
+  const deleteInventoryItem = (inventoryItem) => {
     deleteData(
-      `http://localhost:8000/api/supplier/${supplier.id}`,
+      `${process.env.REACT_APP_LOCAL_SERVER_URL}/inventoryItem/${inventoryItem.id}`,
       setStatusData
     );
   };
@@ -62,7 +62,9 @@ export const Table = ({
       }, false);
     });
 
-    setFilteredInventoryItems(newDataSource.map((item, index) => ({ ...item, index: index + 1 })));
+    setFilteredInventoryItems(
+      newDataSource.map((item, index) => ({ ...item, index: index + 1 }))
+    );
   };
 
   const renderActions = ({ data }) => {
@@ -77,7 +79,7 @@ export const Table = ({
         </button>
         <button
           className="bg-red-700 py-0.25 px-2 rounded-md text-white flex gap-1 items-center pr-1"
-          onClick={() => deleteSupplier(data)}
+          onClick={() => deleteInventoryItem(data)}
         >
           Delete
           <Trash className="w-4 h-4" />
@@ -88,7 +90,9 @@ export const Table = ({
 
   useEffect(() => {
     setInventoryItems(data.Items);
-    setFilteredInventoryItems(data.Items?.map((item, index) => ({ ...item, index: index + 1 })));
+    setFilteredInventoryItems(
+      data.Items?.map((item, index) => ({ ...item, index: index + 1 }))
+    );
   }, [data]);
 
   return (
@@ -103,7 +107,7 @@ export const Table = ({
           />
         </label>
         {children}
-        {isSupplierModalOpen && (
+        {isInventoryItemModalOpen && (
           <ItemModal
             formData={inventoryItemsData}
             handleChange={handleChangeEditChange}
@@ -114,7 +118,7 @@ export const Table = ({
         )}
       </div>
       <ReactDataGrid
-        style={{fontSize: '1.0rem'}}
+        style={{ fontSize: "1.0rem" }}
         onReady={setGridRef}
         idProperty="id"
         columns={[
@@ -138,11 +142,16 @@ export const Table = ({
             defaultFlex: 1,
             minWidth: 300,
           },
-          { name: "unit_of_measurement_id", header: "Units of Measurement" },
+          { name: "unit_of_measurement_name", header: "Units of Measurement" },
           { name: "par_level", header: "Par Level" },
           { name: "reorder_point", header: "Reorder Point" },
           { name: "expiration_date", header: "Expiry Date" },
-          { name: "actions", header: "Actions", minWidth: 200, render: renderActions },
+          {
+            name: "actions",
+            header: "Actions",
+            minWidth: 200,
+            render: renderActions,
+          },
         ]}
         dataSource={filteredInventoryItems || []}
         pagination
