@@ -6,7 +6,6 @@ use App\Models\Ingredient;
 use App\Models\Inventory;
 use App\Models\MenuItem;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class MenuController extends Controller
 {
@@ -15,7 +14,7 @@ class MenuController extends Controller
      */
     public function index()
     {   
-        $items = MenuItem::select('id', 'name', 'description', 'price', 'is_available', 'img', 'category_id')
+        $items = MenuItem::select('id', 'name', 'description', 'price', 'is_available', 'img', 'menu_item_category_id')
             ->with(['category:id,name', 'ingredients:id,menu_item_id,inventory_item_id,quantity,cost'])
             ->get();
 
@@ -39,11 +38,11 @@ class MenuController extends Controller
         $request->validate([
             'name' => 'required',
             'price' => 'required|numeric',
-            'category_id' => 'integer',
+            'menu_item_category_id' => 'integer',
         ], [
             'name.required' => 'Name is required',
             'price.decimal' => 'Price must be a number',
-            'category_id.integer' => 'Category ID must be an integer'
+            'menu_item_category_id.integer' => 'Category ID must be an integer'
         ]);
 
         $imageName = null;
@@ -61,7 +60,7 @@ class MenuController extends Controller
             ]);
         }
 
-        $item = MenuItem::create($request->only(['name', 'description', "price", "category_id", "img", "is_available", 'note']));
+        $item = MenuItem::create($request->only(['name', 'description', "price", "menu_item_category_id", "img", "is_available", 'note']));
 
         $menuItems = array();
         $errs = array();
@@ -99,8 +98,7 @@ class MenuController extends Controller
      */
     public function show(string $id)
     {
-        // get the menu item with the specified id and return it with its category and ingredients and their inventory item names as well
-        $item = MenuItem::select('id', 'name', 'description', 'price', 'is_available', 'img', 'category_id')
+        $item = MenuItem::select('id', 'name', 'description', 'price', 'is_available', 'img', 'menu_item_category_id')
             ->with(['category:id,name', 'ingredients:id,menu_item_id,inventory_item_id,quantity,cost'])
             ->find($id);        
         
