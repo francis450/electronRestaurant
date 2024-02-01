@@ -5,9 +5,11 @@ use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\InventoryPurchasesController;
 use App\Http\Controllers\MenuController;
+use App\Http\Controllers\MenuItemCategoryController;
 use App\Http\Controllers\RegController;
 use App\Http\Controllers\SuppliersController;
 use App\Http\Controllers\UserController;
+use App\Models\MenuItem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -86,4 +88,12 @@ Route::controller(InventoryPurchasesController::class)->group(function(){
     Route::get('/purchase/{id}', 'show');
     Route::post('/purchase', 'store');
     Route::delete('/purchase/{id}', 'destroy');
+});
+
+Route::controller(MenuItemCategoryController::class)->group(function(){
+    Route::get('/menu_categories', 'index');
+    Route::get('/menu_category/{id}', 'show');
+    Route::post('/menu_category', 'store');
+    Route::delete('/menu_category/{id}', 'destroy');
+    Route::put('/menu_category/{id}', 'update');
 });
