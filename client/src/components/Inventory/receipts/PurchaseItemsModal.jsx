@@ -8,26 +8,38 @@ const PurchaseItemsModal = ({ items, closeModal }) => {
       closeModal={closeModal}
       height={44}
     >
-      <table className="w-full border-collapse border border-1 border-slate-500">
-        <thead className="bg-[whitesmoke] text-[#222]">
-          <tr>
-            <th className="border border-gray-300 px-3 py-1.5 w-[400px]">
-              Item
-            </th>
-            <th className="border border-gray-300 px-3 py-1.5">Quantity</th>
-            <th className="border border-gray-300 px-3 py-1.5">Price</th>
-          </tr>
-        </thead>
-        <tbody className="bg-white text-[#222]">
-          {items.items.map((item, index) => (
-            <tr key={index}>
-              <td className="border border-gray-300">{item.inventory_name}</td>
-              <td className="border border-gray-300">{item.quantity}</td>
-              <td className="border border-gray-300">{item.subtotal}</td>
+      <div className="">
+        <table className="w-full border-collapse border border-1 border-slate-500 px-2">
+          <thead className="bg-[whitesmoke] text-[#222] px-2">
+            <tr>
+              <th className="border border-gray-300 px-3 py-1.5 w-[400px]">
+                Item
+              </th>
+              <th className="border border-gray-300 px-3 py-1.5 w-[200px]">
+                Quantity
+              </th>
+              <th className="border border-gray-300 px-3 py-1.5">Price</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+        </table>
+        <div className="h-[300px] w-full overflow-y-scroll">
+          <table className="w-full border-collapse border border-1 border-slate-500 px-2">
+            <tbody className="text-[#222]">
+              {items.items.map((item, index) => (
+                <tr key={index}>
+                  <td className="border border-gray-300 w-[400px]">
+                    {item.inventory_name}
+                  </td>
+                  <td className="border border-gray-300 w-[200px]">
+                    {item.quantity}
+                  </td>
+                  <td className="border border-gray-300">{item.subtotal}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
     </DefaultModal>
   );
 };

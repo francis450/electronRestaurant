@@ -26,7 +26,7 @@ class CategoriesController extends Controller
 
         return response()->json(
             [
-                "message" => $category,
+                "message" => "Category Added Successfully",
                 "status" => "success"
             ], 
             201
