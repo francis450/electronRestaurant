@@ -15,7 +15,7 @@ class MenuController extends Controller
      */
     public function index()
     {   
-        $items = MenuItem::select('id', 'name', 'description', 'price', 'is_available', 'img', 'menu_item_category_id')
+        $items = MenuItem::select('id', 'name', 'description', 'price', 'is_available', 'img','note','created_at', 'menu_item_category_id')
             ->with(['category:id,name', 'ingredients:id,menu_item_id,inventory_item_id,quantity,unit_of_measurement_id,cost'])
             ->get();
 
@@ -108,7 +108,7 @@ class MenuController extends Controller
      */
     public function show(string $id)
     {
-        $item = MenuItem::select('id', 'name', 'description', 'price', 'is_available', 'img', 'menu_item_category_id')
+        $item = MenuItem::select('id', 'name', 'description', 'price', 'is_available', 'img', 'menu_item_category_id', 'note', 'created_at')
             ->with(['category:id,name', 'ingredients:id,menu_item_id,inventory_item_id,quantity,unit_of_measurement_id,cost'])
             ->find($id);        
         
