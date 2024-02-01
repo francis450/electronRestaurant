@@ -99,6 +99,13 @@ This API serves as the core engine for managing menus, inventory, orders, and mo
   - **HTTP Method:** `GET`
   - **Description:** Retrieve a list of all units of measurement(both base and subunits)
 
+  #### To Get a Specific Unit of Measurement using id
+   - **URL:** `/unitofmeasure/{id}`
+  - **HTTP Method:** `GET`
+  - **Parameters:**
+    - `{id}`: The unique identifier for a unit of measurement
+  - **Description:** Retrieve details of a specific unit of measurement identified by the ID.
+
 
   ### Inventory Items Categories
 
