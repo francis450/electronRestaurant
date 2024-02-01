@@ -32,13 +32,13 @@ Route::post('/authenticate', [AuthController::class, 'authenticate']);
 
 Route::post('/register', [RegController::class, 'register']);
 
-Route::controller(UserController::class)->group(function(){
+Route::controller(UserController::class)->group(function () {
     Route::get('/users', 'index');
     Route::get('/user/{id}', 'show');
 });
 
 
-Route::controller(InventoryController::class)->group(function(){
+Route::controller(InventoryController::class)->group(function () {
     Route::post('/newInventoryItem', 'store1Item');
     Route::get('/inventoryItems', 'index');
     Route::get('/inventoryItem/{id}', 'show');
@@ -46,7 +46,7 @@ Route::controller(InventoryController::class)->group(function(){
     Route::delete('/inventoryItem/{id}', 'destroy');
 });
 
-Route::controller(SuppliersController::class)->group(function(){
+Route::controller(SuppliersController::class)->group(function () {
     Route::post('/newSupplier', 'store');
     Route::get('/suppliers', 'index');
     Route::get('supplier/{id}', 'show');
@@ -54,7 +54,7 @@ Route::controller(SuppliersController::class)->group(function(){
     Route::post('editSupplier/{id}', 'update');
 });
 
-Route::controller(MenuController::class)->group(function(){
+Route::controller(MenuController::class)->group(function () {
     Route::post('/menu', 'store');
     Route::get('/menu', 'index');
     Route::get('menu/{id}', 'show');
@@ -62,17 +62,45 @@ Route::controller(MenuController::class)->group(function(){
     Route::put('menu/{id}', 'update');
 });
 
-Route::get('/unitsofmeasure', function(){
+Route::get('/unitsofmeasure', function () {
     return \App\Models\UnitsOfMeasurement::all();
 });
 
-Route::get('/unitofmeasure/{id}', function($id){
-    // return \App\Models\UnitsOfMeasurement::find($id);
-    // return unit of measure with subunits if any
-    return \App\Models\UnitsOfMeasurement::with('subunits')->find($id);
+Route::get('/unitofmeasure/{id}', function ($id) {
+    $unit = \App\Models\UnitsOfMeasurement::find($id);
+
+    if (!$unit) {
+        return response()->json([
+            'message' => 'Unit not found',
+            'status' => 'error'
+        ], 404);
+    }
+
+    if ($unit->type != 'base') {
+        return response()->json([
+            'data' => $unit,
+            'status' => 'success'
+        ], 200);
+    }
+
+    $subunits = $unit->subunits;
+
+    $allUnits = collect([$unit])->merge($unit->subunits);
+    // remove subunits from $unit
+    
+    $allUnits = $allUnits->map(function ($unit) {
+        unset($unit->subunits);
+        return $unit;
+    });    
+
+    return response()->json([
+        'data' => $allUnits,
+        'status' => 'success'
+    ], 200);
 });
 
-Route::post('/unitofmeasure', function(Request $request){
+
+Route::post('/unitofmeasure', function (Request $request) {
     $baseUnit = \App\Models\UnitsOfMeasurement::create($request->all());
     return response()->json([
         'message' => 'successfully added unit',
@@ -81,7 +109,7 @@ Route::post('/unitofmeasure', function(Request $request){
     ], 201);
 });
 
-Route::controller(CategoriesController::class)->group(function(){
+Route::controller(CategoriesController::class)->group(function () {
     Route::get('/categories', 'index');
     Route::get('/category/{id}', 'show');
     Route::post('/category', 'store');
@@ -89,14 +117,14 @@ Route::controller(CategoriesController::class)->group(function(){
     Route::put('/category/{id}', 'update');
 });
 
-Route::controller(InventoryPurchasesController::class)->group(function(){
+Route::controller(InventoryPurchasesController::class)->group(function () {
     Route::get('/purchases', 'index');
     Route::get('/purchase/{id}', 'show');
     Route::post('/purchase', 'store');
     Route::delete('/purchase/{id}', 'destroy');
 });
 
-Route::controller(MenuItemCategoryController::class)->group(function(){
+Route::controller(MenuItemCategoryController::class)->group(function () {
     Route::get('/menu_categories', 'index');
     Route::get('/menu_category/{id}', 'show');
     Route::post('/menu_category', 'store');
