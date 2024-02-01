@@ -77,13 +77,13 @@ Route::get('/unitofmeasure/{id}', function ($id) {
     }
 
     if ($unit->type != 'base') {
+        $subunit = collect([$unit]);
         return response()->json([
-            'data' => $unit,
+            'data' => $subunit,
             'status' => 'success'
         ], 200);
     }
 
-    $subunits = $unit->subunits;
 
     $allUnits = collect([$unit])->merge($unit->subunits);
     // remove subunits from $unit
