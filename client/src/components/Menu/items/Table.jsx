@@ -6,12 +6,13 @@ import useAxios from "../../../hooks/useAxios";
 
 export const Table = ({ children, data, statusData, setStatusData }) => {
   const navigate = useNavigate();
-  const { deleteData } = useAxios();
+  const { getData, deleteData } = useAxios();
   const [gridRef, setGridRef] = useState(null);
   const [searchText, setSearchText] = useState("");
   const [currentPage, setCurrentPage] = useState(2);
   const [fetchedData, setFetchedData] = useState([]);
   const [filteredFetchedData, setFilteredFetchedData] = useState([]);
+  const [selectedCategories, setSelectedCategories] = useState([]);
 
   const onSearchChange = ({ target: { value } }) => {
     const visibleColumns = gridRef.current.visibleColumns;
@@ -59,6 +60,12 @@ export const Table = ({ children, data, statusData, setStatusData }) => {
     setFetchedData(data.data);
     setFilteredFetchedData(data.data);
   }, [data]);
+
+  const handleGetCategories = () => {
+    getData(`${process.env.REACT_APP_LOCAL_SERVER_URL}/menu_category/1`,setStatusData, setSelectedCategories);
+    console.log(selectedCategories);
+  }
+
   return (
     <>
       <div className="flex justify-between items-center  mt-3 mb-1">
@@ -71,6 +78,7 @@ export const Table = ({ children, data, statusData, setStatusData }) => {
           />
         </label>
         {children}
+        <button type="button" onClick={() => handleGetCategories()}>Get</button>
       </div>
       <ReactDataGrid
         style={{ fontSize: "1.0rem" }}
@@ -79,7 +87,7 @@ export const Table = ({ children, data, statusData, setStatusData }) => {
         columns={[
           { name: "name", header: "Name", defaultFlex: 1 },
           { name: "price", header: "Price", defaultFlex: 1 },
-          { name: "category", header: "Category", defaultFlex: 1 },
+          { name: "category", header: "Category", defaultFlex: 1, render: ({ value }) => value.name},
           {
             name: "is_available",
             header: "Availability",

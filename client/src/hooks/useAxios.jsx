@@ -22,7 +22,7 @@ function useAxios(url) {
     setLoading(true)
     try {
       await axios.get(url).then((res) => {
-        setCallerData(res.data)
+        setCallerData(res.data.data)
       })
     } catch (error) {
       handleError(setStatusData)
