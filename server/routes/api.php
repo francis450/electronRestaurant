@@ -67,7 +67,9 @@ Route::get('/unitsofmeasure', function(){
 });
 
 Route::get('/unitofmeasure/{id}', function($id){
-    return \App\Models\UnitsOfMeasurement::find($id);
+    // return \App\Models\UnitsOfMeasurement::find($id);
+    // return unit of measure with subunits if any
+    return \App\Models\UnitsOfMeasurement::with('subunits')->find($id);
 });
 
 Route::post('/unitofmeasure', function(Request $request){
