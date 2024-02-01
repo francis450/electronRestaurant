@@ -66,6 +66,10 @@ Route::get('/unitsofmeasure', function(){
     return \App\Models\UnitsOfMeasurement::all();
 });
 
+Route::get('/unitofmeasure/{id}', function($id){
+    return \App\Models\UnitsOfMeasurement::find($id);
+});
+
 Route::post('/unitofmeasure', function(Request $request){
     $baseUnit = \App\Models\UnitsOfMeasurement::create($request->all());
     return response()->json([
