@@ -94,7 +94,7 @@ This API serves as the core engine for managing menus, inventory, orders, and mo
   - **Description:** Retrieve a list of all units of measurement(both base and subunits)
 
 
-  ### Menu Items Categories
+  ### Inventory Items Categories
 
   #### Adding a new category
 
@@ -203,7 +203,7 @@ This API serves as the core engine for managing menus, inventory, orders, and mo
 
   ### Supplier Routes
 
-  ### Adding a new supplier
+  #### Adding a new supplier
 
   - **URL:** `/newSupplier`
   - **HTTP Method:** `POST`
@@ -220,13 +220,13 @@ This API serves as the core engine for managing menus, inventory, orders, and mo
   }
   ```
 
-  ### List all suppliers
+  #### List all suppliers
 
   - **URL:** `/suppliers`
   - **HTTP Method:** `GET`
   - **Description:** Retrieve a list of all available suppliers
 
-  ### Get specific supplier using id
+  #### Get specific supplier using id
 
   - **URL:** `/supplier/{id}`
   - **HTTP Method:** `GET`
@@ -234,7 +234,7 @@ This API serves as the core engine for managing menus, inventory, orders, and mo
     - `{id}`: The unique identifier for a supplier
   - **Description:** Retrieve details of a specific supplier identified by the ID.
 
-  ### Update specific supplier details using id
+  #### Update specific supplier details using id
 
   - **URL:** `/editSupplier/{id}`
   - **HTTP Method:** `POST`
@@ -242,7 +242,7 @@ This API serves as the core engine for managing menus, inventory, orders, and mo
     - `{id}`: The unique identifier for a supplier
   - **Description:** Edit any details of a specific supplier identified by the ID.
 
-  ### Delete specific supplier using id
+  #### Delete specific supplier using id
 
   - **URL:** `/supplier/{id}`
   - **HTTP Method:** `DELETE`
@@ -310,6 +310,7 @@ This API serves as the core engine for managing menus, inventory, orders, and mo
 
 
   ### Purchase Receipt Routes
+
   #### Create a New Purchase Receipt Item
   - **URL:** `/purchase`
   - **HTTP Method:** `POST`
@@ -361,6 +362,49 @@ This API serves as the core engine for managing menus, inventory, orders, and mo
 
     ---
  
+
+  ### Menu Items Categories Routes
+  #### Create a New Menu Category 
+  - **URL:** `/menu_category`
+  - **HTTP Method:** `POST`
+  - **Payload Options:**
+      ```json
+      {
+        "name": "new_category/subcategory",
+        "parent_category_id": "18", // required for subcategory
+        "description": "decribe the category/subcategory"
+      }
+      ```
+  #### List All Menu Categories
+
+  - **URL:** `/purchases`
+  - **HTTP Method:** `GET`
+  - **Description:** Retrieve a list of all menu categories.
+  #### Show Details of particular menu category
+  - **URL:** `/purchase/{id}`
+  - **HTTP Method:** `GET`
+  - **Parameters:**
+    - `{id}`: The unique identifier of the menu category.
+  - **Description:** Retrieve details of a specific menu category identified by its ID.
+  #### Edit an Existing Menu Category
+
+  - **URL:** `/menu_category/{id}`
+  - **HTTP Method:** `PUT`
+    - **Payload Options:**
+        ```json
+        {
+          "name": "new_category/subcategory",
+          "parent_category_id": "18", // required for subcategory
+          "description": "decribe the category/subcategory"
+        }
+        ```
+
+  #### Delete a Specific Menu Category
+  - **URL:** `/menu_category/{id}`
+  - **HTTP Method:** `DELETE`
+  - **Parameters:**
+    - `{id}`: The unique identifier of the menu category.
+  - **Description:** Deletes a specific menu category identified by its ID.
 ## Authentication
   - **URL** `/authenticate`
   - **HTTP Method:** `POST`
