@@ -7,6 +7,7 @@ use App\Http\Controllers\InventoryPurchasesController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\MenuItemCategoryController;
 use App\Http\Controllers\RegController;
+use App\Http\Controllers\SectionController;
 use App\Http\Controllers\SuppliersController;
 use App\Http\Controllers\UserController;
 use App\Models\MenuItem;
@@ -130,4 +131,13 @@ Route::controller(MenuItemCategoryController::class)->group(function () {
     Route::post('/menu_category', 'store');
     Route::delete('/menu_category/{id}', 'destroy');
     Route::put('/menu_category/{id}', 'update');
+});
+
+
+Route::controller(SectionController::class)->group(function () {
+    Route::get('/sections', 'index');
+    Route::get('/section/{id}', 'show');
+    Route::post('/section', 'store');
+    Route::delete('/section/{id}', 'destroy');
+    Route::put('/section/{id}', 'update');
 });
