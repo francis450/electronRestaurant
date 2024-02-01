@@ -25,6 +25,6 @@ class MenuItemCategory extends Model
     }
 
     public function menu_items() {
-        return $this->hasMany(MenuItem::class, 'category_id');
+        return $this->hasMany(MenuItem::class, 'menu_item_category_id');
     }
 }
