@@ -49,7 +49,7 @@ export const Table = ({
         console.log("updated")
       );
     },
-    [data]
+    [putData, setStatusData]
   );
 
   const renderActions = ({ data }) => {
