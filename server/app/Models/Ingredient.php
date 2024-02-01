@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Ingredient extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
       'inventory_item_id',
@@ -15,6 +16,7 @@ class Ingredient extends Model
       'name',
       'unit_price',
       'quantity',
+      'unit_of_measurement_id',
       'cost'
     ];
 
@@ -22,7 +24,7 @@ class Ingredient extends Model
         return $this->belongsTo(Inventory::class);
     }
 
-    // public function menuItem(){
-    //     // return $this->belongsTo(Menu:class);
-    // }
+    public function unitOfMeasurement(){
+        return $this->belongsTo(UnitsOfMeasurement::class);
+    }
 }

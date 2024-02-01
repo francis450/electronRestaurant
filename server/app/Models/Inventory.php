@@ -30,4 +30,25 @@ class Inventory extends Model
         'cost_per_unit',
         'expiration_date',
     ];
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
+
+    public function unitOfMeasurement()
+    {
+        return $this->belongsTo(UnitsOfMeasurement::class);
+    }
+
+    public function ingredients()
+    {
+        return $this->hasMany(Ingredient::class);
+    }
+
+    public function menuItems()
+    {
+        return $this->belongsToMany(MenuItem::class, 'ingredients', 'inventory_item_id', 'menu_item_id');
+    }
+
 }
