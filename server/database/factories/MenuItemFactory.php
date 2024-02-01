@@ -21,7 +21,7 @@ class MenuItemFactory extends Factory
             'name' => fake()->domainName,
             'description' => fake()->text(),
             'price' => fake()->randomFloat(2,0,1000),
-            'category_id' => fake()->numberBetween(1,2),
+            'menu_item_category_id' => fake()->numberBetween(1,2),
             'img' => fake()->url,
             'is_available' => fake()->boolean,
         ];
