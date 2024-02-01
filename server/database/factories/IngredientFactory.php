@@ -20,6 +20,7 @@ class IngredientFactory extends Factory
             'inventory_item_id' => fake()->numberBetween(1,2),
             'menu_item_id' => fake()->numberBetween(1,2),
             'quantity' => fake()->randomFloat(2,10,01000),
+            'unit_of_measurement_id' => fake()->numberBetween(1,2),
             'cost' => fake()->randomFloat(2,10,01000)
         ];
     }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Ingredient;
 use App\Models\Inventory;
 use App\Models\MenuItem;
+use App\Models\UnitsOfMeasurement;
 use Illuminate\Http\Request;
 
 class MenuController extends Controller
@@ -15,12 +16,13 @@ class MenuController extends Controller
     public function index()
     {   
         $items = MenuItem::select('id', 'name', 'description', 'price', 'is_available', 'img', 'menu_item_category_id')
-            ->with(['category:id,name', 'ingredients:id,menu_item_id,inventory_item_id,quantity,cost'])
+            ->with(['category:id,name', 'ingredients:id,menu_item_id,inventory_item_id,quantity,unit_of_measurement_id,cost'])
             ->get();
 
         foreach ($items as $item) {
             foreach ($item->ingredients as $ingredient) {
                 $ingredient->ingredient_name = Inventory::find($ingredient->inventory_item_id)->item_name;
+                $ingredient->unit_of_measurement = UnitsOfMeasurement::find($ingredient->unit_of_measurement_id)->name;
             }
         }
 
@@ -39,10 +41,15 @@ class MenuController extends Controller
             'name' => 'required',
             'price' => 'required|numeric',
             'menu_item_category_id' => 'integer',
+            'ingredients' => 'required|array',
+            'unit_of_measurement_id' => 'integer',
         ], [
             'name.required' => 'Name is required',
             'price.decimal' => 'Price must be a number',
-            'menu_item_category_id.integer' => 'Category ID must be an integer'
+            'menu_item_category_id.integer' => 'Category ID must be an integer',
+            'ingredients.required' => 'Ingredients are required',
+            'ingredients.array' => 'Ingredients must be an array',
+            'unit_of_measurement_id.integer' => 'Unit of Measurement ID must be an integer',
         ]);
 
         $imageName = null;
@@ -74,9 +81,12 @@ class MenuController extends Controller
 
             $newIngredient = Ingredient::create([
                 'inventory_item_id' => $ingredient['inventory_item_id'],
+                'unit_of_measurement_id' => $ingredient['unit_of_measurement_id'],
                 'menu_item_id' => $item->id,
                 'quantity' => $ingredient['quantity'],
-                'cost' => $item->price/$ingredient['quantity']  
+                'cost' => $ingredient['unit_of_measurement_id'] == $inventoryItem->unitOfMeasurement->id
+                        ? $ingredient['quantity'] * $inventoryItem->cost_per_unit 
+                        : $ingredient['quantity'] * $inventoryItem->cost_per_unit * $inventoryItem->unitOfMeasurement->conversion_factor
             ]);
 
             $menuItems[] = $newIngredient;
@@ -99,7 +109,7 @@ class MenuController extends Controller
     public function show(string $id)
     {
         $item = MenuItem::select('id', 'name', 'description', 'price', 'is_available', 'img', 'menu_item_category_id')
-            ->with(['category:id,name', 'ingredients:id,menu_item_id,inventory_item_id,quantity,cost'])
+            ->with(['category:id,name', 'ingredients:id,menu_item_id,inventory_item_id,quantity,unit_of_measurement_id,cost'])
             ->find($id);        
         
         if (!$item) {
@@ -108,6 +118,7 @@ class MenuController extends Controller
 
         foreach ($item->ingredients as $ingredient) {
             $ingredient->ingredient_name = Inventory::find($ingredient->inventory_item_id)->item_name;
+            $ingredient->unit_of_measurement = UnitsOfMeasurement::find($ingredient->unit_of_measurement_id)->name;
         }
         
         return response()->json([
