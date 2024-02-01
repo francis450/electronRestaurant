@@ -7,6 +7,9 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import PrivateRoutes from "../../reusables/routes/PrivateRoutes";
 import Inventory from "../../pages/inventory";
 import Menu from "../../pages/Menu";
+import Items from "../Menu/items/Items";
+import Categories from "../Menu/categories/Categories";
+import AddItems from "../Menu/items/AddItems";
 
 export const StatusModalContext = createContext();
 export const AuthContext = createContext();
@@ -29,7 +32,31 @@ let router = createBrowserRouter([
       },
       {
         path: "menu",
-        element: <Menu />
+        element: <Menu />,
+        children: [
+          {
+            path: "items",
+            element: <Items />,
+            children: [
+              {
+                path: "add",
+                element: <AddItems />,
+              },
+              {
+                path: ":id",
+                element: <Items />,
+              },
+              {
+                path: ":id/:action",
+                element: <Items />,
+              }
+            ]
+          },
+          {
+            path: "categories",
+            element: <Categories />,
+          }
+        ]
       }
     ],
   },
