@@ -13,14 +13,108 @@ import { StatusModalContext } from "../../App/App";
 import { useUnitsOfMeasure } from "../../../hooks/useUnitsOfMeasure";
 import { useCategories } from "../../../hooks/useCategories";
 
+const Row = ({
+  ingredients = [],
+  mappedInventoryItems,
+  handleInputChangee,
+  handleRemoveRow,
+}) => {
+  return (
+    <>
+      {ingredients.map(
+        (
+          {
+            inventory_item_id,
+            mappedSelectedUnitsOfMeasure,
+            quantity,
+            unit_of_measurement_id,
+            id,
+          },
+          index
+        ) => (
+          <tr key={index}>
+            <td className="border border-gray-300">
+              <CustomSelect
+                options={mappedInventoryItems}
+                name="inventory_item_id"
+                handleChange={(e) => {
+                  handleInputChangee(id, "inventory_item_id", e.value, index);
+                }}
+                value={inventory_item_id ? inventory_item_id : null}
+                placeholder="Select Product Item"
+                styles={{
+                  optionStyles: {
+                    background: "white",
+                  },
+                  controlStyles: {
+                    background: "white",
+                  },
+                }}
+                editing={inventory_item_id ? true : false}
+              />
+            </td>
+            <td className="border border-gray-300">
+              <input
+                type="number"
+                value={quantity}
+                onChange={(e) =>
+                  handleInputChangee(id, "quantity", e.target.value)
+                }
+                className="w-full px-3 py-1 focus:outline-none"
+                placeholder="Quantity"
+              />
+            </td>
+            <td className="border border-gray-300">
+              <CustomSelect
+                name="unit_of_measurement_id"
+                options={[...mappedSelectedUnitsOfMeasure]}
+                handleChange={(e) =>
+                  handleInputChangee(
+                    id,
+                    "unit_of_measurement_id",
+                    e.value,
+                    index
+                  )
+                }
+                value={unit_of_measurement_id ? unit_of_measurement_id : null}
+                styles={{
+                  optionStyles: {
+                    background: "white",
+                  },
+                  controlStyles: {
+                    background: "white",
+                  },
+                }}
+                editing={unit_of_measurement_id ? true : false}
+              />
+            </td>
+            <td className="border border-gray-300">
+              <div className="flex justify-center">
+                <button
+                  onClick={() => handleRemoveRow(id)}
+                  className="bg-red-500 text-sm text-white px-3 py-0.5 rounded-md flex items-center gap-1"
+                >
+                  Remove <Trash className="w-4 h-4" />
+                </button>
+              </div>
+            </td>
+          </tr>
+        )
+      )}
+    </>
+  );
+};
+
 const AddItems = () => {
   const { unitsOfMeasure } = useUnitsOfMeasure();
   const { inventory } = useInventory();
   const { categories } = useCategories();
-  const { postData } = useAxios();
+  const { getData, postData } = useAxios();
   const { setStatusData } = useContext(StatusModalContext);
   const [mappedInventoryItems, setMappedInventoryItems] = useState([]);
-  const [mappedUnitsOfMeasure, setMappedUnitsOfMeasure] = useState([]);
+  const [selectedCategories, setSelectedCategories] = useState([]);
+  const [mappedSelectedUnitsOfMeasure, setMappedSelectedUnitsOfMeasure] =
+    useState([{}]);
   const [mappedCategories, setMappedCategories] = useState([]);
   const [itemData, setItemData] = useState({
     name: "",
@@ -35,9 +129,10 @@ const AddItems = () => {
   const [ingredients, setIngredients] = useState([
     {
       id: 1,
-      inventory_item_id: "1",
-      quantity: "12",
+      inventory_item_id: "",
+      quantity: "",
       unit_of_measurement_id: "",
+      mappedSelectedUnitsOfMeasure: [],
     },
   ]);
 
@@ -45,13 +140,8 @@ const AddItems = () => {
     setItemData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const handleInputChange = (index, key, value) => {
-    const updatedPurchases = [...ingredients];
-    updatedPurchases[index][key] = value;
-    setIngredients(updatedPurchases);
-  };
-
   const handleRemoveRow = (id) => {
+    setSelectedIngredient(null);
     setIngredients(ingredients.filter((ingredient) => ingredient.id !== id));
   };
 
@@ -59,10 +149,13 @@ const AddItems = () => {
     setIngredients([
       ...ingredients,
       {
-        id: ingredients.length + 1,
+        id: ingredients[ingredients.length - 1]?.id
+          ? ingredients[ingredients.length - 1]?.id + 1
+          : 1,
         item: "",
-        quantity: "122",
-        unit_of_measurement_id: "2",
+        quantity: "",
+        unit_of_measurement_id: "",
+        mappedSelectedUnitsOfMeasure: [],
       },
     ]);
   };
@@ -85,13 +178,13 @@ const AddItems = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log({ ...itemData, image: imageUrl, ingredients: ingredients });
-    // const url = `${process.env.REACT_APP_LOCAL_SERVER_URL}/purchase`;
-    // postData(
-    //   url,
-    //   { ...itemData, ingredients: ingredients },
-    //   setStatusData,
-    //   callback
-    // );
+    const url = `${process.env.REACT_APP_LOCAL_SERVER_URL}/purchase`;
+    postData(
+      url,
+      { ...itemData, ingredients: ingredients },
+      setStatusData,
+      callback
+    );
   };
 
   useEffect(() => {
@@ -99,18 +192,74 @@ const AddItems = () => {
       value: item.id,
       label: `${item.item_name} - ${item.item_id}`,
     }));
-    const mappedSelectUnitsMeasure = unitsOfMeasure?.map((u) => ({
-      value: u.id,
-      label: u.name,
-    }));
     const mappedSelectCategories = categories?.map((category) => ({
       value: category.id,
       label: category.name,
     }));
-    setMappedUnitsOfMeasure(mappedSelectUnitsMeasure);
+    const mappedSelectedUnitsofMeasure = selectedCategories?.map(
+      (category) => ({
+        value: category.id,
+        label: category.name + ` (${category.symbol})`,
+      })
+    );
+    setMappedSelectedUnitsOfMeasure(mappedSelectedUnitsofMeasure);
     setMappedInventoryItems(mappedInventoryItems);
     setMappedCategories(mappedSelectCategories);
-  }, [inventory, unitsOfMeasure, categories]);
+    console.log(inventory);
+  }, [inventory, unitsOfMeasure, categories, selectedCategories]);
+
+  const handleGetCategories = (id) => {
+    getData(
+      `${process.env.REACT_APP_LOCAL_SERVER_URL}/unitofmeasure/${id}`,
+      setStatusData,
+      setSelectedCategories
+    ).then(() => {
+      console.log(selectedCategories);
+    });
+  };
+
+  const [selectedIngredient, setSelectedIngredient] = useState(null);
+  const handleInputChangee = (id, key, value, index) => {
+    let updatedIngredients = ingredients.map((ingredient) => {
+      if (ingredient.id === id) {
+        return { ...ingredient, [key]: value }; // Update the specific key if the ID matches
+      } else {
+        return ingredient; // Return the unchanged ingredient if the ID doesn't match
+      }
+    });
+    setIngredients(updatedIngredients);
+    if (key === "inventory_item_id") {
+      setSelectedIngredient(id);
+      handleGetCategories(value);
+    }
+  };
+
+  useEffect(() => {
+    const mappedSelectedUnitsofMeasure = selectedCategories?.map(
+      (category) => ({
+        value: category.id,
+        label: category.name + ` (${category.symbol})`,
+      })
+    );
+    setMappedSelectedUnitsOfMeasure(mappedSelectedUnitsofMeasure);
+  }, [selectedCategories]);
+
+  useEffect(() => {
+    const updatedIngredients = [...ingredients];
+    updatedIngredients.forEach((ingredient) => {
+      // if selectedIngredient then update the mappedSelectedUnitsOfMeasure for that ingredient
+      if (selectedIngredient) {
+        const selectedItem = ingredient.id === selectedIngredient;
+        if (selectedItem) {
+          ingredient.mappedSelectedUnitsOfMeasure =
+            mappedSelectedUnitsOfMeasure;
+        }
+      }
+    });
+    setIngredients(updatedIngredients);
+  }, [mappedSelectedUnitsOfMeasure]);
+
+  useEffect(() => {}, [ingredients]);
 
   return (
     <>
@@ -174,9 +323,6 @@ const AddItems = () => {
                     fill="currentColor"
                     aria-hidden="true"
                   >
-                    {/* Render the uploaded image instead of the default image */}
-                    {/* You can replace this path with your actual uploaded image */}
-
                     <path
                       fillRule="evenodd"
                       d="M3 3h18v18H3V3zm2 2v14h14V5H5zm3.5 6.5a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0zm0 1.75a3.25 3.25 0 100-6.5 3.25 3.25 0 000 6.5zm7 5.75H9V14h6v6.25z"
@@ -190,7 +336,6 @@ const AddItems = () => {
                       htmlFor="file-upload"
                       className="relative cursor-pointer rounded-md bg-white font-semibold text-red-400 focus-within:outline-none focus-within:ring-2 focus-within:ring-red-400 focus-within:ring-offset-2 hover:text-red-200"
                     >
-                      {/* Show the file name if it's uploaded */}
                       <span>Upload a file</span>
                       <input
                         id="file-upload"
@@ -217,7 +362,6 @@ const AddItems = () => {
             <label htmlFor="description" className="text-[black]">
               Note
             </label>
-            {/* textarea */}
             <textarea
               className="w-full focus:outline-none border bg-[#D9D9D9] text-[#222] border-gray-300 rounded-md p-2"
               name="note"
@@ -287,80 +431,12 @@ const AddItems = () => {
                 </tr>
               </thead>
               <tbody className="bg-white text-[#222]">
-                {ingredients.map((ingredient, index) => (
-                  <tr key={index}>
-                    <td className="border border-gray-300">
-                      <CustomSelect
-                        options={mappedInventoryItems}
-                        name="inventory_item_id"
-                        handleChange={(e) =>
-                          handleInputChange(index, "inventory_item_id", e.value)
-                        }
-                        value={
-                          ingredient.inventory_item_id
-                            ? ingredient.inventory_item_id
-                            : null
-                        }
-                        placeholder="Select Product Item"
-                        styles={{
-                          optionStyles: {
-                            background: "white",
-                          },
-                          controlStyles: {
-                            background: "white",
-                          },
-                        }}
-                      />
-                    </td>
-                    <td className="border border-gray-300">
-                      <input
-                        type="number"
-                        value={ingredient.quantity}
-                        onChange={(e) =>
-                          handleInputChange(index, "quantity", e.target.value)
-                        }
-                        className="w-full px-3 py-1 focus:outline-none"
-                        placeholder="Quantity"
-                      />
-                    </td>
-                    <td className="border border-gray-300">
-                      <CustomSelect
-                        name="unit_of_measurement_id"
-                        options={mappedUnitsOfMeasure}
-                        handleChange={(e) =>
-                          handleInputChange(
-                            index,
-                            "unit_of_measurement_id",
-                            e.value
-                          )
-                        }
-                        value={
-                          ingredient.unit_of_measurement_id
-                            ? ingredient.unit_of_measurement_id
-                            : null
-                        }
-                        styles={{
-                          optionStyles: {
-                            background: "white",
-                          },
-                          controlStyles: {
-                            background: "white",
-                          },
-                        }}
-                      />
-                    </td>
-                    <td className="border border-gray-300">
-                      <div className="flex justify-center">
-                        <button
-                          onClick={() => handleRemoveRow(ingredient.id)}
-                          className="bg-red-500 text-sm text-white px-3 py-0.5 rounded-md flex items-center gap-1"
-                        >
-                          Remove <Trash className="w-4 h-4" />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
+                <Row
+                  ingredients={[...ingredients]}
+                  mappedInventoryItems={mappedInventoryItems}
+                  handleInputChangee={handleInputChangee}
+                  handleRemoveRow={handleRemoveRow}
+                />
               </tbody>
             </table>
           </div>
