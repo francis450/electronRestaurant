@@ -12,7 +12,7 @@ import useAxios from "../../../hooks/useAxios";
 import { StatusModalContext } from "../../App/App";
 import { useUnitsOfMeasure } from "../../../hooks/useUnitsOfMeasure";
 import { useCategories } from "../../../hooks/useCategories";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useMenuCategories } from "../../../hooks/useMenuCategories";
 
 const Row = ({
@@ -23,19 +23,48 @@ const Row = ({
 }) => {
   return (
     <>
-      {ingredients.map(
+      {ingredients.length > 0 && ingredients.map(
         (
           {
             inventory_item_id,
-            mappedSelectedUnitsOfMeasure,
+            ingredient_name = "",
+            mappedSelectedUnitsOfMeasure = [],
             quantity,
             unit_of_measurement_id,
             id,
+            unit_of_measurement,
           },
           index
-        ) => (
+        ) => {
+            return(
+              <>
+          {unit_of_measurement && (
           <tr key={index}>
             <td className="border border-gray-300">
+              <div id={`ingredient-${id}`}>{ingredient_name}</div>
+            </td>
+            <td className="border border-gray-300">
+              {quantity}
+            </td>
+            <td className="border border-gray-300">
+              <div>{unit_of_measurement}</div>
+            </td>
+            <td className="border border-gray-300">
+              <div className="flex justify-center">
+                <button
+                  onClick={() => handleRemoveRow(id)}
+                  type="button"
+                  className="bg-red-500 text-sm text-white px-3 py-0.5 rounded-md flex items-center gap-1"
+                >
+                  Remove <Trash className="w-4 h-4" />
+                </button>
+              </div>
+            </td>
+          </tr>
+            )}
+            {!unit_of_measurement && 
+            (<tr key={index}>
+          <td className="border border-gray-300">
               <CustomSelect
                 options={mappedInventoryItems}
                 name="inventory_item_id"
@@ -54,9 +83,10 @@ const Row = ({
                 }}
                 editing={inventory_item_id ? true : false}
               />
-            </td>
+              
+          </td>
             <td className="border border-gray-300">
-              <input
+            <input
                 type="number"
                 value={quantity}
                 onChange={(e) =>
@@ -67,7 +97,7 @@ const Row = ({
               />
             </td>
             <td className="border border-gray-300">
-              <CustomSelect
+          <CustomSelect
                 name="unit_of_measurement_id"
                 options={[...mappedSelectedUnitsOfMeasure]}
                 handleChange={(e) =>
@@ -75,7 +105,7 @@ const Row = ({
                     id,
                     "unit_of_measurement_id",
                     e.value,
-                    index
+                    unit_of_measurement_id
                   )
                 }
                 value={unit_of_measurement_id ? unit_of_measurement_id : null}
@@ -89,8 +119,8 @@ const Row = ({
                 }}
                 editing={unit_of_measurement_id ? true : false}
               />
-            </td>
-            <td className="border border-gray-300">
+          </td>
+          <td className="border border-gray-300">
               <div className="flex justify-center">
                 <button
                   onClick={() => handleRemoveRow(id)}
@@ -102,15 +132,17 @@ const Row = ({
               </div>
             </td>
           </tr>
-        )
+            )}
+          </>
+        )}
       )}
     </>
   );
 };
 
-const AddItems = () => {
+const EditItems = () => {
   const navigate = useNavigate();
-  const { unitsOfMeasure } = useUnitsOfMeasure();
+  const { id } = useParams();
   const { inventory } = useInventory();
   const { menuCategories } = useMenuCategories();
   const { getData, postData } = useAxios();
@@ -124,21 +156,13 @@ const AddItems = () => {
     name: "",
     description: "",
     price: 0.0,
-    menu_item_category_id: null,
-    is_available: 1,
+    category_id: null,
+    is_available: true,
     image: null,
     note: "",
   });
 
-  const [ingredients, setIngredients] = useState([
-    {
-      id: 1,
-      inventory_item_id: "",
-      quantity: "",
-      unit_of_measurement_id: "",
-      mappedSelectedUnitsOfMeasure: [],
-    },
-  ]);
+  const [ingredients, setIngredients] = useState([]);
 
   const handleChange = (e) => {
     setItemData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -206,22 +230,16 @@ const AddItems = () => {
       value: item.id,
       label: `${item.item_name} - ${item.item_id}`,
     }));
-    const mappedSelectCategories = menuCategories?.data?.map((category) => ({
+    const mappedSelectCategories = menuCategories.data?.map((category) => ({
       value: category.id,
       label: category.name,
     }));
-    const mappedSelectedUnitsofMeasure = selectedCategories?.map(
-      (category) => ({
-        value: category.id,
-        label: category.name + ` (${category.symbol})`,
-      })
-    );
-    setMappedSelectedUnitsOfMeasure(mappedSelectedUnitsofMeasure);
     setMappedInventoryItems(mappedInventoryItems);
     setMappedCategories(mappedSelectCategories);
-  }, [inventory, unitsOfMeasure, menuCategories, selectedCategories]);
+  }, [menuCategories, inventory]);
 
   const handleGetCategories = (id) => {
+    console.log("id", id);
     getData(
       `${process.env.REACT_APP_LOCAL_SERVER_URL}/unitofmeasure/${id}`,
       setStatusData,
@@ -230,11 +248,12 @@ const AddItems = () => {
   };
 
   const [selectedIngredient, setSelectedIngredient] = useState(null);
+
   const handleInputChangee = (id, key, value, index) => {
-    // clear value in select first 
+    // console.log("id", id, "key", key, "value", value, "index", index);
     let updatedIngredients = ingredients.map((ingredient) => {
       if (ingredient.id === id) {
-        return { ...ingredient, [key]: value }; // Update the specific key if the ID matches
+        return { ...ingredient, [key]: value, unit_of_measurement_id: "" }; // Update the specific key if the ID matches
       } else {
         return ingredient; // Return the unchanged ingredient if the ID doesn't match
       }
@@ -242,6 +261,7 @@ const AddItems = () => {
     setIngredients(updatedIngredients);
     if (key === "inventory_item_id") {
       setSelectedIngredient(id);
+      console.log("value",id, value, selectedIngredient);
       handleGetCategories(value);
     }
   };
@@ -268,14 +288,29 @@ const AddItems = () => {
         }
       }
     });
+
     setIngredients(updatedIngredients);
   }, [mappedSelectedUnitsOfMeasure]);
 
-  useEffect(() => {}, [ingredients]);
+  useEffect(() => {
+    // get menuData then update ingredients and itemData
+    getData(`${process.env.REACT_APP_LOCAL_SERVER_URL}/menu/${id}`, setStatusData, (data) => {
+      setItemData(data);
+      setIngredients(data.ingredients);
+    })
+
+  }, [id]);
+
+
+  useEffect(() => {
+
+    console.log(itemData, ingredients, selectedIngredient);
+
+  }, [itemData, ingredients, selectedIngredient])
 
   return (
     <>
-      <h1 className="text-xl text-left px-2">Add Items</h1>
+      <h1 className="text-xl text-left px-2">Edit Menu Item</h1>
       <form className="grid grid-cols-2 bg-white min-h-[62vh]">
         <section className="details-section px-2">
           <div className="flex flex-col gap-1 items-start w-full">
@@ -299,7 +334,7 @@ const AddItems = () => {
             <textarea
               className="w-full focus:outline-none h-20 border bg-[#D9D9D9] text-[#222] border-gray-300 rounded-md p-2"
               name="description"
-              value={itemData.description}
+              value={itemData.description ? itemData.description : ""}
               onChange={handleChange}
             ></textarea>
           </div>
@@ -322,13 +357,19 @@ const AddItems = () => {
             </label>
             <div className="flex w-full justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10">
               <div className="text-center flex flex-col items-center">
-                {imageUrl ? (
-                  <img
+                {itemData.img ? 
+                  !imageUrl ? (<img
+                    src={`http://localhost:8000${itemData.img}`}
+                    alt="Uploaded"
+                    className="h-10 w-10 object-cover"
+                  />) : (
+                    <img
                     src={imageUrl}
                     alt="Uploaded"
                     className="h-10 w-10 object-cover"
                   />
-                ) : (
+                  )
+                : (
                   <svg
                     className="mx-auto h-12 w-12 text-gray-300"
                     viewBox="0 0 24 24"
@@ -392,7 +433,7 @@ const AddItems = () => {
                 onChange={(e) =>
                   setItemData((prev) => ({
                     ...prev,
-                    is_available: prev.is_available === 0 ? 1 : 0,
+                    available: !prev.available,
                   }))
                 }
               />
@@ -409,13 +450,14 @@ const AddItems = () => {
               Menu Category
             </label>
             <CustomSelect
-              name="menu_item_category_id"
+              name="category_id"
               options={mappedCategories}
               handleChange={(e) => {
-                setItemData((prev) => ({ ...prev, menu_item_category_id: e.value }));
+                setItemData((prev) => ({ ...prev, menu_item_category_id : e.value }));
               }}
               value={itemData.menu_item_category_id ? itemData.menu_item_category_id : null}
               placeholder="Select Menu Category"
+              editing={itemData.menu_item_category_id ? true : false}
             />
           </div>
           <div className="w-full flex items-start mt-3">
@@ -445,6 +487,7 @@ const AddItems = () => {
               <tbody className="bg-white text-[#222]">
                 <Row
                   ingredients={[...ingredients]}
+
                   mappedInventoryItems={mappedInventoryItems}
                   handleInputChangee={handleInputChangee}
                   handleRemoveRow={handleRemoveRow}
@@ -480,4 +523,4 @@ const AddItems = () => {
   );
 };
 
-export default AddItems;
+export default EditItems;

@@ -22,6 +22,7 @@ const CustomSelect = ({
   handleChange,
   placeholder = "Select ...",
   editing,
+  callback = () => {},
   styles = {
     optionStyles: {},
     controlStyles: {}
@@ -79,6 +80,17 @@ const CustomSelect = ({
       return option;
     });
   }, [options, value]);
+
+  useEffect(() => {
+    if(name === "unit_of_measurement_id"){
+      setSelected(null)
+    }
+  }, [name]);
+
+  useEffect(() => {
+    console.log("callback called", options);
+    callback()
+  }, []);
 
   return (
     <div className="w-full rounded-md">

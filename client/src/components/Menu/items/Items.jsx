@@ -22,7 +22,7 @@ const Items = () => {
           </TableContainer>
         )}
       </section>
-      {pathname === "/menu/items/add" && <Outlet />}
+      {pathname !== "/menu/items" && <Outlet />}
     </>
   );
 };
