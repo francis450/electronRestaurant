@@ -21,7 +21,8 @@ class DatabaseSeeder extends Seeder
         \App\Models\MenuItemCategory::factory()->count(5)->create();
         $this->call(MenuItemTableSeeder::class);
         $this->call(IngredientsTableSeeder::class);
-        // use the factory to seed 20 records
         \App\Models\InventoryPurchaseReceipt::factory()->count(20)->create();
+        \App\Models\Section::factory()->count(10)->create();
+        \App\Models\Table::factory()->count(10)->create();
     }
 }

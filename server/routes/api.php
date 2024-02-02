@@ -7,6 +7,7 @@ use App\Http\Controllers\InventoryPurchasesController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\MenuItemCategoryController;
 use App\Http\Controllers\RegController;
+use App\Http\Controllers\SectionController;
 use App\Http\Controllers\SuppliersController;
 use App\Http\Controllers\UserController;
 use App\Models\MenuItem;
@@ -77,13 +78,13 @@ Route::get('/unitofmeasure/{id}', function ($id) {
     }
 
     if ($unit->type != 'base') {
+        $subunit = collect([$unit]);
         return response()->json([
-            'data' => $unit,
+            'data' => $subunit,
             'status' => 'success'
         ], 200);
     }
 
-    $subunits = $unit->subunits;
 
     $allUnits = collect([$unit])->merge($unit->subunits);
     // remove subunits from $unit
@@ -130,4 +131,13 @@ Route::controller(MenuItemCategoryController::class)->group(function () {
     Route::post('/menu_category', 'store');
     Route::delete('/menu_category/{id}', 'destroy');
     Route::put('/menu_category/{id}', 'update');
+});
+
+
+Route::controller(SectionController::class)->group(function () {
+    Route::get('/sections', 'index');
+    Route::get('/section/{id}', 'show');
+    Route::post('/section', 'store');
+    Route::delete('/section/{id}', 'destroy');
+    Route::put('/section/{id}', 'update');
 });
