@@ -13,7 +13,7 @@ export const useSuppliers = () => {
           setError(false);
           setLoading(true);
           try {
-            const res = await axios.get(`${process.env.REACT_APP_LOCAL_SERVER_URL}/suppliers`);
+            const res = await axios.get(`${process.env.REACT_APP_LOCAL_API_SERVER_URL}/suppliers`);
             setSuppliers(res.data);
           } catch (error) {
             setError(true)

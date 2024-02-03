@@ -38,7 +38,7 @@ export const Table = ({
 
   const deleteReceipt = (supplier) => {
     deleteData(
-      `${process.env.REACT_APP_LOCAL_SERVER_URL}/purchase/${supplier.id}`,
+      `/purchase/${supplier.id}`,
       setStatusData
     );
   };

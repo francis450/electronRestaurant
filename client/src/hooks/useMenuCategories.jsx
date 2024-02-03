@@ -13,7 +13,7 @@ export const useMenuCategories = () => {
           setError(false);
           setLoading(true);
           try {
-            const res = await axios.get(`${process.env.REACT_APP_LOCAL_SERVER_URL}/menu_categories`);
+            const res = await axios.get(`${process.env.REACT_APP_LOCAL_API_SERVER_URL}/menu_categories`);
             setMenuCategories(res.data);
           } catch (error) {
             setError(true)

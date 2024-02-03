@@ -55,7 +55,7 @@ const Items = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const url = `${process.env.REACT_APP_LOCAL_SERVER_URL}/newInventoryItem`;
+    const url = `/newInventoryItem`;
     postData(url, formData, setStatusData, callback);
   };
 

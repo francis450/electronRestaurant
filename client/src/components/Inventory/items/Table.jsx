@@ -41,7 +41,7 @@ export const Table = ({
 
   const deleteInventoryItem = (inventoryItem) => {
     deleteData(
-      `${process.env.REACT_APP_LOCAL_SERVER_URL}/inventoryItem/${inventoryItem.id}`,
+      `/inventoryItem/${inventoryItem.id}`,
       setStatusData
     );
   };

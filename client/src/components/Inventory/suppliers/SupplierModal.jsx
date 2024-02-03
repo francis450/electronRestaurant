@@ -21,7 +21,7 @@ const SupplierModal = ({
   const handleUpdate = (e) => {
     e.preventDefault();
     console.log('submitting data');
-    const url = `${process.env.REACT_APP_LOCAL_SERVER_URL}/editSupplier/${formData.id}`;
+    const url = `/editSupplier/${formData.id}`;
     postData(url, formData, setStatusData, callback);
   };
 

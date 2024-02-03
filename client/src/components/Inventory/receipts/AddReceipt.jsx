@@ -58,7 +58,7 @@ const AddReceipt = ({ setIsAddReceiptSection, editing = false }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const url = `${process.env.REACT_APP_LOCAL_SERVER_URL}/purchase`;
+    const url = `/purchase`;
     postData(
       url,
       { ...receiptDetails, items: purchases },

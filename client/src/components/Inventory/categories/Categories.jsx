@@ -14,7 +14,7 @@ const Categories = () => {
   };
 
   const addCateggory = () => {
-    const url = `${process.env.REACT_APP_LOCAL_SERVER_URL}/category`;
+    const url = `/category`;
     postData(url, { name }, setStatusData, callback);
   };
 

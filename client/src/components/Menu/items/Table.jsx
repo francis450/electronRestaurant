@@ -29,7 +29,7 @@ export const Table = ({ children, data, statusData, setStatusData }) => {
 
   const deleteMenu = (supplier) => {
     deleteData(
-      `${process.env.REACT_APP_LOCAL_SERVER_URL}/purchase/${supplier.id}`,
+      `/purchase/${supplier.id}`,
       setStatusData
     );
   };

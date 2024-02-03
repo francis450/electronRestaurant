@@ -14,7 +14,7 @@ export const useMenuItems = () => {
       setLoading(true);
       try {
         const res = await axios.get(
-          `${process.env.REACT_APP_LOCAL_SERVER_URL}/menu`
+          `${process.env.REACT_APP_LOCAL_API_SERVER_URL}/menu`
         );
         setMenuItems(res.data);
       } catch (error) {

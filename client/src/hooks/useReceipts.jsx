@@ -14,7 +14,7 @@ export const useReceipts = () => {
       setLoading(true);
       try {
         const res = await axios.get(
-          `${process.env.REACT_APP_LOCAL_SERVER_URL}/purchases`
+          `${process.env.REACT_APP_LOCAL_API_SERVER_URL}/purchases`
         );
         setReceipts(res.data);
       } catch (error) {

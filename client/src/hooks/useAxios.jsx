@@ -1,6 +1,8 @@
 import { useState } from "react";
 import axios from "axios";
 
+const server_url = process.env.REACT_APP_LOCAL_API_SERVER_URL;
+
 function useAxios(url) {
   const [data, setData] = useState();
   const [error, setError] = useState();
@@ -21,7 +23,7 @@ function useAxios(url) {
   const getData = async (url, setStatusData, setCallerData) => {
     setLoading(true)
     try {
-      await axios.get(url).then((res) => {
+      await axios.get(`${server_url}${url}`).then((res) => {
         setCallerData(res.data.data)
       })
     } catch (error) {
@@ -33,7 +35,7 @@ function useAxios(url) {
   const postData = async (url, body, setStatusData, callback) => {
     setLoading(true);
     try {
-      const response = await axios.post(url, body);
+      const response = await axios.post(`${server_url}${url}`, body);
       if (response.status >= 200 && response.status < 300) {
         setStatusData((prev) => ({
           ...prev,
@@ -64,7 +66,7 @@ function useAxios(url) {
     const putData = async (url, body, setStatusData, callback) => {
       setLoading(true);
       try {
-        const response = await axios.put(url, body);
+        const response = await axios.put(`${server_url}${url}`, body);
         if (response.status >= 200 && response.status < 300) {
           setStatusData((prev) => ({
             ...prev,
@@ -96,7 +98,7 @@ function useAxios(url) {
     // delete data
     setLoading(true);
     try {
-      const response = await axios.delete(url);
+      const response = await axios.delete(`${server_url}${url}`);
       setData(response.data);
       setStatusData((prev) => ({
         ...prev,
