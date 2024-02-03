@@ -45,7 +45,7 @@ const Suppliers = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const url = "http://localhost:8000/api/newSupplier";
+    const url = "/newSupplier";
     postData(url, formData, setStatusData, callback);
   };
 
