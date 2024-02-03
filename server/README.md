@@ -45,7 +45,12 @@ This API serves as the core engine for managing menus, inventory, orders, and mo
         3. [To Get specific Menu category using id](#get-specific-menu-item-using-id)
         4. [Update specific category details using id](#edit-an-existing-menu-category)
         5. [Delete specific category using id](#delete-a-specific-menu-category)
-
+    8. [Sections For Tables on a restaurant](#table-sections-endpoints)
+        1. [Adding A New Section/Areas](#create-a-new-table-section)
+        2. [To List All Table Sections](#list-all-table-sections)
+        3. [To Update A specific Section](#edit-a-particular-table-section)
+        4. [To Add A New Table Section](#create-a-new-table-section)
+        5. [To Delete A Table Sections](#delete-a-particular-table-section)
 3. [Authentication](#authentication)
 
 
@@ -419,6 +424,86 @@ This API serves as the core engine for managing menus, inventory, orders, and mo
   - **Parameters:**
     - `{id}`: The unique identifier of the menu category.
   - **Description:** Deletes a specific menu category identified by its ID.
+
+
+
+## Table Sections Endpoints
+  ### Create a New Table Section 
+  - **URL:** `/section`
+  - **HTTP Method:** `POST`
+  - **Payload Options:**
+      ```json
+      {
+        "name": "main hall",
+        "description": "Behind the bar"
+      }
+      ```
+  ### List All Table Sections
+
+  - **URL:** `/sections`
+  - **HTTP Method:** `GET`
+  - **Description:** Retrieve a list of all table sections.
+  ### Show Details of particular tables section
+  - **URL:** `/section/{id}`
+  - **HTTP Method:** `GET`
+  - **Parameters:**
+    - `{id}`: The unique identifier of the table sections.
+  - **Description:** Retrieve details of a specific tables sections identified by its ID.
+  ### Edit a Particular table section
+
+  - **URL:** `/section/{id}`
+  - **HTTP Method:** `PUT`
+    - **Payload Options:**
+        ```json
+        {
+          "name": "main hall",
+          "description": "Behind the bar"
+        }
+        ```
+  ### Delete a Particular table section
+  - **URL:** `/section/{id}`
+  - **HTTP Method:** `DELETE`
+
+## Restaurant Tables Endpoints
+  ### Create a New Table 
+  - **URL:** `/table`
+  - **HTTP Method:** `POST`
+  - **Payload Options:**
+      ```json
+      {
+        "name": "table12",
+        "description": "Describe The Table",
+        "section_id": 1
+      }
+      ```
+  ### List All Tables
+  - **URL:** `/tables`
+  - **HTTP Method:** `GET`
+  - **Description:** Retrieve a list of all tables.
+  ### Show Details of particular Table
+  - **URL:** `/table/{id}`
+  - **HTTP Method:** `GET`
+  - **Parameters:**
+    - `{id}`: The unique identifier of the tables.
+  - **Description:** Retrieve details of a specific tables  identified by its ID.
+  ### Edit a Particular table
+
+  - **URL:** `/table/{id}`
+  - **HTTP Method:** `PUT`
+    - **Payload Options:**
+        ```json
+        {
+          "name": "table12",
+          "description": "Change description",
+          "section_id": 1
+        }
+        ```
+  ### Delete a Particular table
+  - **URL:** `/table/{id}`
+  - **HTTP Method:** `DELETE`
+
+
+
 ## Authentication
   - **URL** `/authenticate`
   - **HTTP Method:** `POST`

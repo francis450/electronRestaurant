@@ -9,6 +9,7 @@ use App\Http\Controllers\MenuItemCategoryController;
 use App\Http\Controllers\RegController;
 use App\Http\Controllers\SectionController;
 use App\Http\Controllers\SuppliersController;
+use App\Http\Controllers\TablesController;
 use App\Http\Controllers\UserController;
 use App\Models\MenuItem;
 use Illuminate\Http\Request;
@@ -140,4 +141,21 @@ Route::controller(SectionController::class)->group(function () {
     Route::post('/section', 'store');
     Route::delete('/section/{id}', 'destroy');
     Route::put('/section/{id}', 'update');
+});
+
+
+Route::controller(TablesController::class)->group(function () {
+    Route::get('/tables', 'index');
+    Route::get('/table/{id}', 'show');
+    Route::post('/table', 'store');
+    Route::delete('/table/{id}', 'destroy');
+    Route::put('/table/{id}', 'update');
+});
+
+// method not allowed
+Route::fallback(function () {
+    return response()->json([
+        'message' => 'Method not allowed',
+        'status' => 'error'
+    ], 405);
 });
