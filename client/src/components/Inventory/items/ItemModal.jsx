@@ -30,7 +30,7 @@ const ItemModal = ({
 
   const handleUpdate = (e) => {
     e.preventDefault();
-    const url = `http://localhost:8000/api/inventoryItem/${formData.id}`;
+    const url = `/inventoryItem/${formData.id}`;
     putData(
       url,
       {

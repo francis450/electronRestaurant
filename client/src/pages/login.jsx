@@ -34,7 +34,7 @@ export const Login = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const url = "http://localhost:8000/api/authenticate";
+    const url = "/authenticate";
     postData(url, credentials, setStatusData, callback);
   };
 
