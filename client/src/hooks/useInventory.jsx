@@ -13,7 +13,7 @@ export const useInventory = () => {
           setError(false);
           setLoading(true);
           try {
-            const res = await axios.get(`${process.env.REACT_APP_LOCAL_SERVER_URL}/inventoryItems`);
+            const res = await axios.get(`${process.env.REACT_APP_LOCAL_API_SERVER_URL}/inventoryItems`);
             setInventory(res.data);
           } catch (error) {
             setError(true)

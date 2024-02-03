@@ -11,7 +11,7 @@ export const useUnitsOfMeasure = () => {
           setError(false);
           setLoading(true);
           try {
-            const res = await axios.get(`${process.env.REACT_APP_LOCAL_SERVER_URL}/unitsofmeasure`);
+            const res = await axios.get(`${process.env.REACT_APP_LOCAL_API_SERVER_URL}/unitsofmeasure`);
             setUnitsOfMeasure(res.data);
           } catch (error) {
             setError(true)

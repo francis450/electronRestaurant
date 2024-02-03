@@ -18,7 +18,7 @@ export const Table = ({
 
   const deleteCategory = (supplier) => {
     deleteData(
-      `${process.env.REACT_APP_LOCAL_SERVER_URL}/category/${supplier.id}`,
+      `/category/${supplier.id}`,
       setStatusData
     );
   };
@@ -44,12 +44,12 @@ export const Table = ({
 
   const onEditComplete = useCallback(
     ({ value, columnId, rowId }) => {
-      const url = `${process.env.REACT_APP_LOCAL_SERVER_URL}/category/${rowId}`;
+      const url = `/category/${rowId}`;
       putData(url, { [columnId]: value }, setStatusData, () =>
         console.log("updated")
       );
     },
-    [data]
+    [putData, setStatusData]
   );
 
   const renderActions = ({ data }) => {

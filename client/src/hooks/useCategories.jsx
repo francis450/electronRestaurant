@@ -14,7 +14,7 @@ export const useCategories = () => {
       setLoading(true);
       try {
         const res = await axios.get(
-          `${process.env.REACT_APP_LOCAL_SERVER_URL}/categories`
+          `${process.env.REACT_APP_LOCAL_API_SERVER_URL}/categories`
         );
         setCategories(res.data);
       } catch (error) {

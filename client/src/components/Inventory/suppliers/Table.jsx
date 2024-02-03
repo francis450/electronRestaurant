@@ -43,7 +43,7 @@ export const Table = ({
 
   const deleteSupplier = (supplier) => {
     deleteData(
-      `${process.env.REACT_APP_LOCAL_SERVER_URL}/supplier/${supplier.id}`,
+      `/supplier/${supplier.id}`,
       setStatusData
     );
   };

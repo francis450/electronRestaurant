@@ -7,6 +7,7 @@ use App\Models\Inventory;
 use App\Models\MenuItem;
 use App\Models\UnitsOfMeasurement;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class MenuController extends Controller
 {
@@ -66,7 +67,6 @@ class MenuController extends Controller
                 'img' => $imageName
             ]);
         }
-
         $item = MenuItem::create($request->only(['name', 'description', "price", "menu_item_category_id", "img", "is_available", 'note']));
 
         $menuItems = array();

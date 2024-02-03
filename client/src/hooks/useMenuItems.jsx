@@ -2,33 +2,33 @@ import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import { StatusModalContext } from "../components/App/App";
 
-export const useReceipts = () => {
+export const useMenuItems = () => {
   const { statusData } = useContext(StatusModalContext);
-  const [receipts, setReceipts] = useState([]);
+  const [menuItems, setMenuItems] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
 
   useEffect(() => {
-    const fetchReceipts = async () => {
+    const fetchMenuItems = async () => {
       setError(false);
       setLoading(true);
       try {
         const res = await axios.get(
-          `${process.env.REACT_APP_LOCAL_API_SERVER_URL}/purchases`
+          `${process.env.REACT_APP_LOCAL_API_SERVER_URL}/menu`
         );
-        setReceipts(res.data);
+        setMenuItems(res.data);
       } catch (error) {
         setError(true);
       } finally {
         setLoading(false);
       }
     };
-    fetchReceipts();
+    fetchMenuItems();
   }, [statusData]);
 
   return {
     loading,
     error,
-    receipts,
+    menuItems,
   };
 };

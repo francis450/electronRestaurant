@@ -8,10 +8,10 @@ export default function MenuList() {
     <ul className="md:menu ml-6 mb-3">
       <ResponsiveNavLink
         to={"/dashboard"}
-        active={"/dashboard" === location.pathname}
+        active={location.pathname.includes("/dashboard")}
         className="flex items-center gap-3"
       >
-       <svg
+        <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
           viewBox="0 0 24 24"
@@ -29,7 +29,7 @@ export default function MenuList() {
       </ResponsiveNavLink>
       <ResponsiveNavLink
         to={"/sales"}
-        active={".sales" === location.pathname}
+        active={location.pathname.includes("/sales")}
         className="flex items-center gap-3"
       >
         <svg
@@ -50,7 +50,7 @@ export default function MenuList() {
       </ResponsiveNavLink>
       <ResponsiveNavLink
         to={"/orders"}
-        active={"/orders" === location.pathname}
+        active={location.pathname.includes("/orders")}
         className="flex items-center gap-3"
       >
         <svg
@@ -70,8 +70,31 @@ export default function MenuList() {
         <span className="">Orders</span>
       </ResponsiveNavLink>
       <ResponsiveNavLink
+        to={"/menu/items"}
+        active={location.pathname.includes("/menu/items")}
+        className="flex items-center gap-3"
+      >
+        <svg
+          className="w-6 h-6"
+          aria-hidden="true"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke="currentColor"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            d="M15 4h3c.6 0 1 .4 1 1v15c0 .6-.4 1-1 1H6a1 1 0 0 1-1-1V5c0-.6.4-1 1-1h3m0 3h6m-3 5h3m-6 0h0m3 4h3m-6 0h0m1-13v4h4V3h-4Z"
+          />
+        </svg>
+        <span className="">Menu</span>
+      </ResponsiveNavLink>
+      <ResponsiveNavLink
         to={"/inventory"}
-        active={"/inventory" === location.pathname}
+        active={location.pathname.includes("/inventory")}
         className="flex items-center gap-3"
       >
         <svg
@@ -92,7 +115,7 @@ export default function MenuList() {
       </ResponsiveNavLink>
       <ResponsiveNavLink
         to={"/users"}
-        active={"/users" === location.pathname}
+        active={location.pathname.includes("/users")}
         className="flex items-center gap-3"
       >
         <svg
@@ -118,7 +141,7 @@ export default function MenuList() {
       </ResponsiveNavLink>
       <ResponsiveNavLink
         to={"/notifications"}
-        active={"/notifications" === location.pathname}
+        active={location.pathname.includes("/notifications")}
         className="flex items-center gap-3"
       >
         <svg
@@ -139,8 +162,8 @@ export default function MenuList() {
       </ResponsiveNavLink>
 
       <ResponsiveNavLink
-        to={"/profile"}
-        active={"/profile" === location.pathname}
+        to={"/departments"}
+        active={location.pathname.includes("/departments")}
         className="flex items-center gap-3"
       >
         <svg
@@ -163,7 +186,7 @@ export default function MenuList() {
 
       <ResponsiveNavLink
         to={"/profile"}
-        active={"/profile" === location.pathname}
+        active={location.pathname.includes("/profile")}
         className="flex items-center gap-3"
       >
         <svg
