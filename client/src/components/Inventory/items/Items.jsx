@@ -22,6 +22,57 @@ const Items = () => {
     expiration_date: "",
   });
 
+  const [errors, setErrors] = useState({
+    item_name: "",
+    category_id: "",
+    unit_of_measurement_id: "",
+    current_quantity: "",
+    par_level: "",
+    reorder_point: "",
+    supplier: "",
+    cost_per_unit:"",
+    expiration_date: "",
+  });
+
+  const [formRegexError, setFormRegexerror] = useState({
+    item_name: {
+      regex: /^[a-zA-Z\s]{3,}$/,
+      message: "Name must be at least 3 characters long",
+    },
+    category_id: {
+      regex: /.*\d+.*$/,
+      message: "Name must be at least 3 characters long",
+    },
+    unit_of_measurement_id: {
+      regex: /.*\d+.*$/,
+      message: "Name must be at least 3 characters long",
+    },
+    current_quantity: {
+      regex: /^[0-9]{1,}$/,
+      message: "Invalid quantity",
+    },
+    par_level: {
+      regex: /^[0-9]{1,}$/,
+      message: "Invalid quantity",
+    },
+    reorder_point: {
+      regex: /^[0-9]{1,}$/,
+      message: "Invalid reorder point",
+    },
+    supplier: {
+      regex: /^[a-zA-Z\s]{3,}$/,
+      message: "Name must be at least 3 characters long",
+    },
+    cost_per_unit: {
+      regex: /^[0-9]{1,}$/,
+      message: "Invalid quantity",
+    },
+    expiration_date: {
+      regex: /^[0-9]{1,}$/,
+      message: "Invalid quantity",
+    },
+  });
+
   const handleChange = (e) => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };

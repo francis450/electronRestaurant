@@ -8,3 +8,13 @@ export const formatOptions = (options, id="id", name="name" ) => {
     };
   });
 };
+
+// function that validates the form fields
+// it takes in a regex pattern, the field name and the field value and setter callback to update the state
+export const validateField = (pattern, fieldName, fieldValue, setErrors, errorMessage) => {
+  if (!pattern.test(fieldValue)) {
+    setErrors((prev) => ({ ...prev, [fieldName]: errorMessage}));
+  } else {
+    setErrors((prev) => ({ ...prev, [fieldName]: "" }));
+  }
+}

@@ -10,6 +10,7 @@ import {
   ReceiptIcon,
   Trash,
 } from "../../../reusables/svgs/svgs";
+import { validateField } from "../../../lib/utils";
 
 const AddReceipt = ({ setIsAddReceiptSection, editing = false }) => {
   const { suppliers } = useSuppliers();
@@ -25,12 +26,51 @@ const AddReceipt = ({ setIsAddReceiptSection, editing = false }) => {
     total_cost: "",
     payment_method: "",
   });
+
+  const [errors, setErrors] = useState({
+    receipt_number: "",
+    supplier_id: "",
+    date: "",
+    total_cost: "",
+    payment_method: "",
+  });
+  
+  const [formRegexError, setFormRegexerror] = useState({
+    receipt_number: {
+      regex: /^[a-zA-Z0-9\s]{3,}$/,
+      message: "Receipt number must be at least 3 characters long",
+    },
+    supplier_id: {
+      regex: /^[1-9]{1,}$/,
+      message: "Select a supplier",
+    },
+    date: {
+      regex: /^.+$/,
+      message: "Date is required",
+    },
+    total_cost: {
+      regex: /^[1-9]{1,}$/,
+      message: "Invalid total cost",
+    },
+    // payment_method: {
+    //   regex: /^[1-9]{1,}$/,
+    //   message: "Select payment method",
+    // },
+  });
+
   const [purchases, setPurchases] = useState([
     { id: 1, product_id: "", quantity: "", unit_price: "" },
   ]);
 
   const handleChange = (e) => {
     setReceiptDetails((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    validateField(
+      formRegexError[e.target.name].regex,
+      e.target.name,
+      e.target.value,
+      setErrors,
+      formRegexError[e.target.name].message
+    );
   };
 
   const handleCustomSelectChange = (e, name) => {
@@ -83,30 +123,40 @@ const AddReceipt = ({ setIsAddReceiptSection, editing = false }) => {
   return (
     <div className="">
       <div className="grid md:grid-cols-5 gap-2 mt-2 mb-1">
-        <input
-          type="text"
-          name="receipt_number"
-          placeholder="Receipt Number"
-          value={receiptDetails.receipt_number}
-          onChange={handleChange}
-          className="py-1 border-none focus:outline-none text-[#222] rounded-md px-2"
-        />
-        <input
-          type="number"
-          name="total_cost"
-          placeholder="Total"
-          value={receiptDetails.total_cost}
-          onChange={handleChange}
-          className="form-control py-1 px-2 focus:outline-none rounded-md text-[#222]"
-        />
-        <input
-          type="date"
-          name="date"
-          placeholder="Date of Purchase"
-          value={receiptDetails.date}
-          onChange={handleChange}
-          className="form-control py-1 px-2 focus:outline-none rounded-md text-[#222]"
-        />
+        <div className="w-full">
+          <input
+            type="text"
+            name="receipt_number"
+            placeholder="Receipt Number"
+            value={receiptDetails.receipt_number}
+            onChange={handleChange}
+            className="py-1 border-none focus:outline-none text-[#222] rounded-md px-2 w-full"
+          />
+          <p className="text-red-500 text-xs">{errors.receipt_number}</p>
+        </div>
+        <div className="w-full">
+          <input
+            type="number"
+            name="total_cost"
+            placeholder="Total"
+            value={receiptDetails.total_cost}
+            onChange={handleChange}
+            className="form-control py-1 px-2 focus:outline-none rounded-md text-[#222] w-full"
+          />
+          <p className="text-red-500 text-xs">{errors.total_cost}</p>
+        </div>
+        <div className="w-full">
+          <input
+            type="date"
+            name="date"
+            placeholder="Date of Purchase"
+            value={receiptDetails.date}
+            onChange={handleChange}
+            className="form-control py-1 px-2 focus:outline-none rounded-md text-[#222] w-full"
+          />
+          <p className="text-red-500 text-xs">{errors.date}</p>
+        </div>
+        <div className="w-full">
         <CustomSelect
           options={[
             { value: "cash", label: "Cash" },
@@ -129,6 +179,9 @@ const AddReceipt = ({ setIsAddReceiptSection, editing = false }) => {
             },
           }}
         />
+        {/* <p className="text-red-500 text-xs">{errors.payment_method}</p> */}
+        </div>
+        <div className="w-full">
         <CustomSelect
           options={mappedSuppliers}
           name="supplier_id"
@@ -145,6 +198,8 @@ const AddReceipt = ({ setIsAddReceiptSection, editing = false }) => {
             },
           }}
         />
+        <p className="text-red-500 text-xs">{errors.supplier_id}</p>
+        </div>
       </div>
       <div className="h-[480px] overflow-y-auto">
         <table className="w-full border-collapse border border-1 border-slate-500">
@@ -237,7 +292,8 @@ const AddReceipt = ({ setIsAddReceiptSection, editing = false }) => {
         </button>
         <button
           onClick={handleSubmit}
-          className="mt-3 bg-green-700 text-[#fff] py-1 px-3 rounded-md flex items-center gap-1"
+          className="mt-3 bg-green-700 text-[#fff] py-1 px-3 rounded-md flex items-center gap-1 disabled:opacity-50 disabled:cursor-not-allowed"
+          disabled={Object.values(errors).some((err) => err !== "")}
         >
           <ReceiptIcon /> Add Receipt
         </button>
