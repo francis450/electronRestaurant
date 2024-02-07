@@ -5,7 +5,7 @@ import Input from "../reusables/forms/input";
 import { AuthContext, StatusModalContext } from "../components/App/App";
 import useAxios from "../hooks/useAxios";
 import { useNavigate } from "react-router-dom";
-import { channels } from "../components/shared/constants";
+import { channels } from "../shared/constants";
 
 export const Login = () => {
   const ipcRenderer = window?.ipcRenderer

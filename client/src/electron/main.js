@@ -1,8 +1,10 @@
-const { app, BrowserWindow } = require("electron");
-
+const { app, BrowserWindow, ipcMain, screen } = require("electron");
+const path = require('path');
+const { channels } = require('../shared/constants')
 let mainWindow;
 
 function createWindow() {
+  const { width, height } = screen.getPrimaryDisplay().workAreaSize;
   let loading = true;
   mainWindow = new BrowserWindow({
     width: "100%",
@@ -10,9 +12,13 @@ function createWindow() {
     autoHideMenuBar: true,
     titleBarStyle: "hidden",
     webPreferences: {
+      contextIsolation: true,
       nodeIntegration: true,
+      preload: path.join(__dirname, './preload.js'),
     },
   });
+
+  mainWindow.webContents.openDevTools();
 
   const fetchLocalHostAfter1s = () => {
     fetch("http://localhost:3000")
@@ -39,6 +45,10 @@ function createWindow() {
   mainWindow.on("closed", function () {
     mainWindow = null;
   });
+
+  ipcMain.on(channels.LOGIN, (event, arg) => {
+    mainWindow.setSize(width, height, true)
+  });
 }
 
 app.whenReady().then(createWindow);
@@ -50,3 +60,4 @@ app.on("window-all-closed", function () {
 app.on("activate", function () {
   if (mainWindow === null) createWindow();
 });
+
