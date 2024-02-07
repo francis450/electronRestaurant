@@ -73,7 +73,7 @@ const CustomSelect = ({
 
   useEffect(() => {
     options.map((option) => {
-      if (value && option.value === Number(value)) {
+      if (value && option.value == value) {
         setSelected(option);
       }
       return option;

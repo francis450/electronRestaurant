@@ -5,8 +5,10 @@ import Input from "../reusables/forms/input";
 import { AuthContext, StatusModalContext } from "../components/App/App";
 import useAxios from "../hooks/useAxios";
 import { useNavigate } from "react-router-dom";
+import { channels } from "../shared/constants";
 
 export const Login = () => {
+  const ipcRenderer = window?.ipcRenderer
   const { postData } = useAxios();
   const { setAuth } = useContext(AuthContext);
   const navigate = useNavigate();
@@ -20,7 +22,10 @@ export const Login = () => {
     };
     setAuth(auth);
     sessionStorage.setItem("auth", JSON.stringify(auth));
+    ipcRenderer && ipcRenderer.send(channels.LOGIN, { product: 'notebook' });
+
     navigate("/dashboard");
+    
   };
 
   const [credentials, setCredentials] = React.useState({
@@ -34,7 +39,7 @@ export const Login = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const url = "http://localhost:8000/api/authenticate";
+    const url = "/authenticate";
     postData(url, credentials, setStatusData, callback);
   };
 
