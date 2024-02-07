@@ -6,6 +6,7 @@ import { StatusModalContext } from "../../App/App";
 
 const SupplierModal = ({
   formData,
+  errors,
   closeModal,
   handleChange,
   handleSubmit,
@@ -26,7 +27,7 @@ const SupplierModal = ({
   };
 
   return (
-    <DefaultModal header={"Add Supplier Form"} closeModal={closeModal} height={43}>
+    <DefaultModal header={"Add Supplier Form"} closeModal={closeModal} height={46}>
       <form>
         <div className="form-group flex justify-center gap-2 mt-1 px-4">
           <div className="flex flex-col gap-1 items-start w-full">
@@ -41,6 +42,7 @@ const SupplierModal = ({
               onchange={handleChange}
               required={true}
             />
+            <p className="text-red-500 text-xs">{errors.name}</p>
           </div>
         </div>
         <div className="form-group flex justify-center gap-2 mt-1 px-4">
@@ -55,6 +57,7 @@ const SupplierModal = ({
               value={formData.contact_name ? formData.contact_name : ""}
               onchange={handleChange}
             />
+            <p className="text-red-500 text-xs">{errors.contact_name}</p>
           </div>
           <div className="flex flex-col gap-1 items-start w-full">
             <label htmlFor="username" className="text-[black]">
@@ -67,6 +70,7 @@ const SupplierModal = ({
               value={formData.phone_number ? formData.phone_number : ""}
               onchange={handleChange}
             />
+            <p className="text-red-500 text-xs">{errors.phone_number}</p>
           </div>
         </div>
         <div className="form-group flex justify-center gap-2 mt-1 px-4">
@@ -81,6 +85,7 @@ const SupplierModal = ({
               value={formData.email ? formData.email : ""}
               onchange={handleChange}
             />
+            <p className="text-red-500 text-xs">{errors.email}</p>
           </div>
         </div>
         <div className="form-group flex justify-center gap-2 mt-1 px-4">
@@ -95,6 +100,7 @@ const SupplierModal = ({
               value={formData.kra_pin ? formData.kra_pin : ""}
               onchange={handleChange}
             />
+            <p className="text-red-500 text-xs">{errors.kra_pin}</p>
           </div>
           <div className="flex flex-col gap-1 items-start w-full">
             <label htmlFor="username" className="text-[black]">
@@ -107,6 +113,7 @@ const SupplierModal = ({
               value={formData.address ? formData.address : ""}
               onchange={handleChange}
             />
+            <p className="text-red-500 text-xs">{errors.address}</p>
           </div>
         </div>
         <div className="form-group flex justify-center gap-2 mt-1 px-4">
@@ -121,12 +128,14 @@ const SupplierModal = ({
               value={formData.customer_unit_serial_number ? formData.customer_unit_serial_number : ""}
               onchange={handleChange}
             />
+            <p className="text-red-500 text-xs">{errors.customer_unit_serial_number}</p>
           </div>
         </div>
         <div className="px-4 mt-1 flex justify-end">
           <button
-            className="btn py-2 px-4 bg-green-700 text-[white] mt-1 rounded-lg"
+            className="btn py-1 px-4 bg-green-700 text-[white] my-2 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
             onClick={editing ? handleUpdate : handleSubmit}
+            disabled={Object.values(errors).some((err) => err !== "")}
           >
             {editing ? "Update" : "Submit"}
           </button>

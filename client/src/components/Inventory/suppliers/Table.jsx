@@ -4,6 +4,7 @@ import ReactDataGrid from "@inovua/reactdatagrid-community";
 import "@inovua/reactdatagrid-community/index.css";
 import SupplierModal from "./SupplierModal";
 import { Pencil, Trash } from "../../../reusables/svgs/svgs";
+import { validateField } from "../../../lib/utils";
 
 export const Table = ({
   children,
@@ -27,8 +28,52 @@ export const Table = ({
     customer_unit_serial_number: "",
   });
 
+  const [errors, setErrors] = useState({
+    name: "",
+    contact_name: "",
+    email: "",
+    phone_number: "",
+    address: "",
+    kra_pin: "",
+    customer_unit_serial_number: "",
+  });
+
+  const [formRegexError, setFormRegexerror] = useState({
+    name: {
+      regex: /^[a-zA-Z\s]{3,}$/,
+      message: "Name must be at least 3 characters long",
+    },
+    contact_name: {
+      regex: /^[a-zA-Z\s]{3,}$/,
+      message: "Name must be at least 3 characters long",
+    },
+    email: {
+      regex: /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
+      message: "Invalid email",
+    },
+    phone_number: {
+      regex: /^0[0-9]{9}$/,
+      message: "Phone number should be 10 digits long & start with 0",
+    },
+    address: {
+      regex: /^[a-zA-Z0-9\s,]{3,}$/,
+      message: "Invalid address",
+    },
+    kra_pin: {
+      regex: /^[0-9]{11,}$/,
+      message: "KRA pin should be at least 11 digits long",
+    },
+    customer_unit_serial_number: {
+      regex: /^[0-9]{10,}$/,
+      message: "Invalid serial number",
+    },
+  });
+
   const handleChangeEditChange = (e) => {
-    setSupplierData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    const { name, value } = e.target;
+    setSupplierData((prev) => ({ ...prev, [name]: value }));
+    validateField(formRegexError[name].regex, name, value, setErrors, formRegexError[name].message );
+
   };
 
   const closeModal = () => setIsSupplierFormModalOpen(false);
@@ -97,6 +142,14 @@ export const Table = ({
       }))
     );
   }, [data]);
+  
+  useEffect(() => {
+    window.onclick = (e) => {
+      if (e.target.className === "flex fixed top-0 right-0 bottom-0 z-10 left-0 justify-center bg-black bg-opacity-30 items-center") {
+        closeModal();
+      }
+    };
+  }, []);
 
   return (
     <>
@@ -115,6 +168,7 @@ export const Table = ({
             formData={supplierData}
             handleChange={handleChangeEditChange}
             closeModal={closeModal}
+            errors={errors}
             editing={true}
           />
         )}
