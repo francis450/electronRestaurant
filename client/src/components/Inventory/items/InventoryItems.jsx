@@ -5,7 +5,7 @@ import ItemModal from "./ItemModal";
 import TableContainer from "./TableContainer";
 import { Plus } from "../../../reusables/svgs/svgs";
 
-const Items = () => {
+const InventoryItems = () => {
   const { postData } = useAxios();
   const { statusData, setStatusData } = useContext(StatusModalContext);
 
@@ -18,7 +18,7 @@ const Items = () => {
     par_level: "",
     reorder_point: "",
     supplier: "",
-    cost_per_unit:"",
+    cost_per_unit: "",
     expiration_date: "",
   });
 
@@ -30,7 +30,7 @@ const Items = () => {
     par_level: "",
     reorder_point: "",
     supplier: "",
-    cost_per_unit:"",
+    cost_per_unit: "",
     expiration_date: "",
   });
 
@@ -78,8 +78,8 @@ const Items = () => {
   };
 
   const handleCustomSelectChange = (e, name) => {
-    setFormData((prev) => ({ ...prev, [name]: e.value}))
-  }
+    setFormData((prev) => ({ ...prev, [name]: e.value }));
+  };
 
   const [isItemModalOpen, setIsItemFormModalOpen] = useState(false);
 
@@ -97,7 +97,7 @@ const Items = () => {
       par_level: "",
       reorder_point: "",
       supplier: "",
-      cost_per_unit:"",
+      cost_per_unit: "",
       expiration_date: "",
     }));
 
@@ -115,25 +115,25 @@ const Items = () => {
       <section className="Items-table-section">
         <TableContainer statusData={statusData}>
           <button
-              className="btn py-1 px-3 bg-red-200 text-[#222] rounded-md flex gap-1"
-              onClick={() => openModal()}
-            >
+            className="btn py-1 px-3 bg-red-200 text-[#222] rounded-md flex gap-1"
+            onClick={() => openModal()}
+          >
             Add Item
             <Plus />
           </button>
           {isItemModalOpen && (
-          <ItemModal
-            formData={formData}
-            closeModal={closeModal}
-            handleChange={handleChange}
-            handleSubmit={handleSubmit}
-            handleCustomSelectChange={handleCustomSelectChange}
-          />
-        )}
+            <ItemModal
+              formData={formData}
+              closeModal={closeModal}
+              handleChange={handleChange}
+              handleSubmit={handleSubmit}
+              handleCustomSelectChange={handleCustomSelectChange}
+            />
+          )}
         </TableContainer>
       </section>
     </>
   );
 };
 
-export default Items;
+export default InventoryItems;
