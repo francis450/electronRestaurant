@@ -4,6 +4,7 @@ import useAxios from "../../../hooks/useAxios";
 import ReactDataGrid from "@inovua/reactdatagrid-community";
 import "@inovua/reactdatagrid-community/index.css";
 import { Pencil, Trash } from "../../../reusables/svgs/svgs";
+import { inventoryItemsCols } from "./constants";
 
 export const Table = ({
   children,
@@ -122,30 +123,7 @@ export const Table = ({
         onReady={setGridRef}
         idProperty="id"
         columns={[
-          { name: "index", header: "No.", defaultWidth: 80 },
-          { name: "id", header: "ID", defaultVisible: false },
-          {
-            name: "item_name",
-            header: "Item Name",
-            defaultFlex: 1,
-            minWidth: 150,
-          },
-          {
-            name: "category_name",
-            header: "Category",
-            defaultFlex: 1,
-            minWidth: 150,
-          },
-          {
-            name: "supplier_name",
-            header: "Supplier",
-            defaultFlex: 1,
-            minWidth: 300,
-          },
-          { name: "unit_of_measurement_name", header: "Units of Measurement" },
-          { name: "par_level", header: "Par Level" },
-          { name: "reorder_point", header: "Reorder Point" },
-          { name: "expiration_date", header: "Expiry Date" },
+          ...inventoryItemsCols,
           {
             name: "actions",
             header: "Actions",
