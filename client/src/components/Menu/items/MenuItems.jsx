@@ -3,7 +3,7 @@ import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { Plus } from "../../../reusables/svgs/svgs";
 import TableContainer from "./TableContainer";
 
-const Items = () => {
+const MenuItems = () => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
 
@@ -27,4 +27,4 @@ const Items = () => {
   );
 };
 
-export default Items;
+export default MenuItems;
