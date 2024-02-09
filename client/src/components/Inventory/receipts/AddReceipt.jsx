@@ -11,6 +11,7 @@ import {
   Trash,
 } from "../../../reusables/svgs/svgs";
 import { validateField } from "../../../lib/utils";
+import { formRegexError, initialReceiptDetailsState } from "./constants";
 
 const AddReceipt = ({ setIsAddReceiptSection, editing = false }) => {
   const { suppliers } = useSuppliers();
@@ -19,44 +20,10 @@ const AddReceipt = ({ setIsAddReceiptSection, editing = false }) => {
   const { setStatusData } = useContext(StatusModalContext);
   const [mappedSuppliers, setMappedSuppliers] = useState([]);
   const [mappedInventoryItems, setMappedInventoryItems] = useState([]);
-  const [receiptDetails, setReceiptDetails] = useState({
-    receipt_number: "",
-    supplier_id: "",
-    date: "",
-    total_cost: "",
-    payment_method: "",
-  });
+  const [receiptDetails, setReceiptDetails] = useState(initialReceiptDetailsState);
 
-  const [errors, setErrors] = useState({
-    receipt_number: "",
-    supplier_id: "",
-    date: "",
-    total_cost: "",
-    payment_method: "",
-  });
+  const [errors, setErrors] = useState(initialReceiptDetailsState);
   
-  const [formRegexError, setFormRegexerror] = useState({
-    receipt_number: {
-      regex: /^[a-zA-Z0-9\s]{3,}$/,
-      message: "Receipt number must be at least 3 characters long",
-    },
-    supplier_id: {
-      regex: /^[1-9]{1,}$/,
-      message: "Select a supplier",
-    },
-    date: {
-      regex: /^.+$/,
-      message: "Date is required",
-    },
-    total_cost: {
-      regex: /^[1-9]{1,}$/,
-      message: "Invalid total cost",
-    },
-    // payment_method: {
-    //   regex: /^[1-9]{1,}$/,
-    //   message: "Select payment method",
-    // },
-  });
 
   const [purchases, setPurchases] = useState([
     { id: 1, product_id: "", quantity: "", unit_price: "" },

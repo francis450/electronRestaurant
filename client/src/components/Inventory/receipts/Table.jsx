@@ -4,6 +4,7 @@ import ReactDataGrid from "@inovua/reactdatagrid-community";
 import "@inovua/reactdatagrid-community/index.css";
 import { Trash, Visit } from "../../../reusables/svgs/svgs";
 import PurchaseItemsModal from "./PurchaseItemsModal";
+import { receiptsTableCols } from "./constants";
 
 export const Table = ({
   children,
@@ -114,11 +115,7 @@ export const Table = ({
         onReady={setGridRef}
         idProperty="id"
         columns={[
-          { name: "receipt_number", header: "Receipt Number", defaultFlex: 1 },
-          { name: "supplier_name", header: "Supplier", defaultFlex: 1 },
-          { name: "payment_method", header: "Payment Method", defaultFlex: 1 },
-          { name: "total_cost", header: "Total Cost", defaultFlex: 1 },
-          { name: "date", header: "Date Created", defaultFlex: 1 },
+          ...receiptsTableCols,
           {
             name: "actions",
             header: "Actions",

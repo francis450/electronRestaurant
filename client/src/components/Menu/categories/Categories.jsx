@@ -44,12 +44,6 @@ const Categories = () => {
   };
 
   const handleInventoryChange = (e, id) => {
-    // TODO: handle inventory change
-    // when inventory item is selected:
-    //        - set the inventory item id
-    //        - clear the unit of measure for that item
-    //        - get the units of measure for that item
-
     setIngredients((prev) => {
       return prev.map((ingredient) => {
         if (ingredient.id === id) {

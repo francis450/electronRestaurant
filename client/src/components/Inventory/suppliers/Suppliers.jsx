@@ -5,61 +5,15 @@ import { TableContainer } from "./TableContainer";
 import SupplierModal from "./SupplierModal";
 import { Plus } from "../../../reusables/svgs/svgs";
 import { validateField } from "../../../lib/utils";
+import { formRegexError, handleCloseModalOnOutsideClick, initialFormState } from "./constants";
 
 const Suppliers = () => {
   const { postData } = useAxios();
   const { setStatusData } = useContext(StatusModalContext);
 
-  const [formData, setFormData] = useState({
-    name: "",
-    contact_name: "",
-    email: "",
-    phone_number: "",
-    address: "",
-    kra_pin: "",
-    customer_unit_serial_number: "",
-  });
+  const [formData, setFormData] = useState(initialFormState);
 
-  const [formRegexError, setFormRegexerror] = useState({
-    name: {
-      regex: /^[a-zA-Z\s]{3,}$/,
-      message: "Name must be at least 3 characters long",
-    },
-    contact_name: {
-      regex: /^[a-zA-Z\s]{3,}$/,
-      message: "Name must be at least 3 characters long",
-    },
-    email: {
-      regex: /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
-      message: "Invalid email",
-    },
-    phone_number: {
-      regex: /^0[0-9]{9}$/,
-      message: "Phone number should be 10 digits long & start with 0",
-    },
-    address: {
-      regex: /^[a-zA-Z0-9\s,]{3,}$/,
-      message: "Invalid address",
-    },
-    kra_pin: {
-      regex: /^[0-9]{11,}$/,
-      message: "KRA pin should be at least 11 digits long",
-    },
-    customer_unit_serial_number: {
-      regex: /^[0-9]{10,}$/,
-      message: "Invalid serial number",
-    },
-  });
-
-  const [errors, setErrors] = useState({
-    name: "",
-    contact_name: "",
-    email: "",
-    phone_number: "",
-    address: "",
-    kra_pin: "",
-    customer_unit_serial_number: "",
-  });
+  const [errors, setErrors] = useState(initialFormState);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -75,15 +29,8 @@ const Suppliers = () => {
   const callback = () => {
     setFormData((prev) => ({
       ...prev,
-      name: "",
-      contact_name: "",
-      email: "",
-      phone_number: "",
-      address: "",
-      kra_pin: "",
-      customer_unit_serial_number: "",
+      ...initialFormState
     }));
-
     closeModal();
   };
 
@@ -93,13 +40,8 @@ const Suppliers = () => {
     postData(url, formData, setStatusData, callback);
   };
 
-  // listen to click event outside the modal to close it
   useEffect(() => {
-    window.onclick = (e) => {
-      if (e.target.className === "flex fixed top-0 right-0 bottom-0 z-10 left-0 justify-center bg-black bg-opacity-30 items-center") {
-        closeModal();
-      }
-    };
+    handleCloseModalOnOutsideClick(closeModal);
   }, []);
 
   return (  
