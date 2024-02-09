@@ -5,6 +5,7 @@ import "@inovua/reactdatagrid-community/index.css";
 import SupplierModal from "./SupplierModal";
 import { Pencil, Trash } from "../../../reusables/svgs/svgs";
 import { validateField } from "../../../lib/utils";
+import { formRegexError, handleCloseModalOnOutsideClick, initialFormState, suppliersColumns } from "./constants";
 
 export const Table = ({
   children,
@@ -17,63 +18,14 @@ export const Table = ({
   const [currentPage, setCurrentPage] = useState(2);
   const [suppliers, setSuppliers] = useState([]);
   const [filteredSuppliers, setFilteredSuppliers] = useState([]);
-  const [supplierData, setSupplierData] = useState({
-    id: "",
-    name: "",
-    contact_name: "",
-    email: "",
-    phone_number: "",
-    address: "",
-    kra_pin: "",
-    customer_unit_serial_number: "",
-  });
+  const [supplierData, setSupplierData] = useState(initialFormState);
 
-  const [errors, setErrors] = useState({
-    name: "",
-    contact_name: "",
-    email: "",
-    phone_number: "",
-    address: "",
-    kra_pin: "",
-    customer_unit_serial_number: "",
-  });
-
-  const [formRegexError, setFormRegexerror] = useState({
-    name: {
-      regex: /^[a-zA-Z\s]{3,}$/,
-      message: "Name must be at least 3 characters long",
-    },
-    contact_name: {
-      regex: /^[a-zA-Z\s]{3,}$/,
-      message: "Name must be at least 3 characters long",
-    },
-    email: {
-      regex: /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
-      message: "Invalid email",
-    },
-    phone_number: {
-      regex: /^0[0-9]{9}$/,
-      message: "Phone number should be 10 digits long & start with 0",
-    },
-    address: {
-      regex: /^[a-zA-Z0-9\s,]{3,}$/,
-      message: "Invalid address",
-    },
-    kra_pin: {
-      regex: /^[0-9]{11,}$/,
-      message: "KRA pin should be at least 11 digits long",
-    },
-    customer_unit_serial_number: {
-      regex: /^[0-9]{10,}$/,
-      message: "Invalid serial number",
-    },
-  });
+  const [errors, setErrors] = useState(initialFormState);
 
   const handleChangeEditChange = (e) => {
     const { name, value } = e.target;
     setSupplierData((prev) => ({ ...prev, [name]: value }));
     validateField(formRegexError[name].regex, name, value, setErrors, formRegexError[name].message );
-
   };
 
   const closeModal = () => setIsSupplierFormModalOpen(false);
@@ -82,8 +34,8 @@ export const Table = ({
     setSupplierData((prev) => ({ ...prev, ...supplier }));
   };
 
-  const handleClickView = (item) => {
-    openModal(item);
+  const handleClickView = (supplier) => {
+    openModal(supplier);
   };
 
   const deleteSupplier = (supplier) => {
@@ -144,11 +96,7 @@ export const Table = ({
   }, [data]);
   
   useEffect(() => {
-    window.onclick = (e) => {
-      if (e.target.className === "flex fixed top-0 right-0 bottom-0 z-10 left-0 justify-center bg-black bg-opacity-30 items-center") {
-        closeModal();
-      }
-    };
+    handleCloseModalOnOutsideClick(closeModal);
   }, []);
 
   return (
@@ -178,11 +126,7 @@ export const Table = ({
         onReady={setGridRef}
         idProperty="id"
         columns={[
-          { name: "index", header: "No.", defaultWidth: 80 },
-          { name: "name", header: "Company Name", defaultFlex: 1 },
-          { name: "contact_name", header: "Contact Name", defaultFlex: 1 },
-          { name: "email", header: "Email", defaultFlex: 1 },
-          { name: "phone_number", header: "Phone Number", defaultFlex: 1 },
+          ...suppliersColumns,
           {
             name: "actions",
             header: "Actions",

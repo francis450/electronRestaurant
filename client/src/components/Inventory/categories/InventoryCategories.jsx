@@ -4,7 +4,7 @@ import useAxios from "../../../hooks/useAxios";
 import { StatusModalContext } from "../../App/App";
 import TableContainer from "./TableContainer";
 
-const Categories = () => {
+const InventoryCategories = () => {
   const [name, setName] = useState("");
   const { postData } = useAxios();
   const { setStatusData } = useContext(StatusModalContext);
@@ -43,4 +43,4 @@ const Categories = () => {
   );
 };
 
-export default Categories;
+export default InventoryCategories;

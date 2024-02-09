@@ -8,8 +8,10 @@ import { StatusModalContext } from "../../App/App";
 import { useNavigate, useParams } from "react-router-dom";
 import { useMenuCategories } from "../../../hooks/useMenuCategories";
 import AddIngredients from "./AddIngredients";
+import { initialItemsDataState } from "./constants";
+import { v4 as uuidv4 } from "uuid";
 
-const EditItems = () => {
+const EditMenuItems = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const { inventory } = useInventory();
@@ -17,15 +19,7 @@ const EditItems = () => {
   const { getData, postData } = useAxios();
   const { setStatusData } = useContext(StatusModalContext);
   const [mappedCategories, setMappedCategories] = useState([]);
-  const [itemData, setItemData] = useState({
-    name: "",
-    description: "",
-    price: 0.0,
-    category_id: null,
-    is_available: true,
-    image: null,
-    note: "",
-  });
+  const [itemData, setItemData] = useState(initialItemsDataState);
 
   const [ingredients, setIngredients] = useState([]);
 
@@ -41,9 +35,7 @@ const EditItems = () => {
     setIngredients([
       ...ingredients,
       {
-        id: ingredients[ingredients.length - 1]?.id
-          ? ingredients[ingredients.length - 1]?.id + 1
-          : 1,
+        id: uuidv4(),
         quantity: "",
         unit_of_measurement_id: "",
         mappedSelectedUnitsOfMeasure: [],
@@ -315,4 +307,4 @@ const EditItems = () => {
   );
 };
 
-export default EditItems;
+export default EditMenuItems;

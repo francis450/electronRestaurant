@@ -8,22 +8,15 @@ import { useNavigate } from "react-router-dom";
 import { useMenuCategories } from "../../../hooks/useMenuCategories";
 import { v4 as uuidv4 } from "uuid";
 import AddIngredients from "./AddIngredients";
+import { initialItemsDataState } from "./constants";
 
-const AddItems = () => {
+const AddMenuItems = () => {
   const navigate = useNavigate();
   const { postData } = useAxios();
   const { setStatusData } = useContext(StatusModalContext);
   const { menuCategories } = useMenuCategories();
   const [mappedCategories, setMappedCategories] = useState([]);
-  const [itemData, setItemData] = useState({
-    name: "",
-    description: "",
-    price: 0.0,
-    menu_item_category_id: null,
-    is_available: 1,
-    image: null,
-    note: "",
-  });
+  const [itemData, setItemData] = useState(initialItemsDataState);
 
   const [ingredients, setIngredients] = useState([
     {
@@ -56,19 +49,17 @@ const AddItems = () => {
     ]);
   };
 
-  const callback = () => navigate("/menu/items");
-
   const [fileName, setFileName] = useState(null);
   const [imageUrl, setImageUrl] = useState(null);
   const formData = new FormData();
 
   const handleFileUpload = (e) => {
-    const file = e.target.files[0]; // Get the uploaded file
+    const file = e.target.files[0];
     setItemData((prev) => ({ ...prev, image: file }));
-    setFileName(file.name); // Update the state with the file name
+    setFileName(file.name);
     const reader = new FileReader();
     reader.onload = () => {
-      setImageUrl(reader.result); // Update the state with the data URL of the image
+      setImageUrl(reader.result);
     };
     reader.readAsDataURL(file);
   };
@@ -92,7 +83,7 @@ const AddItems = () => {
       );
     });
     const url = `/menu`;
-    postData(url, formData, setStatusData, callback);
+    postData(url, formData, setStatusData, () => navigate("/menu/items"));
   };
 
   useEffect(() => {
@@ -125,7 +116,6 @@ const AddItems = () => {
             <label htmlFor="description" className="text-[black]">
               Description
             </label>
-            {/* textarea */}
             <textarea
               className="w-full focus:outline-none h-20 border bg-[#D9D9D9] text-[#222] border-gray-300 rounded-md p-2"
               name="description"
@@ -184,7 +174,7 @@ const AddItems = () => {
                         name="file-upload"
                         type="file"
                         className="sr-only"
-                        onChange={handleFileUpload} // Handle file upload
+                        onChange={handleFileUpload}
                       />
                     </label>
                   </>
@@ -298,4 +288,4 @@ const AddItems = () => {
   );
 };
 
-export default AddItems;
+export default AddMenuItems;

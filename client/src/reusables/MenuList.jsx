@@ -93,7 +93,7 @@ export default function MenuList() {
         <span className="">Menu</span>
       </ResponsiveNavLink>
       <ResponsiveNavLink
-        to={"/inventory"}
+        to={"/inventory/items"}
         active={location.pathname.includes("/inventory")}
         className="flex items-center gap-3"
       >
