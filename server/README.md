@@ -205,7 +205,30 @@ This API serves as the core engine for managing menus, inventory, orders, and mo
   #### Update specific menu item details using id
 
   - **URL:** `/menu/{id}`
-  - **HTTP Method:** `POST`
+  - **HTTP Method:** `PUT`
+  - **Payload Options:**
+  ```json
+{
+    "name": "edited menu name",
+    "description": "Nostrum dolores dicta ipsum asperiores. Hic in itaque magnam mollitia quas illo.",
+    "price": "100.00",
+    "is_available": 1,
+    "img": "new image",
+    "menu_item_category_id": 1,
+    "ingredients": [
+      {
+        "inventory_item_id": 2,
+        "quantity": 353.51,
+        "unit_of_measurement_id": 2
+      },
+      {
+        "inventory_item_id": 3,
+        "quantity": 195.62,
+        "unit_of_measurement_id": 1
+      }
+    ]
+  }
+  ```
   - **Parameters:**
     - `{id}`: The unique identifier for a menu item
   - **Description:** Edit any details of a specific menu item identified by the ID.
@@ -396,11 +419,11 @@ This API serves as the core engine for managing menus, inventory, orders, and mo
       ```
   #### List All Menu Categories
 
-  - **URL:** `/purchases`
+  - **URL:** `/menu_categories`
   - **HTTP Method:** `GET`
   - **Description:** Retrieve a list of all menu categories.
   #### Show Details of particular menu category
-  - **URL:** `/purchase/{id}`
+  - **URL:** `/menu_category/{id}`
   - **HTTP Method:** `GET`
   - **Parameters:**
     - `{id}`: The unique identifier of the menu category.
