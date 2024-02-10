@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import useAxios from "../../../hooks/useAxios";
-import ReactDataGrid from "@inovua/reactdatagrid-community";
 import "@inovua/reactdatagrid-community/index.css";
 import { Pencil, Trash } from "../../../reusables/svgs/svgs";
 import MenuCategoryModal from "./MenuCategoryModal";
+import DataTable from "../../../reusables/tables/DataTable";
 
 export const Table = ({
   children,
@@ -95,8 +95,6 @@ export const Table = ({
     );
   }, [data]);
 
-
-
   return (
     <>
       <div className="flex justify-between items-center mt-3 mb-1">
@@ -119,10 +117,11 @@ export const Table = ({
           />
         )}
       </div>
-      <ReactDataGrid
-        style={{ fontSize: "1.0rem" }}
-        onReady={setGridRef}
-        idProperty="id"
+      <DataTable
+        setGridRef={setGridRef}
+        currentPage={currentPage}
+        filteredFetchedData={filteredInventoryItems}
+        setCurrentPage={setCurrentPage}
         columns={[
           {name: "name", header: "Name", minWidth: 200},
           {parent: "parent_category", header: "Parent Category", minWidth: 200, render: ({value}) => value ? value : "No Parent" },
@@ -132,48 +131,8 @@ export const Table = ({
             header: "Actions",
             minWidth: 200,
             render: renderActions,
-          },
+          }
         ]}
-        dataSource={filteredInventoryItems || []}
-        pagination
-        defaultLimit={10}
-        paginationShowPageSizeSelector
-        paginationPageSizeOptions={[5, 10, 20, 50, 100]}
-        paginationToolbarProps={{
-          style: {
-            border: "none",
-            borderRadius: 0,
-            borderBottom: "1px solid rgba(0,0,0,.1)",
-          },
-        }}
-        paginationProps={{
-          style: {
-            border: "none",
-            borderRadius: 0,
-            borderTop: "1px solid rgba(0,0,0,.1)",
-          },
-        }}
-        paginationShowPages
-        paginationMode="default"
-        paginationNext={<span>Next</span>}
-        paginationPrev={<span>Prev</span>}
-        paginationPageInputProps={{
-          style: {
-            border: "none",
-            borderRadius: 0,
-            borderBottom: "1px solid rgba(0,0,0,.1)",
-          },
-        }}
-        paginationShowPagesToolbar
-        paginationShowSizeChanger
-        paginationShowTotal
-        paginationTotal={<span>Rows: {filteredInventoryItems?.length}</span>}
-        paginationRowsPerPageOptions={[5, 10, 20, 50, 100]}
-        paginationCurrentPage={currentPage}
-        onPaginationChange={({ page }) => {
-          setCurrentPage(page);
-        }}
-        className="h-[50.15vh] text-xl"
       />
     </>
   );

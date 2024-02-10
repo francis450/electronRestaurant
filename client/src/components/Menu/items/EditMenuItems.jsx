@@ -17,7 +17,7 @@ const EditMenuItems = () => {
   const { id } = useParams();
   const { inventory } = useInventory();
   const { menuCategories } = useMenuCategories();
-  const { getData, putData } = useAxios();
+  const { getData } = useAxios();
   const { setStatusData } = useContext(StatusModalContext);
   const [mappedCategories, setMappedCategories] = useState([]);
   const [itemData, setItemData] = useState(initialItemsDataState);

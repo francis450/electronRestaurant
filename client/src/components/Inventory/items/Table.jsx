@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
 import ItemModal from "./ItemModal";
 import useAxios from "../../../hooks/useAxios";
-import ReactDataGrid from "@inovua/reactdatagrid-community";
 import "@inovua/reactdatagrid-community/index.css";
 import { Pencil, Trash } from "../../../reusables/svgs/svgs";
 import { inventoryItemsCols } from "./constants";
+import DataTable from "../../../reusables/tables/DataTable";
 
 export const Table = ({
   children,
@@ -41,10 +41,7 @@ export const Table = ({
   };
 
   const deleteInventoryItem = (inventoryItem) => {
-    deleteData(
-      `/inventoryItem/${inventoryItem.id}`,
-      setStatusData
-    );
+    deleteData(`/inventoryItem/${inventoryItem.id}`, setStatusData);
   };
 
   const [searchText, setSearchText] = useState("");
@@ -58,8 +55,8 @@ export const Table = ({
 
     const newDataSource = inventoryItems.filter((p) => {
       return visibleColumns.reduce((acc, col) => {
-        const v = (p[col.id] + "").toLowerCase(); // get string value
-        return acc || v.indexOf(value.toLowerCase()) !== -1; // make the search case insensitive
+        const v = (p[col.id] + "").toLowerCase();
+        return acc || v.indexOf(value.toLowerCase()) !== -1;
       }, false);
     });
 
@@ -118,10 +115,11 @@ export const Table = ({
           />
         )}
       </div>
-      <ReactDataGrid
-        style={{ fontSize: "1.0rem" }}
-        onReady={setGridRef}
-        idProperty="id"
+      <DataTable
+        setGridRef={setGridRef}
+        currentPage={currentPage}
+        filteredFetchedData={filteredInventoryItems}
+        setCurrentPage={setCurrentPage}
         columns={[
           ...inventoryItemsCols,
           {
@@ -131,46 +129,6 @@ export const Table = ({
             render: renderActions,
           },
         ]}
-        dataSource={filteredInventoryItems || []}
-        pagination
-        defaultLimit={10}
-        paginationShowPageSizeSelector
-        paginationPageSizeOptions={[5, 10, 20, 50, 100]}
-        paginationToolbarProps={{
-          style: {
-            border: "none",
-            borderRadius: 0,
-            borderBottom: "1px solid rgba(0,0,0,.1)",
-          },
-        }}
-        paginationProps={{
-          style: {
-            border: "none",
-            borderRadius: 0,
-            borderTop: "1px solid rgba(0,0,0,.1)",
-          },
-        }}
-        paginationShowPages
-        paginationMode="default"
-        paginationNext={<span>Next</span>}
-        paginationPrev={<span>Prev</span>}
-        paginationPageInputProps={{
-          style: {
-            border: "none",
-            borderRadius: 0,
-            borderBottom: "1px solid rgba(0,0,0,.1)",
-          },
-        }}
-        paginationShowPagesToolbar
-        paginationShowSizeChanger
-        paginationShowTotal
-        paginationTotal={<span>Rows: {filteredInventoryItems?.length}</span>}
-        paginationRowsPerPageOptions={[5, 10, 20, 50, 100]}
-        paginationCurrentPage={currentPage}
-        onPaginationChange={({ page }) => {
-          setCurrentPage(page);
-        }}
-        className="h-[50.15vh] text-xl"
       />
     </>
   );
