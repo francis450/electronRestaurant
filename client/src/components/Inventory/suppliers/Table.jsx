@@ -29,6 +29,7 @@ export const Table = ({
   };
 
   const closeModal = () => setIsSupplierFormModalOpen(false);
+  const closeModalRef = useRef(closeModal);
   const openModal = (supplier) => {
     setIsSupplierFormModalOpen(true);
     setSupplierData((prev) => ({ ...prev, ...supplier }));
@@ -96,12 +97,12 @@ export const Table = ({
   }, [data]);
   
   useEffect(() => {
-    handleCloseModalOnOutsideClick(closeModal);
+    handleCloseModalOnOutsideClick(closeModalRef.current);
   }, []);
 
   return (
     <>
-      <div className="flex justify-between items-center  mt-3 mb-1">
+      <div className="flex justify-between items-center mt-3 mb-1">
         <label>
           <input
             value={searchText}
