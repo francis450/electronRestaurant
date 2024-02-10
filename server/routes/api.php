@@ -60,8 +60,8 @@ Route::controller(MenuController::class)->group(function () {
     Route::post('/menu', 'store');
     Route::get('/menu', 'index');
     Route::get('menu/{id}', 'show');
-    Route::delete('menu/{id}', 'destroy');
-    Route::put('menu/{id}', 'update');
+    Route::delete('/menu/{id}', 'destroy');
+    Route::put('/menu/{id}', 'update');
 });
 
 Route::get('/unitsofmeasure', function () {
