@@ -62,7 +62,7 @@ export const Table = ({ children, data, statusData, setStatusData }) => {
 
   return (
     <>
-      <div className="flex justify-between items-center  mt-3 mb-1">
+      <div className="flex justify-between items-center mt-3 mb-1">
         <label>
           <input
             value={searchText}

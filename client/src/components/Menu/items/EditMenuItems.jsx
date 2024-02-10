@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import Input from "../../../reusables/forms/input";
 import CustomSelect from "../../../reusables/forms/select";
 import { useInventory } from "../../../hooks/useInventory";
@@ -20,6 +20,10 @@ const EditMenuItems = () => {
   const { setStatusData } = useContext(StatusModalContext);
   const [mappedCategories, setMappedCategories] = useState([]);
   const [itemData, setItemData] = useState(initialItemsDataState);
+  const [fileName, setFileName] = useState(null);
+  const [imageUrl, setImageUrl] = useState(null);
+  const getDataRef = useRef(getData);
+  const setStatusDataRef = useRef(setStatusData);
 
   const [ingredients, setIngredients] = useState([]);
 
@@ -44,9 +48,6 @@ const EditMenuItems = () => {
   };
 
   const callback = () => navigate("/menu/items");
-
-  const [fileName, setFileName] = useState(null);
-  const [imageUrl, setImageUrl] = useState(null);
   const formData = new FormData();
 
   const handleFileUpload = (e) => {
@@ -91,10 +92,9 @@ const EditMenuItems = () => {
   }, [menuCategories, inventory]);
 
   useEffect(() => {
-    // get menuData then update ingredients and itemData
-    getData(
+    getDataRef.current(
       `/menu/${id}`,
-      setStatusData,
+      setStatusDataRef.current,
       (data) => {
         setItemData(data);
         setIngredients(data.ingredients);
