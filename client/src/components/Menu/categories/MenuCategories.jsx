@@ -1,9 +1,9 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import useAxios from "../../../hooks/useAxios";
 import { StatusModalContext } from "../../App/App";
 import TableContainer from "./TableContainer";
 import { Plus } from "../../../reusables/svgs/svgs";
-import { initialFormState } from "./constants";
+import { handleCloseModalOnOutsideClick, initialFormState } from "./constants";
 import MenuCategoryModal from "./MenuCategoryModal";
 
 const MenuCategories = () => {
@@ -39,6 +39,11 @@ const MenuCategories = () => {
     const url = `/menu_category`;
     postData(url, formData, setStatusData, callback);
   };
+
+  useEffect(() => {
+    handleCloseModalOnOutsideClick(closeModal);
+  }, []);
+
 
   return (
     <>

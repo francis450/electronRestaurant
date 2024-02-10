@@ -24,13 +24,13 @@ const MenuCategoryModal = ({
 
   const handleUpdate = (e) => {
     e.preventDefault();
-    const url = `/inventoryItem/${formData.id}`;
+    const url = `/menu_category/${formData.id}`;
     putData(
       url,
       {
-        item_name: formData.item_name,
-        category_id: formData.category_id,
-        par_level: formData.par_level,
+        name: formData.name,
+        parent_category_id: formData.parent_category_id,
+        description: formData.description,
       },
       setStatusData,
       callback
