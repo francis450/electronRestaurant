@@ -14,6 +14,18 @@ class MenuItemCategoryController extends Controller
         return response()->json([ "data" => $categories], 200);
     }
 
+    public function indexAll()
+    {
+        $categories = MenuItemCategory::all();
+
+        foreach ($categories as $category) {
+            $category->parent_category_name = $category->parent_category ? $category->parent_category->name : null;
+            unset($category->parent_category);
+        }
+
+        return response()->json([ "data" => $categories], 200);
+    }
+
     public function show($id)
     {
         $category = MenuItemCategory::with('parent_category', 'child_categories', 'menu_items')->find($id);
@@ -21,6 +33,20 @@ class MenuItemCategoryController extends Controller
         if (!$category) {
             return response()->json(['message' => 'Category not found'], 404);
         }
+
+        return response()->json(["data" => $category], 200);
+    }
+
+    public function showOne($id)
+    {
+        $category = MenuItemCategory::find($id);
+
+        if (!$category) {
+            return response()->json(['message' => 'Category not found'], 404);
+        }
+
+        $category->parent_category_name = $category->parent_category ? $category->parent_category->name : null;
+        unset($category->parent_category);
 
         return response()->json(["data" => $category], 200);
     }
