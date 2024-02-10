@@ -45,7 +45,7 @@ const InventoryItems = () => {
       <section className="Items-table-section">
         <TableContainer statusData={statusData}>
           <button
-            className="btn py-1 px-3 bg-red-200 text-[#222] rounded-md flex gap-1"
+            className="btn py-1 px-3 bg-red-200 text-[#222] mt-2 rounded-md flex gap-1"
             onClick={() => openModal()}
           >
             Add Item

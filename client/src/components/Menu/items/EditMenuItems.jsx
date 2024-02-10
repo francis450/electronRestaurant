@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import Input from "../../../reusables/forms/input";
 import CustomSelect from "../../../reusables/forms/select";
 import { useInventory } from "../../../hooks/useInventory";
-import { ArrowLeft, Plus, ReceiptIcon } from "../../../reusables/svgs/svgs";
+import { ArrowLeft, Pencil, Plus } from "../../../reusables/svgs/svgs";
 import useAxios from "../../../hooks/useAxios";
 import { StatusModalContext } from "../../App/App";
 import { useNavigate, useParams } from "react-router-dom";
@@ -10,13 +10,14 @@ import { useMenuCategories } from "../../../hooks/useMenuCategories";
 import AddIngredients from "./AddIngredients";
 import { initialItemsDataState } from "./constants";
 import { v4 as uuidv4 } from "uuid";
+import axios from "axios";
 
 const EditMenuItems = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const { inventory } = useInventory();
   const { menuCategories } = useMenuCategories();
-  const { getData, postData } = useAxios();
+  const { getData, putData } = useAxios();
   const { setStatusData } = useContext(StatusModalContext);
   const [mappedCategories, setMappedCategories] = useState([]);
   const [itemData, setItemData] = useState(initialItemsDataState);
@@ -79,8 +80,15 @@ const EditMenuItems = () => {
         ingredient.unit_of_measurement_id
       );
     });
-    const url = `/menu`;
-    postData(url, formData, setStatusData, callback);
+    const url = `${process.env.REACT_APP_LOCAL_API_SERVER_URL}/menu/${id}`;
+    axios.post(url, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+        "_method": "PUT",
+      },
+    }).then((response) => {
+      callback();
+    })
   };
 
   useEffect(() => {
@@ -298,7 +306,7 @@ const EditMenuItems = () => {
               onClick={handleSubmit}
               className="mt-3 bg-green-700 text-[#fff] py-1 px-3 rounded-md flex items-center gap-1"
             >
-              <ReceiptIcon /> Add Menu Item
+              <Pencil className="w-4 h-4"/> Update Menu Item
             </button>
           </div>
         </section>
