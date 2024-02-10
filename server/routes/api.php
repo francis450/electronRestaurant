@@ -127,13 +127,22 @@ Route::controller(InventoryPurchasesController::class)->group(function () {
 });
 
 Route::controller(MenuItemCategoryController::class)->group(function () {
-    Route::get('/menu_categories', 'index');
-    Route::get('/menu_category/{id}', 'show');
+    Route::get('/pos_menu_categories', 'index');
+    Route::get('/pos_menu_category/{id}', 'show');
+    Route::get('/menu_categories', 'indexAll');
+    Route::get('/menu_category/{id}', 'showOne');
     Route::post('/menu_category', 'store');
     Route::delete('/menu_category/{id}', 'destroy');
     Route::put('/menu_category/{id}', 'update');
 });
 
+Route::controller(MenuItem::class)->group(function () {
+    Route::get('/menu_items', 'index');
+    Route::get('/menu_item/{id}', 'show');
+    Route::post('/menu_item', 'store');
+    Route::delete('/menu_item/{id}', 'destroy');
+    Route::post('/menu_item/{id}', 'update');
+});
 
 Route::controller(SectionController::class)->group(function () {
     Route::get('/sections', 'index');
