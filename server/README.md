@@ -208,7 +208,7 @@ This API serves as the core engine for managing menus, inventory, orders, and mo
   - **HTTP Method:** `PUT`
   - **Payload Options:**
   ```json
-{
+  {
     "name": "edited menu name",
     "description": "Nostrum dolores dicta ipsum asperiores. Hic in itaque magnam mollitia quas illo.",
     "price": "100.00",

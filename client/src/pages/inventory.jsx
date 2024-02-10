@@ -1,10 +1,6 @@
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { AuthContext } from "../components/App/App";
 import Authenticated from "../reusables/layouts/AuthenticaedLayout";
-import Suppliers from "../components/Inventory/suppliers/Suppliers";
-import Receipts from "../components/Inventory/receipts/Receipts";
-import InventoryCategories from "../components/Inventory/categories/InventoryCategories";
-import InventoryItems from "../components/Inventory/items/InventoryItems";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 
 const Inventory = () => {

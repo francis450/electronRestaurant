@@ -61,7 +61,7 @@ Route::controller(MenuController::class)->group(function () {
     Route::get('/menu', 'index');
     Route::get('menu/{id}', 'show');
     Route::delete('/menu/{id}', 'destroy');
-    Route::put('/menu/{id}', 'update');
+    Route::post('/menu/{id}', 'update');
 });
 
 Route::get('/unitsofmeasure', function () {

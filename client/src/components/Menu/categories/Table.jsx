@@ -1,36 +1,69 @@
-import ReactDataGrid from "@inovua/reactdatagrid-community";
-import React, { useEffect, useState } from "react";
-import { Trash, Visit } from "../../../reusables/svgs/svgs";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useRef, useState } from "react";
 import useAxios from "../../../hooks/useAxios";
+import ReactDataGrid from "@inovua/reactdatagrid-community";
+import "@inovua/reactdatagrid-community/index.css";
+import { Pencil, Trash } from "../../../reusables/svgs/svgs";
+import MenuCategoryModal from "./MenuCategoryModal";
 
-export const Table = ({ children, data, statusData, setStatusData }) => {
-  const navigate = useNavigate();
+export const Table = ({
+  children,
+  data,
+  isMenuItemModalOpen,
+  setIsMenuItemFormModalOpen,
+  setStatusData,
+}) => {
   const { deleteData } = useAxios();
-  const [gridRef, setGridRef] = useState(null);
-  const [searchText, setSearchText] = useState("");
   const [currentPage, setCurrentPage] = useState(2);
-  const [fetchedData, setFetchedData] = useState([]);
-  const [filteredFetchedData, setFilteredFetchedData] = useState([]);
+  const [inventoryItems, setInventoryItems] = useState([]);
+  const [inventoryItemsData, setInventoryItemsData] = useState({});
+  const [filteredInventoryItems, setFilteredInventoryItems] = useState([]);
+
+  const handleChangeEditChange = (e) => {
+    setInventoryItemsData((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
+  };
+
+  const handleCustomSelectChange = (e, name) => {
+    setInventoryItemsData((prev) => ({ ...prev, [name]: e.value }));
+  };
+
+  const closeModal = () => setIsMenuItemFormModalOpen(false);
+  const openModal = (inventoryItem) => {
+    setIsMenuItemFormModalOpen(true);
+    setInventoryItemsData((prev) => ({ ...prev, ...inventoryItem }));
+  };
+
+  const handleClickView = (item) => {
+    openModal(item);
+  };
+
+  const deleteInventoryItem = (inventoryItem) => {
+    deleteData(
+      `/inventoryItem/${inventoryItem.id}`,
+      setStatusData
+    );
+  };
+
+  const [searchText, setSearchText] = useState("");
+  const [gridRef, setGridRef] = useState(null);
+  const searchTextRef = useRef(searchText);
+  searchTextRef.current = searchText;
 
   const onSearchChange = ({ target: { value } }) => {
     const visibleColumns = gridRef.current.visibleColumns;
     setSearchText(value);
 
-    const newDataSource = fetchedData.filter((p) => {
+    const newDataSource = inventoryItems.filter((p) => {
       return visibleColumns.reduce((acc, col) => {
         const v = (p[col.id] + "").toLowerCase(); // get string value
         return acc || v.indexOf(value.toLowerCase()) !== -1; // make the search case insensitive
       }, false);
     });
 
-    setFilteredFetchedData(newDataSource);
-  };
-
-  const deleteMenu = (supplier) => {
-    deleteData(
-      `/purchase/${supplier.id}`,
-      setStatusData
+    setFilteredInventoryItems(
+      newDataSource.map((item, index) => ({ ...item, index: index + 1 }))
     );
   };
 
@@ -39,14 +72,14 @@ export const Table = ({ children, data, statusData, setStatusData }) => {
       <div className="table_cell flex gap-4 justify-center">
         <button
           className="bg-yellow-500 py-0.25 px-2 rounded-md flex items-center gap-1 pr-1 text-[#222]"
-          onClick={() => navigate("/menu/items/" + data.id)}
+          onClick={() => handleClickView(data)}
         >
-          View
-          <Visit className="w-5 h-5" />
+          Edit
+          <Pencil className="w-4 h-4" />
         </button>
         <button
           className="bg-red-700 py-0.25 px-2 rounded-md text-white flex gap-1 items-center pr-1"
-          onClick={() => deleteMenu(data)}
+          onClick={() => deleteInventoryItem(data)}
         >
           Delete
           <Trash className="w-4 h-4" />
@@ -56,9 +89,13 @@ export const Table = ({ children, data, statusData, setStatusData }) => {
   };
 
   useEffect(() => {
-    setFetchedData(data.data);
-    setFilteredFetchedData(data.data);
+    setInventoryItems(data.Items);
+    setFilteredInventoryItems(
+      data.data?.map((item, index) => ({ ...item, index: index + 1 }))
+    );
   }, [data]);
+
+
 
   return (
     <>
@@ -72,47 +109,24 @@ export const Table = ({ children, data, statusData, setStatusData }) => {
           />
         </label>
         {children}
+        {isMenuItemModalOpen && (
+          <MenuCategoryModal
+            formData={inventoryItemsData}
+            handleChange={handleChangeEditChange}
+            closeModal={closeModal}
+            handleCustomSelectChange={handleCustomSelectChange}
+            editing={true}
+          />
+        )}
       </div>
       <ReactDataGrid
         style={{ fontSize: "1.0rem" }}
         onReady={setGridRef}
         idProperty="id"
         columns={[
-          { name: "name", header: "Name", defaultFlex: 1 },
-          { name: "price", header: "Price", defaultFlex: 1 },
-          {
-            name: "category",
-            header: "Category",
-            defaultFlex: 1,
-            render: ({ value }) => value?.name ? value.name : "null",
-          },
-          {
-            name: "is_available",
-            header: "Availability",
-            defaultFlex: 1,
-            render: ({value}) => {
-              return (
-                <div className="flex items-center">
-                  <label className="relative inline-flex items-center cursor-pointer">
-                    <input
-                      type="checkbox"
-                      value=""
-                      className="sr-only peer"
-                      checked={value}
-                      disabled
-                    />
-                    <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-green-300 dark:peer-focus:ring-green-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-green-600"></div>
-                  </label>
-                </div>
-              );
-            },
-          },
-          {
-            name: "created_at",
-            header: "Date Created",
-            defaultFlex: 1,
-            render: ({ value }) => new Date(value).toLocaleDateString(),
-          },
+          {name: "name", header: "Name", minWidth: 200},
+          {parent: "parent_category", header: "Parent Category", minWidth: 200, render: ({value}) => value ? value : "No Parent" },
+          {name: "description", header: "Description", minWidth: 300, render: ({value}) => value ? value.substring(0, 50) + "..." : "No Description", defaultFlex: 1 },
           {
             name: "actions",
             header: "Actions",
@@ -120,7 +134,7 @@ export const Table = ({ children, data, statusData, setStatusData }) => {
             render: renderActions,
           },
         ]}
-        dataSource={filteredFetchedData || []}
+        dataSource={filteredInventoryItems || []}
         pagination
         defaultLimit={10}
         paginationShowPageSizeSelector
@@ -153,7 +167,7 @@ export const Table = ({ children, data, statusData, setStatusData }) => {
         paginationShowPagesToolbar
         paginationShowSizeChanger
         paginationShowTotal
-        paginationTotal={<span>Rows: {filteredFetchedData?.length}</span>}
+        paginationTotal={<span>Rows: {filteredInventoryItems?.length}</span>}
         paginationRowsPerPageOptions={[5, 10, 20, 50, 100]}
         paginationCurrentPage={currentPage}
         onPaginationChange={({ page }) => {

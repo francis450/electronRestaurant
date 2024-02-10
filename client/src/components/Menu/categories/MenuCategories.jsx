@@ -1,14 +1,14 @@
 import React, { useContext, useState } from "react";
 import useAxios from "../../../hooks/useAxios";
 import { StatusModalContext } from "../../App/App";
-import ItemModal from "./ItemModal";
 import TableContainer from "./TableContainer";
 import { Plus } from "../../../reusables/svgs/svgs";
 import { initialFormState } from "./constants";
+import MenuCategoryModal from "./MenuCategoryModal";
 
-const InventoryItems = () => {
+const MenuCategories = () => {
   const { postData } = useAxios();
-  const { statusData, setStatusData } = useContext(StatusModalContext);
+  const { setStatusData } = useContext(StatusModalContext);
 
   const [formData, setFormData] = useState(initialFormState);
 
@@ -36,23 +36,23 @@ const InventoryItems = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const url = `/newInventoryItem`;
+    const url = `/menu_category`;
     postData(url, formData, setStatusData, callback);
   };
 
   return (
     <>
       <section className="Items-table-section">
-        <TableContainer statusData={statusData}>
+        <TableContainer>
           <button
-            className="btn py-1 px-3 bg-red-200 text-[#222] mt-2 rounded-md flex gap-1"
+            className="btn py-1 px-3 bg-red-200 mt-2 text-[#222] rounded-md flex gap-1"
             onClick={() => openModal()}
           >
-            Add Item
+            Add Menu Category
             <Plus />
           </button>
           {isItemModalOpen && (
-            <ItemModal
+            <MenuCategoryModal
               formData={formData}
               closeModal={closeModal}
               handleChange={handleChange}
@@ -66,4 +66,4 @@ const InventoryItems = () => {
   );
 };
 
-export default InventoryItems;
+export default MenuCategories;
