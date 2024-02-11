@@ -1,10 +1,10 @@
-import ReactDataGrid from "@inovua/reactdatagrid-community";
 import React, { useEffect, useState } from "react";
 import { Trash, Visit } from "../../../reusables/svgs/svgs";
 import { useNavigate } from "react-router-dom";
 import useAxios from "../../../hooks/useAxios";
+import DataTable from "../../../reusables/tables/DataTable";
 
-export const Table = ({ children, data, statusData, setStatusData }) => {
+export const Table = ({ children, data, setStatusData }) => {
   const navigate = useNavigate();
   const { deleteData } = useAxios();
   const [gridRef, setGridRef] = useState(null);
@@ -28,10 +28,7 @@ export const Table = ({ children, data, statusData, setStatusData }) => {
   };
 
   const deleteMenu = (supplier) => {
-    deleteData(
-      `/purchase/${supplier.id}`,
-      setStatusData
-    );
+    deleteData(`/purchase/${supplier.id}`, setStatusData);
   };
 
   const renderActions = ({ data }) => {
@@ -73,24 +70,21 @@ export const Table = ({ children, data, statusData, setStatusData }) => {
         </label>
         {children}
       </div>
-      <ReactDataGrid
-        style={{ fontSize: "1.0rem" }}
-        onReady={setGridRef}
-        idProperty="id"
+      <DataTable
+        setGridRef={setGridRef}
+        currentPage={currentPage}
+        filteredFetchedData={filteredFetchedData}
+        setCurrentPage={setCurrentPage}
         columns={[
           { name: "name", header: "Name", defaultFlex: 1 },
           { name: "price", header: "Price", defaultFlex: 1 },
-          {
-            name: "category",
-            header: "Category",
-            defaultFlex: 1,
-            render: ({ value }) => value?.name ? value.name : "null",
+          { name: "category", header: "Category", defaultFlex: 1, render: ({ value }) => (value?.name ? value.name : "null"),
           },
           {
             name: "is_available",
             header: "Availability",
             defaultFlex: 1,
-            render: ({value}) => {
+            render: ({ value }) => {
               return (
                 <div className="flex items-center">
                   <label className="relative inline-flex items-center cursor-pointer">
@@ -120,46 +114,6 @@ export const Table = ({ children, data, statusData, setStatusData }) => {
             render: renderActions,
           },
         ]}
-        dataSource={filteredFetchedData || []}
-        pagination
-        defaultLimit={10}
-        paginationShowPageSizeSelector
-        paginationPageSizeOptions={[5, 10, 20, 50, 100]}
-        paginationToolbarProps={{
-          style: {
-            border: "none",
-            borderRadius: 0,
-            borderBottom: "1px solid rgba(0,0,0,.1)",
-          },
-        }}
-        paginationProps={{
-          style: {
-            border: "none",
-            borderRadius: 0,
-            borderTop: "1px solid rgba(0,0,0,.1)",
-          },
-        }}
-        paginationShowPages
-        paginationMode="default"
-        paginationNext={<span>Next</span>}
-        paginationPrev={<span>Prev</span>}
-        paginationPageInputProps={{
-          style: {
-            border: "none",
-            borderRadius: 0,
-            borderBottom: "1px solid rgba(0,0,0,.1)",
-          },
-        }}
-        paginationShowPagesToolbar
-        paginationShowSizeChanger
-        paginationShowTotal
-        paginationTotal={<span>Rows: {filteredFetchedData?.length}</span>}
-        paginationRowsPerPageOptions={[5, 10, 20, 50, 100]}
-        paginationCurrentPage={currentPage}
-        onPaginationChange={({ page }) => {
-          setCurrentPage(page);
-        }}
-        className="h-[50.15vh] text-xl"
       />
     </>
   );

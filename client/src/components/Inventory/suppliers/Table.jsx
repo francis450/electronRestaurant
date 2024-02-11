@@ -1,11 +1,16 @@
 import React, { useEffect, useRef, useState } from "react";
 import useAxios from "../../../hooks/useAxios";
-import ReactDataGrid from "@inovua/reactdatagrid-community";
 import "@inovua/reactdatagrid-community/index.css";
 import SupplierModal from "./SupplierModal";
 import { Pencil, Trash } from "../../../reusables/svgs/svgs";
 import { validateField } from "../../../lib/utils";
-import { formRegexError, handleCloseModalOnOutsideClick, initialFormState, suppliersColumns } from "./constants";
+import {
+  formRegexError,
+  handleCloseModalOnOutsideClick,
+  initialFormState,
+  suppliersColumns,
+} from "./constants";
+import DataTable from "../../../reusables/tables/DataTable";
 
 export const Table = ({
   children,
@@ -25,7 +30,13 @@ export const Table = ({
   const handleChangeEditChange = (e) => {
     const { name, value } = e.target;
     setSupplierData((prev) => ({ ...prev, [name]: value }));
-    validateField(formRegexError[name].regex, name, value, setErrors, formRegexError[name].message );
+    validateField(
+      formRegexError[name].regex,
+      name,
+      value,
+      setErrors,
+      formRegexError[name].message
+    );
   };
 
   const closeModal = () => setIsSupplierFormModalOpen(false);
@@ -40,10 +51,7 @@ export const Table = ({
   };
 
   const deleteSupplier = (supplier) => {
-    deleteData(
-      `/supplier/${supplier.id}`,
-      setStatusData
-    );
+    deleteData(`/supplier/${supplier.id}`, setStatusData);
   };
 
   const [searchText, setSearchText] = useState("");
@@ -95,7 +103,7 @@ export const Table = ({
       }))
     );
   }, [data]);
-  
+
   useEffect(() => {
     handleCloseModalOnOutsideClick(closeModalRef.current);
   }, []);
@@ -122,10 +130,11 @@ export const Table = ({
           />
         )}
       </div>
-      <ReactDataGrid
-        style={{ fontSize: "1.0rem" }}
-        onReady={setGridRef}
-        idProperty="id"
+      <DataTable
+        setGridRef={setGridRef}
+        currentPage={currentPage}
+        filteredFetchedData={filteredSuppliers}
+        setCurrentPage={setCurrentPage}
         columns={[
           ...suppliersColumns,
           {
@@ -135,46 +144,6 @@ export const Table = ({
             render: renderActions,
           },
         ]}
-        dataSource={filteredSuppliers || []}
-        pagination
-        defaultLimit={10}
-        paginationShowPageSizeSelector
-        paginationPageSizeOptions={[5, 10, 20, 50, 100]}
-        paginationToolbarProps={{
-          style: {
-            border: "none",
-            borderRadius: 0,
-            borderBottom: "1px solid rgba(0,0,0,.1)",
-          },
-        }}
-        paginationProps={{
-          style: {
-            border: "none",
-            borderRadius: 0,
-            borderTop: "1px solid rgba(0,0,0,.1)",
-          },
-        }}
-        paginationShowPages
-        paginationMode="default"
-        paginationNext={<span>Next</span>}
-        paginationPrev={<span>Prev</span>}
-        paginationPageInputProps={{
-          style: {
-            border: "none",
-            borderRadius: 0,
-            borderBottom: "1px solid rgba(0,0,0,.1)",
-          },
-        }}
-        paginationShowPagesToolbar
-        paginationShowSizeChanger
-        paginationShowTotal
-        paginationTotal={<span>Rows: {filteredSuppliers?.length}</span>}
-        paginationRowsPerPageOptions={[5, 10, 20, 50, 100]}
-        paginationCurrentPage={currentPage}
-        onPaginationChange={({ page }) => {
-          setCurrentPage(page);
-        }}
-        className="h-[50.15vh] text-xl"
       />
     </>
   );

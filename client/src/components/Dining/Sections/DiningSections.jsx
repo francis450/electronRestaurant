@@ -1,12 +1,12 @@
-import React, { useContext, useEffect, useState } from "react";
-import useAxios from "../../../hooks/useAxios";
-import { StatusModalContext } from "../../App/App";
-import TableContainer from "./TableContainer";
-import { Plus } from "../../../reusables/svgs/svgs";
-import { handleCloseModalOnOutsideClick, initialFormState } from "./constants";
-import MenuCategoryModal from "./MenuCategoryModal";
+import React, { useContext, useEffect, useState } from 'react'
+import useAxios from '../../../hooks/useAxios';
+import { StatusModalContext } from '../../App/App';
+import TableContainer from './TableContainer';
+import { Plus } from '../../../reusables/svgs/svgs';
+import DiningSectionsModal from './DiningSectionsModal';
+import { handleCloseModalOnOutsideClick, initialFormState } from './constants';
 
-const MenuCategories = () => {
+const DiningSections = () => {
   const { postData } = useAxios();
   const { setStatusData } = useContext(StatusModalContext);
 
@@ -36,7 +36,7 @@ const MenuCategories = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const url = `/menu_category`;
+    const url = `/section`;
     postData(url, formData, setStatusData, callback);
   };
 
@@ -53,11 +53,11 @@ const MenuCategories = () => {
             className="btn py-1 px-3 bg-red-200 mt-2 text-[#222] rounded-md flex gap-1"
             onClick={() => openModal()}
           >
-            Add Menu Category
+            Add Section
             <Plus />
           </button>
           {isItemModalOpen && (
-            <MenuCategoryModal
+            <DiningSectionsModal
               formData={formData}
               closeModal={closeModal}
               handleChange={handleChange}
@@ -71,4 +71,5 @@ const MenuCategories = () => {
   );
 };
 
-export default MenuCategories;
+
+export default DiningSections;

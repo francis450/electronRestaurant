@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import useAxios from "../../../hooks/useAxios";
-import ReactDataGrid from "@inovua/reactdatagrid-community";
 import "@inovua/reactdatagrid-community/index.css";
 import { Pencil, Trash } from "../../../reusables/svgs/svgs";
 import MenuCategoryModal from "./MenuCategoryModal";
+import DataTable from "../../../reusables/tables/DataTable";
 
 export const Table = ({
   children,
@@ -14,34 +14,34 @@ export const Table = ({
 }) => {
   const { deleteData } = useAxios();
   const [currentPage, setCurrentPage] = useState(2);
-  const [inventoryItems, setInventoryItems] = useState([]);
-  const [inventoryItemsData, setInventoryItemsData] = useState({});
-  const [filteredInventoryItems, setFilteredInventoryItems] = useState([]);
+  const [menuCategorys, setMenuCategorys] = useState([]);
+  const [menuCategorysData, setMenuCategorysData] = useState({});
+  const [filteredMenuCategorys, setFilteredMenuCategorys] = useState([]);
 
   const handleChangeEditChange = (e) => {
-    setInventoryItemsData((prev) => ({
+    setMenuCategorysData((prev) => ({
       ...prev,
       [e.target.name]: e.target.value,
     }));
   };
 
   const handleCustomSelectChange = (e, name) => {
-    setInventoryItemsData((prev) => ({ ...prev, [name]: e.value }));
+    setMenuCategorysData((prev) => ({ ...prev, [name]: e.value }));
   };
 
   const closeModal = () => setIsMenuItemFormModalOpen(false);
-  const openModal = (inventoryItem) => {
+  const openModal = (menuCategory) => {
     setIsMenuItemFormModalOpen(true);
-    setInventoryItemsData((prev) => ({ ...prev, ...inventoryItem }));
+    setMenuCategorysData((prev) => ({ ...prev, ...menuCategory }));
   };
 
   const handleClickView = (item) => {
     openModal(item);
   };
 
-  const deleteInventoryItem = (inventoryItem) => {
+  const deleteMenuCategory = (menuCategory) => {
     deleteData(
-      `/inventoryItem/${inventoryItem.id}`,
+      `/menu_category/${menuCategory.id}`,
       setStatusData
     );
   };
@@ -55,14 +55,14 @@ export const Table = ({
     const visibleColumns = gridRef.current.visibleColumns;
     setSearchText(value);
 
-    const newDataSource = inventoryItems.filter((p) => {
+    const newDataSource = menuCategorys.filter((p) => {
       return visibleColumns.reduce((acc, col) => {
         const v = (p[col.id] + "").toLowerCase(); // get string value
         return acc || v.indexOf(value.toLowerCase()) !== -1; // make the search case insensitive
       }, false);
     });
 
-    setFilteredInventoryItems(
+    setFilteredMenuCategorys(
       newDataSource.map((item, index) => ({ ...item, index: index + 1 }))
     );
   };
@@ -79,7 +79,7 @@ export const Table = ({
         </button>
         <button
           className="bg-red-700 py-0.25 px-2 rounded-md text-white flex gap-1 items-center pr-1"
-          onClick={() => deleteInventoryItem(data)}
+          onClick={() => deleteMenuCategory(data)}
         >
           Delete
           <Trash className="w-4 h-4" />
@@ -89,13 +89,11 @@ export const Table = ({
   };
 
   useEffect(() => {
-    setInventoryItems(data.Items);
-    setFilteredInventoryItems(
+    setMenuCategorys(data.Items);
+    setFilteredMenuCategorys(
       data.data?.map((item, index) => ({ ...item, index: index + 1 }))
     );
   }, [data]);
-
-
 
   return (
     <>
@@ -111,7 +109,7 @@ export const Table = ({
         {children}
         {isMenuItemModalOpen && (
           <MenuCategoryModal
-            formData={inventoryItemsData}
+            formData={menuCategorysData}
             handleChange={handleChangeEditChange}
             closeModal={closeModal}
             handleCustomSelectChange={handleCustomSelectChange}
@@ -119,61 +117,22 @@ export const Table = ({
           />
         )}
       </div>
-      <ReactDataGrid
-        style={{ fontSize: "1.0rem" }}
-        onReady={setGridRef}
-        idProperty="id"
+      <DataTable
+        setGridRef={setGridRef}
+        currentPage={currentPage}
+        filteredFetchedData={filteredMenuCategorys}
+        setCurrentPage={setCurrentPage}
         columns={[
           {name: "name", header: "Name", minWidth: 200},
-          {parent: "parent_category", header: "Parent Category", minWidth: 200, render: ({value}) => value ? value : "No Parent" },
+          {parent: "parent_category_name", header: "Parent Category", minWidth: 200, render: ({value}) => value ? value : "No Parent" },
           {name: "description", header: "Description", minWidth: 300, render: ({value}) => value ? value.substring(0, 50) + "..." : "No Description", defaultFlex: 1 },
           {
             name: "actions",
             header: "Actions",
             minWidth: 200,
             render: renderActions,
-          },
+          }
         ]}
-        dataSource={filteredInventoryItems || []}
-        pagination
-        defaultLimit={10}
-        paginationShowPageSizeSelector
-        paginationPageSizeOptions={[5, 10, 20, 50, 100]}
-        paginationToolbarProps={{
-          style: {
-            border: "none",
-            borderRadius: 0,
-            borderBottom: "1px solid rgba(0,0,0,.1)",
-          },
-        }}
-        paginationProps={{
-          style: {
-            border: "none",
-            borderRadius: 0,
-            borderTop: "1px solid rgba(0,0,0,.1)",
-          },
-        }}
-        paginationShowPages
-        paginationMode="default"
-        paginationNext={<span>Next</span>}
-        paginationPrev={<span>Prev</span>}
-        paginationPageInputProps={{
-          style: {
-            border: "none",
-            borderRadius: 0,
-            borderBottom: "1px solid rgba(0,0,0,.1)",
-          },
-        }}
-        paginationShowPagesToolbar
-        paginationShowSizeChanger
-        paginationShowTotal
-        paginationTotal={<span>Rows: {filteredInventoryItems?.length}</span>}
-        paginationRowsPerPageOptions={[5, 10, 20, 50, 100]}
-        paginationCurrentPage={currentPage}
-        onPaginationChange={({ page }) => {
-          setCurrentPage(page);
-        }}
-        className="h-[50.15vh] text-xl"
       />
     </>
   );

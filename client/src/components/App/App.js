@@ -15,6 +15,9 @@ import Suppliers from "../Inventory/suppliers/Suppliers";
 import Receipts from "../Inventory/receipts/Receipts";
 import InventoryCategories from "../Inventory/categories/InventoryCategories";
 import MenuCategories from "../Menu/categories/MenuCategories";
+import DiningSections from "../Dining/Sections/DiningSections";
+import DiningTables from "../Dining/Tables/DiningTables";
+import Dining from "../../pages/dining";
 
 export const StatusModalContext = createContext();
 export const AuthContext = createContext();
@@ -81,6 +84,20 @@ let router = createBrowserRouter([
           },
         ],
       },
+      {
+        path: "dining",
+        element: <Dining/>,
+        children: [
+          {
+            path: "tables",
+            element: <DiningTables />,
+          },
+          {
+            path: "sections",
+            element: <DiningSections />,
+          }
+        ]
+      }
     ],
   },
 ]);

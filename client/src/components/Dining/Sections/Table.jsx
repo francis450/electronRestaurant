@@ -1,47 +1,49 @@
 import React, { useEffect, useRef, useState } from "react";
-import ItemModal from "./ItemModal";
 import useAxios from "../../../hooks/useAxios";
 import "@inovua/reactdatagrid-community/index.css";
 import { Pencil, Trash } from "../../../reusables/svgs/svgs";
-import { inventoryItemsCols } from "./constants";
+import DiningSectionsModal from "./DiningSectionsModal";
 import DataTable from "../../../reusables/tables/DataTable";
 
 export const Table = ({
   children,
   data,
-  isInventoryItemModalOpen,
-  setIsInventoryItemFormModalOpen,
+  isMenuItemModalOpen,
+  setIsMenuItemFormModalOpen,
   setStatusData,
 }) => {
   const { deleteData } = useAxios();
   const [currentPage, setCurrentPage] = useState(2);
-  const [inventoryItems, setInventoryItems] = useState([]);
-  const [inventoryItemsData, setInventoryItemsData] = useState({});
-  const [filteredInventoryItems, setFilteredInventoryItems] = useState([]);
+  const [menuCategorys, setMenuCategorys] = useState([]);
+  const [menuCategorysData, setMenuCategorysData] = useState({});
+  const [filteredMenuCategorys, setFilteredMenuCategorys] = useState([]);
 
   const handleChangeEditChange = (e) => {
-    setInventoryItemsData((prev) => ({
+    setMenuCategorysData((prev) => ({
       ...prev,
       [e.target.name]: e.target.value,
     }));
   };
 
   const handleCustomSelectChange = (e, name) => {
-    setInventoryItemsData((prev) => ({ ...prev, [name]: e.value }));
+    setMenuCategorysData((prev) => ({ ...prev, [name]: e.value }));
   };
 
-  const closeModal = () => setIsInventoryItemFormModalOpen(false);
-  const openModal = (inventoryItem) => {
-    setIsInventoryItemFormModalOpen(true);
-    setInventoryItemsData((prev) => ({ ...prev, ...inventoryItem }));
+  const closeModal = () => setIsMenuItemFormModalOpen(false);
+  const openModal = (menuCategory) => {
+    setIsMenuItemFormModalOpen(true);
+    setMenuCategorysData((prev) => ({ ...prev, ...menuCategory }));
   };
 
   const handleClickView = (item) => {
     openModal(item);
   };
 
-  const deleteInventoryItem = (inventoryItem) => {
-    deleteData(`/inventoryItem/${inventoryItem.id}`, setStatusData);
+  const deleteMenuCategory = (menuCategory) => {
+    deleteData(
+      `/section/${menuCategory.id}`,
+      setStatusData
+    );
   };
 
   const [searchText, setSearchText] = useState("");
@@ -53,14 +55,14 @@ export const Table = ({
     const visibleColumns = gridRef.current.visibleColumns;
     setSearchText(value);
 
-    const newDataSource = inventoryItems.filter((p) => {
+    const newDataSource = menuCategorys?.filter((p) => {
       return visibleColumns.reduce((acc, col) => {
-        const v = (p[col.id] + "").toLowerCase();
-        return acc || v.indexOf(value.toLowerCase()) !== -1;
+        const v = (p[col.id] + "").toLowerCase(); // get string value
+        return acc || v.indexOf(value.toLowerCase()) !== -1; // make the search case insensitive
       }, false);
     });
 
-    setFilteredInventoryItems(
+    setFilteredMenuCategorys(
       newDataSource.map((item, index) => ({ ...item, index: index + 1 }))
     );
   };
@@ -77,7 +79,7 @@ export const Table = ({
         </button>
         <button
           className="bg-red-700 py-0.25 px-2 rounded-md text-white flex gap-1 items-center pr-1"
-          onClick={() => deleteInventoryItem(data)}
+          onClick={() => deleteMenuCategory(data)}
         >
           Delete
           <Trash className="w-4 h-4" />
@@ -87,15 +89,17 @@ export const Table = ({
   };
 
   useEffect(() => {
-    setInventoryItems(data.Items);
-    setFilteredInventoryItems(
-      data.Items?.map((item, index) => ({ ...item, index: index + 1 }))
+    setMenuCategorys(data.data);
+    setFilteredMenuCategorys(
+      data.data?.map((item, index) => ({ ...item, index: index + 1 }))
     );
   }, [data]);
 
+
+
   return (
     <>
-      <div className="flex justify-between items-center  mt-3 mb-1">
+      <div className="flex justify-between items-center mt-3 mb-1">
         <label>
           <input
             value={searchText}
@@ -105,9 +109,9 @@ export const Table = ({
           />
         </label>
         {children}
-        {isInventoryItemModalOpen && (
-          <ItemModal
-            formData={inventoryItemsData}
+        {isMenuItemModalOpen && (
+          <DiningSectionsModal
+            formData={menuCategorysData}
             handleChange={handleChangeEditChange}
             closeModal={closeModal}
             handleCustomSelectChange={handleCustomSelectChange}
@@ -118,16 +122,17 @@ export const Table = ({
       <DataTable
         setGridRef={setGridRef}
         currentPage={currentPage}
-        filteredFetchedData={filteredInventoryItems}
+        filteredFetchedData={filteredMenuCategorys}
         setCurrentPage={setCurrentPage}
         columns={[
-          ...inventoryItemsCols,
+          {name: "name", header: "Name", minWidth: 200},
+          {name: "description", header: "Description", minWidth: 300, render: ({value}) => value ? value.substring(0, 50) + "..." : "No Description", defaultFlex: 1 },
           {
             name: "actions",
             header: "Actions",
             minWidth: 200,
             render: renderActions,
-          },
+          }
         ]}
       />
     </>

@@ -4,23 +4,14 @@ import ReactDataGrid from "@inovua/reactdatagrid-community";
 import "@inovua/reactdatagrid-community/index.css";
 import { Trash } from "../../../reusables/svgs/svgs";
 
-export const Table = ({
-  children,
-  data,
-  isSupplierModalOpen,
-  setIsSupplierFormModalOpen,
-  setStatusData,
-}) => {
+export const Table = ({ children, data, setStatusData }) => {
   const { putData, deleteData } = useAxios();
   const [currentPage, setCurrentPage] = useState(2);
   const [suppliers, setSuppliers] = useState([]);
   const [filteredSuppliers, setFilteredSuppliers] = useState([]);
 
   const deleteCategory = (supplier) => {
-    deleteData(
-      `/category/${supplier.id}`,
-      setStatusData
-    );
+    deleteData(`/category/${supplier.id}`, setStatusData);
   };
 
   const [searchText, setSearchText] = useState("");

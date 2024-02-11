@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
 import useAxios from "../../../hooks/useAxios";
-import ReactDataGrid from "@inovua/reactdatagrid-community";
 import "@inovua/reactdatagrid-community/index.css";
 import { Trash, Visit } from "../../../reusables/svgs/svgs";
 import PurchaseItemsModal from "./PurchaseItemsModal";
 import { receiptsTableCols } from "./constants";
+import DataTable from "../../../reusables/tables/DataTable";
 
 export const Table = ({
   children,
@@ -15,8 +15,8 @@ export const Table = ({
 }) => {
   const { deleteData } = useAxios();
   const [currentPage, setCurrentPage] = useState(2);
-  const [suppliers, setSuppliers] = useState([]);
-  const [filteredSuppliers, setFilteredSuppliers] = useState([]);
+  const [suppliers, setReceipts] = useState([]);
+  const [filteredReceipts, setFilteredReceipts] = useState([]);
   const [supplierData, setSupplierData] = useState({});
 
   const handleChangeEditChange = (e) => {
@@ -38,10 +38,7 @@ export const Table = ({
   };
 
   const deleteReceipt = (supplier) => {
-    deleteData(
-      `/purchase/${supplier.id}`,
-      setStatusData
-    );
+    deleteData(`/purchase/${supplier.id}`, setStatusData);
   };
 
   const [searchText, setSearchText] = useState("");
@@ -60,7 +57,7 @@ export const Table = ({
       }, false);
     });
 
-    setFilteredSuppliers(newDataSource);
+    setFilteredReceipts(newDataSource);
   };
 
   const renderActions = ({ data }) => {
@@ -85,8 +82,8 @@ export const Table = ({
   };
 
   useEffect(() => {
-    setSuppliers(data.data);
-    setFilteredSuppliers(data.data);
+    setReceipts(data.data);
+    setFilteredReceipts(data.data);
   }, [data]);
 
   return (
@@ -110,10 +107,11 @@ export const Table = ({
           />
         )}
       </div>
-      <ReactDataGrid
-        style={{ fontSize: "1.0rem" }}
-        onReady={setGridRef}
-        idProperty="id"
+      <DataTable
+        setGridRef={setGridRef}
+        currentPage={currentPage}
+        filteredFetchedData={filteredReceipts}
+        setCurrentPage={setCurrentPage}
         columns={[
           ...receiptsTableCols,
           {
@@ -123,46 +121,6 @@ export const Table = ({
             render: renderActions,
           },
         ]}
-        dataSource={filteredSuppliers || []}
-        pagination
-        defaultLimit={10}
-        paginationShowPageSizeSelector
-        paginationPageSizeOptions={[5, 10, 20, 50, 100]}
-        paginationToolbarProps={{
-          style: {
-            border: "none",
-            borderRadius: 0,
-            borderBottom: "1px solid rgba(0,0,0,.1)",
-          },
-        }}
-        paginationProps={{
-          style: {
-            border: "none",
-            borderRadius: 0,
-            borderTop: "1px solid rgba(0,0,0,.1)",
-          },
-        }}
-        paginationShowPages
-        paginationMode="default"
-        paginationNext={<span>Next</span>}
-        paginationPrev={<span>Prev</span>}
-        paginationPageInputProps={{
-          style: {
-            border: "none",
-            borderRadius: 0,
-            borderBottom: "1px solid rgba(0,0,0,.1)",
-          },
-        }}
-        paginationShowPagesToolbar
-        paginationShowSizeChanger
-        paginationShowTotal
-        paginationTotal={<span>Rows: {filteredSuppliers?.length}</span>}
-        paginationRowsPerPageOptions={[5, 10, 20, 50, 100]}
-        paginationCurrentPage={currentPage}
-        onPaginationChange={({ page }) => {
-          setCurrentPage(page);
-        }}
-        className="h-[50.15vh] text-xl"
       />
     </>
   );
