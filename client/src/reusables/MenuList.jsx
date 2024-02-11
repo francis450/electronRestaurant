@@ -115,7 +115,7 @@ export default function MenuList() {
       </ResponsiveNavLink>
       <ResponsiveNavLink
         to={"/dining/tables"}
-        active={location.pathname.includes("/tables")}
+        active={location.pathname.includes("/dining")}
         className="flex items-center gap-3"
       >
         <svg
