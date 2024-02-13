@@ -4,7 +4,7 @@ import React from 'react'
 const DataTable = ({currentPage, filteredFetchedData, setGridRef, setCurrentPage, columns, onEditComplete=()=>[]}) => {
   return (
     <ReactDataGrid
-        style={{ fontSize: "1.0rem" }}
+        style={{ fontSize: "1.0rem", maxHeight: "90vh" }}
         onReady={setGridRef}
         idProperty="id"
         columns={columns}
@@ -48,7 +48,7 @@ const DataTable = ({currentPage, filteredFetchedData, setGridRef, setCurrentPage
         onPaginationChange={({ page }) => {
           setCurrentPage(page);
         }}
-        className="h-[50.15vh] text-xl"
+        className="h-[486px] text-xl"
       />
   )
 }

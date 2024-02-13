@@ -51,7 +51,6 @@ export const formRegexError = {
 };
 
 export const inventoryItemsCols = [
-  { name: "index", header: "No.", defaultWidth: 80 },
   { name: "id", header: "ID", defaultVisible: false },
   {
     name: "item_name",

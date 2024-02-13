@@ -120,7 +120,10 @@ const ItemModal = ({
         </div>
         <div className="form-group flex justify-center gap-2 mt-1 px-4">
           <div className="flex flex-col gap-1 items-start w-full">
-            <label htmlFor="username" className="text-[black]">
+            <label
+              htmlFor="username"
+              className="text-[black] whitespace-nowrap"
+            >
               Current Quantity
             </label>
             <Input

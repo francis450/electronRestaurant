@@ -97,7 +97,7 @@ const AddMenuItems = () => {
   return (
     <>
       <h1 className="text-xl text-left px-2">Add Items</h1>
-      <form className="grid grid-cols-2 bg-white min-h-[62vh]">
+      <form className="grid md:grid-cols-2 bg-white min-h-[62vh] w-full">
         <section className="details-section px-2">
           <div className="flex flex-col gap-1 items-start w-full">
             <label htmlFor="name" className="text-[black]">
@@ -260,26 +260,32 @@ const AddMenuItems = () => {
               handleRemoveRow={handleRemoveRow}
             />
           </div>
-          <div className="flex justify-end gap-3">
+          <div className="flex justify-between md:justify-end gap-1">
             <button
-              className="mt-3 bg-[#61dafb] text-[#222] py-1 px-3 rounded-md flex items-center gap-1"
+              className="mt-3 bg-[#61dafb] text-[#222] py-1 px-3 rounded-md"
               type="button"
             >
-              <ArrowLeft className="w-4 h-4" /> Go Back
+              <span className="flex items-center gap-1 whitespace-nowrap">
+                <ArrowLeft className="w-4 h-4" /> Go Back{" "}
+              </span>
             </button>
             <button
               type="button"
               onClick={handleAddRow}
-              className="mt-3 bg-orange-300 text-[#222] py-1 px-3 rounded-md flex items-center gap-1"
+              className="mt-3 bg-orange-300 text-[#222] py-1 px-3 rounded-md"
             >
-              <Plus className="w-4 h-4" /> Add Ingredient
+              <span className="flex items-center gap-1 whitespace-nowrap">
+                <Plus className="w-4 h-4" /> Add Ingredient
+              </span>
             </button>
             <button
               type="button"
               onClick={handleSubmit}
-              className="mt-3 bg-green-700 text-[#fff] py-1 px-3 rounded-md flex items-center gap-1"
+              className="mt-3 bg-green-700 text-[#fff] py-1 px-3 rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              <ReceiptIcon /> Add Menu Item
+              <span className="flex items-center gap-1 whitespace-nowrap">
+                <ReceiptIcon /> Add Receipt
+              </span>
             </button>
           </div>
         </section>

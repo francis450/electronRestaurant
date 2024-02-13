@@ -88,7 +88,7 @@ export const Table = ({
 
   return (
     <>
-      <div className="flex justify-between items-center  mt-3 mb-1">
+      <div className="flex flex-col-reverse md:flex-row justify-between items-center mt-3 mb-1 gap-1 md:gap-0">
         <label>
           <input
             value={searchText}

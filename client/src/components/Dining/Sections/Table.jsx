@@ -40,10 +40,7 @@ export const Table = ({
   };
 
   const deleteMenuCategory = (menuCategory) => {
-    deleteData(
-      `/section/${menuCategory.id}`,
-      setStatusData
-    );
+    deleteData(`/section/${menuCategory.id}`, setStatusData);
   };
 
   const [searchText, setSearchText] = useState("");
@@ -95,16 +92,14 @@ export const Table = ({
     );
   }, [data]);
 
-
-
   return (
     <>
       <div className="flex justify-between items-center mt-3 mb-1">
-        <label>
+        <label style={{ maxWidth: "60%" }}>
           <input
             value={searchText}
             onChange={onSearchChange}
-            className="py-1 border-none focus:outline-none text-[#222] rounded-md px-2"
+            className="py-1 border-none focus:outline-none text-[#222] rounded-md px-2 max-w-full"
             placeholder="search ..."
           />
         </label>
@@ -125,14 +120,21 @@ export const Table = ({
         filteredFetchedData={filteredMenuCategorys}
         setCurrentPage={setCurrentPage}
         columns={[
-          {name: "name", header: "Name", minWidth: 200},
-          {name: "description", header: "Description", minWidth: 300, render: ({value}) => value ? value.substring(0, 50) + "..." : "No Description", defaultFlex: 1 },
+          { name: "name", header: "Name", minWidth: 200 },
+          {
+            name: "description",
+            header: "Description",
+            minWidth: 300,
+            render: ({ value }) =>
+              value ? value.substring(0, 50) + "..." : "No Description",
+            defaultFlex: 1,
+          },
           {
             name: "actions",
             header: "Actions",
             minWidth: 200,
             render: renderActions,
-          }
+          },
         ]}
       />
     </>

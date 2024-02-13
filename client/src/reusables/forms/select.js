@@ -24,8 +24,8 @@ const CustomSelect = ({
   editing,
   styles = {
     optionStyles: {},
-    controlStyles: {}
-  }
+    controlStyles: {},
+  },
 }) => {
   const [selected, setSelected] = useState(value);
 
@@ -36,38 +36,38 @@ const CustomSelect = ({
         textAlign: "left",
         color: state.isSelected ? "#212529" : "#222",
         backgroundColor: state.isSelected ? "#a0a0a0" : "#D9D9D9",
-        ...styles.optionStyles
+        ...styles.optionStyles,
       };
     },
     control: (provided, state) => ({
       ...provided,
-      background: '#D9D9D9',
-      borderColor: '#9e9e9e',
-      minHeight: '34px',
-      height: '34px',
+      background: "#D9D9D9",
+      borderColor: "#9e9e9e",
+      minHeight: "34px",
+      height: "34px",
       textAlign: "left",
       borderRadius: "0.375rem",
       border: "none",
       boxShadow: "none",
-      ...styles.controlStyles
+      ...styles.controlStyles,
     }),
 
     valueContainer: (provided, state) => ({
       ...provided,
-      height: '34px',
-      padding: '0 6px'
+      height: "34px",
+      padding: "0 6px",
     }),
 
     input: (provided, state) => ({
       ...provided,
-      margin: '0px',
+      margin: "0px",
     }),
-    indicatorSeparator: state => ({
-      display: 'none',
+    indicatorSeparator: (state) => ({
+      display: "none",
     }),
     indicatorsContainer: (provided, state) => ({
       ...provided,
-      height: '34px',
+      height: "34px",
     }),
   };
 
@@ -81,7 +81,7 @@ const CustomSelect = ({
   }, [options, value]);
 
   return (
-    <div className="w-full rounded-md">
+    <div className="rounded-md">
       {editing || value ? (
         <Select
           name={name}

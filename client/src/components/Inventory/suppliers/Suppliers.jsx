@@ -5,7 +5,11 @@ import { TableContainer } from "./TableContainer";
 import SupplierModal from "./SupplierModal";
 import { Plus } from "../../../reusables/svgs/svgs";
 import { validateField } from "../../../lib/utils";
-import { formRegexError, handleCloseModalOnOutsideClick, initialFormState } from "./constants";
+import {
+  formRegexError,
+  handleCloseModalOnOutsideClick,
+  initialFormState,
+} from "./constants";
 
 const Suppliers = () => {
   const { postData } = useAxios();
@@ -18,7 +22,13 @@ const Suppliers = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
-    validateField(formRegexError[name].regex, name, value, setErrors, formRegexError[name].message );
+    validateField(
+      formRegexError[name].regex,
+      name,
+      value,
+      setErrors,
+      formRegexError[name].message
+    );
   };
 
   const [isSupplierModalOpen, setIsSupplierFormModalOpen] = useState(false);
@@ -29,7 +39,7 @@ const Suppliers = () => {
   const callback = () => {
     setFormData((prev) => ({
       ...prev,
-      ...initialFormState
+      ...initialFormState,
     }));
     closeModal();
   };
@@ -44,26 +54,26 @@ const Suppliers = () => {
     handleCloseModalOnOutsideClick(closeModal);
   }, []);
 
-  return (  
+  return (
     <>
       <section className="suppliers-table-section">
         <TableContainer errors={errors}>
-        <button
-            className="btn py-1 px-3 bg-red-200 text-[#222] mt-2 rounded-md flex gap-1"
+          <button
+            className="btn py-1 px-3 bg-red-200 text-[#222] rounded-md flex gap-1"
             onClick={() => openModal()}
           >
-            Add Supplier
+            <span className="whitespace-nowrap">Add Supplier</span>
             <Plus />
           </button>
           {isSupplierModalOpen && (
-          <SupplierModal
-            formData={formData}
-            errors={errors}
-            closeModal={closeModal}
-            handleChange={handleChange}
-            handleSubmit={handleSubmit}
-          />
-        )}
+            <SupplierModal
+              formData={formData}
+              errors={errors}
+              closeModal={closeModal}
+              handleChange={handleChange}
+              handleSubmit={handleSubmit}
+            />
+          )}
         </TableContainer>
       </section>
     </>

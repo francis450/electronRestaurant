@@ -26,9 +26,19 @@ export const initialReceiptDetailsState = {
 };
 
 export const receiptsTableCols = [
-  { name: "receipt_number", header: "Receipt Number", defaultFlex: 1 },
-  { name: "supplier_name", header: "Supplier", defaultFlex: 1 },
-  { name: "payment_method", header: "Payment Method", defaultFlex: 1 },
-  { name: "total_cost", header: "Total Cost", defaultFlex: 1 },
-  { name: "date", header: "Date Created", defaultFlex: 1 },
+  {
+    name: "receipt_number",
+    header: "Receipt Number",
+    defaultFlex: 1,
+    minWidth: 150,
+  },
+  { name: "supplier_name", header: "Supplier", defaultFlex: 1, minWidth: 300 },
+  {
+    name: "payment_method",
+    header: "Payment Method",
+    defaultFlex: 1,
+    minWidth: 150,
+  },
+  { name: "total_cost", header: "Total Cost", defaultFlex: 1, minWidth: 150 },
+  { name: "date", header: "Date Created", defaultFlex: 1, minWidth: 150 },
 ];

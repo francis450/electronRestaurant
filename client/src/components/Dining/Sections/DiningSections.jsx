@@ -1,10 +1,10 @@
-import React, { useContext, useEffect, useState } from 'react'
-import useAxios from '../../../hooks/useAxios';
-import { StatusModalContext } from '../../App/App';
-import TableContainer from './TableContainer';
-import { Plus } from '../../../reusables/svgs/svgs';
-import DiningSectionsModal from './DiningSectionsModal';
-import { handleCloseModalOnOutsideClick, initialFormState } from './constants';
+import React, { useContext, useEffect, useState } from "react";
+import useAxios from "../../../hooks/useAxios";
+import { StatusModalContext } from "../../App/App";
+import TableContainer from "./TableContainer";
+import { Plus } from "../../../reusables/svgs/svgs";
+import DiningSectionsModal from "./DiningSectionsModal";
+import { handleCloseModalOnOutsideClick, initialFormState } from "./constants";
 
 const DiningSections = () => {
   const { postData } = useAxios();
@@ -44,16 +44,15 @@ const DiningSections = () => {
     handleCloseModalOnOutsideClick(closeModal);
   }, []);
 
-
   return (
     <>
       <section className="Items-table-section">
         <TableContainer>
           <button
-            className="btn py-1 px-3 bg-red-200 mt-2 text-[#222] rounded-md flex gap-1"
+            className="btn py-1 px-3 bg-red-200 text-[#222] rounded-md flex gap-1"
             onClick={() => openModal()}
           >
-            Add Section
+            <span className="whitespace-nowrap">Add Section</span>
             <Plus />
           </button>
           {isItemModalOpen && (
@@ -70,6 +69,5 @@ const DiningSections = () => {
     </>
   );
 };
-
 
 export default DiningSections;

@@ -21,7 +21,7 @@ const InventoryCategories = () => {
   return (
     <section className="receipts-section ">
       <TableContainer>
-        <div className="mt-2 flex justify-end gap-3">
+        <div className="flex justify-between md:justify-end gap-3">
           <input
             type="text"
             placeholder="Category Name"
@@ -34,7 +34,7 @@ const InventoryCategories = () => {
             onClick={() => addCateggory()}
             disabled={!name}
           >
-            Add Category
+            <span className="hidden md:block">Add</span> Category
             <Plus />
           </button>
         </div>

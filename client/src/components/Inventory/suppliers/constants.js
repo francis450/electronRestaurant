@@ -52,8 +52,8 @@ export const handleCloseModalOnOutsideClick = (closeModal) => {
 
 export const suppliersColumns = [
   { name: "index", header: "No.", defaultWidth: 80 },
-  { name: "name", header: "Company Name", defaultFlex: 1 },
-  { name: "contact_name", header: "Contact Name", defaultFlex: 1 },
-  { name: "email", header: "Email", defaultFlex: 1 },
-  { name: "phone_number", header: "Phone Number", defaultFlex: 1 },
+  { name: "name", header: "Company Name", minWidth: 150 },
+  { name: "contact_name", header: "Contact Name", minWidth: 150 },
+  { name: "email", header: "Email", minWidth: 150 },
+  { name: "phone_number", header: "Phone Number", minWidth: 150 },
 ];
