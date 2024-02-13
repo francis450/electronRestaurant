@@ -1,10 +1,10 @@
-import React, { useContext, useEffect, useState } from 'react'
-import useAxios from '../../../hooks/useAxios';
-import { StatusModalContext } from '../../App/App';
-import { handleCloseModalOnOutsideClick, initialFormState } from './contants';
-import TableContainer from './TableContainer';
-import { Plus } from '../../../reusables/svgs/svgs';
-import DiningTablesModal from './DiningTablesModal';
+import React, { useContext, useEffect, useState } from "react";
+import useAxios from "../../../hooks/useAxios";
+import { StatusModalContext } from "../../App/App";
+import { handleCloseModalOnOutsideClick, initialFormState } from "./contants";
+import TableContainer from "./TableContainer";
+import { Plus } from "../../../reusables/svgs/svgs";
+import DiningTablesModal from "./DiningTablesModal";
 
 const DiningTables = () => {
   const { postData } = useAxios();
@@ -44,16 +44,15 @@ const DiningTables = () => {
     handleCloseModalOnOutsideClick(closeModal);
   }, []);
 
-
   return (
     <>
       <section className="Items-table-section">
         <TableContainer>
           <button
-            className="btn py-1 px-3 bg-red-200 mt-2 text-[#222] rounded-md flex gap-1"
+            className="btn py-1 px-3 bg-red-200 text-[#222] rounded-md flex gap-1"
             onClick={() => openModal()}
           >
-            Add Table
+            <span className="whitespace-nowrap">Add Table</span>
             <Plus />
           </button>
           {isItemModalOpen && (
@@ -71,5 +70,4 @@ const DiningTables = () => {
   );
 };
 
-
-export default DiningTables
+export default DiningTables;

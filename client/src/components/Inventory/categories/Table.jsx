@@ -64,7 +64,7 @@ export const Table = ({ children, data, setStatusData }) => {
 
   return (
     <>
-      <div className="flex justify-between items-center  mt-3 mb-1">
+      <div className="flex items-start flex-col-reverse lg:flex-row lg:justify-between lg:items-center mt-3 mb-1 gap-1 lg:gap-0">
         <label>
           <input
             value={searchText}
@@ -73,7 +73,7 @@ export const Table = ({ children, data, setStatusData }) => {
             placeholder="search ..."
           />
         </label>
-        {children}
+        <div className="">{children}</div>
       </div>
       <ReactDataGrid
         style={{ fontSize: "1.0rem" }}
@@ -129,7 +129,7 @@ export const Table = ({ children, data, setStatusData }) => {
         onPaginationChange={({ page }) => {
           setCurrentPage(page);
         }}
-        className="h-[50.15vh] text-xl"
+        className="h-[486px] text-xl"
       />
     </>
   );

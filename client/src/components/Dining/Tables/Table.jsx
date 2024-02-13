@@ -98,11 +98,11 @@ export const Table = ({
   return (
     <>
       <div className="flex justify-between items-center mt-3 mb-1">
-        <label>
+        <label style={{maxWidth: "60%"}}>
           <input
             value={searchText}
             onChange={onSearchChange}
-            className="py-1 border-none focus:outline-none text-[#222] rounded-md px-2"
+            className="py-1 border-none focus:outline-none text-[#222] rounded-md px-2 max-w-full"
             placeholder="search ..."
           />
         </label>

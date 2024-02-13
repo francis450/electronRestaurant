@@ -83,21 +83,21 @@ const AddIngredients = ({
   }, [inventory]);
 
   return (
-    <>
-      <table className="w-full bg-[#333] text-left border-collapse border border-1 border-slate-500">
+    <div className="w-1/3 overflow-x-auto bg-fuchsia-600 px-1">
+      <table className="w-full bg-[#333] text-left border-collapse border border-1 border-slate-500 overflow-x-scroll">
         <thead>
           <tr>
-            <th className="border border-gray-300 px-3 py-1.5 w-[300px]">
+            <th className="border border-gray-300 px-3 py-1.5">
               Item
             </th>
             <th className="border border-gray-300 px-3 py-1.5">Quantity</th>
             <th className="border border-gray-300 px-3 py-1.5 text-nowrap">
               Unit of Measurement
             </th>
-            <th className="border border-gray-300 px-3 py-1.5">Action</th>
+            <th className="border border-grauy-300 px-3 py-1.5">Action</th>
           </tr>
         </thead>
-        <tbody className="bg-white text-[#222]">
+        <tbody className="bg-white text-[#222] overflow-x-scroll">
           {ingredients.map((ingredient) => {
             return (
               <tr key={ingredient.id}>
@@ -188,7 +188,7 @@ const AddIngredients = ({
           })}
         </tbody>
       </table>
-    </>
+    </div>
   );
 };
 

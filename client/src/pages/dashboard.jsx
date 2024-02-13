@@ -7,14 +7,14 @@ import BarGraph from "../reusables/graphs/BarGraph";
 
 const Dashboard = () => {
   const { auth } = useContext(AuthContext);
-  const items = [1, 3, 4, 5];
+  const items = [1, 3];
   return (
     <Authenticated
       user={auth.user}
       header={<h1 className="text-2xl text-white">Dashboard</h1>}
     >
       <div className="pt-4">
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 align-center w-full my-2 md:h-[20vh]">
+        <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-6 align-center w-full my-2">
           {items.map((item, index) => (
             <div key={`item+${item}+${index}`}>
               <DashCard />

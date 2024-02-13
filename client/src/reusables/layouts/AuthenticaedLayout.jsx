@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import ApplicationLogo from "../ApplicationLogo";
 import Dropdown from "../Dropdown";
-import NavLink from "../NavLink";
 import { useNavigate } from "react-router-dom";
 import MenuList from "../MenuList";
 
@@ -29,7 +28,7 @@ export default function Authenticated({ header, children }) {
   }, []);
 
   return (
-    <div className="max-h-screen">
+    <div className="min-h-screen">
       <nav className="bg-[#222222] border-b border-gray-100">
         <div className="md:max-w-[95%] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-[8vh]">
@@ -81,12 +80,12 @@ export default function Authenticated({ header, children }) {
           </div>
         </div>
       </nav>
-      <div data-theme="cupcake" className="block h-[90vh] text-[#D3D3D3]">
-        <div className="w-full grid grid-cols-6 gap-2">
-          <div className="col-span-1 bg-[#222222] h-[91.75vh] pt-10">
+      <div data-theme="cupcake" className="block min-h-[90vh] text-[#D3D3D3]">
+        <div className="w-full grid grid-cols-10 gap-2">
+          <div className="hidden md:grid md:col-span-3 lg:col-span-2 bg-[#222222] min-h-[91.75vh] pt-10">
             <MenuList />
           </div>
-          <div className="col-span-5 w-full px-3">{children}</div>
+          <div className="col-span-10 md:col-span-7 lg:col-span-8 w-full px-1 md:px-3">{children}</div>
         </div>
       </div>
     </div>

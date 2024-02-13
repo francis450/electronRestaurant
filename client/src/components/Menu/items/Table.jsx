@@ -76,14 +76,18 @@ export const Table = ({ children, data, setStatusData }) => {
         filteredFetchedData={filteredFetchedData}
         setCurrentPage={setCurrentPage}
         columns={[
-          { name: "name", header: "Name", defaultFlex: 1 },
-          { name: "price", header: "Price", defaultFlex: 1 },
-          { name: "category", header: "Category", defaultFlex: 1, render: ({ value }) => (value?.name ? value.name : "null"),
+          { name: "name", header: "Name", minWidth: 150 },
+          { name: "price", header: "Price", minWidth: 150 },
+          {
+            name: "category",
+            header: "Category",
+            minWidth: 150,
+            render: ({ value }) => (value?.name ? value.name : "null"),
           },
           {
             name: "is_available",
             header: "Availability",
-            defaultFlex: 1,
+            minWidth: 50,
             render: ({ value }) => {
               return (
                 <div className="flex items-center">
@@ -104,7 +108,7 @@ export const Table = ({ children, data, setStatusData }) => {
           {
             name: "created_at",
             header: "Date Created",
-            defaultFlex: 1,
+            minWidth: 150,
             render: ({ value }) => new Date(value).toLocaleDateString(),
           },
           {

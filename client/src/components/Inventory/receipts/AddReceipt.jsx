@@ -20,10 +20,11 @@ const AddReceipt = ({ setIsAddReceiptSection, editing = false }) => {
   const { setStatusData } = useContext(StatusModalContext);
   const [mappedSuppliers, setMappedSuppliers] = useState([]);
   const [mappedInventoryItems, setMappedInventoryItems] = useState([]);
-  const [receiptDetails, setReceiptDetails] = useState(initialReceiptDetailsState);
+  const [receiptDetails, setReceiptDetails] = useState(
+    initialReceiptDetailsState
+  );
 
   const [errors, setErrors] = useState(initialReceiptDetailsState);
-  
 
   const [purchases, setPurchases] = useState([
     { id: 1, product_id: "", quantity: "", unit_price: "" },
@@ -124,51 +125,55 @@ const AddReceipt = ({ setIsAddReceiptSection, editing = false }) => {
           <p className="text-red-500 text-xs">{errors.date}</p>
         </div>
         <div className="w-full">
-        <CustomSelect
-          options={[
-            { value: "cash", label: "Cash" },
-            { value: "mpesa", label: "Mpesa" },
-            { value: "bank", label: "Bank" },
-          ]}
-          name="payment_method"
-          handleChange={handleCustomSelectChange}
-          value={
-            receiptDetails.payment_method ? receiptDetails.payment_method : null
-          }
-          placeholder="Select Payment Method"
-          editing={editing}
-          styles={{
-            optionStyles: {
-              background: "white",
-            },
-            controlStyles: {
-              background: "white",
-            },
-          }}
-        />
-        {/* <p className="text-red-500 text-xs">{errors.payment_method}</p> */}
+          <CustomSelect
+            options={[
+              { value: "cash", label: "Cash" },
+              { value: "mpesa", label: "Mpesa" },
+              { value: "bank", label: "Bank" },
+            ]}
+            name="payment_method"
+            handleChange={handleCustomSelectChange}
+            value={
+              receiptDetails.payment_method
+                ? receiptDetails.payment_method
+                : null
+            }
+            placeholder="Select Payment Method"
+            editing={editing}
+            styles={{
+              optionStyles: {
+                background: "white",
+              },
+              controlStyles: {
+                background: "white",
+              },
+            }}
+          />
+          {/* <p className="text-red-500 text-xs">{errors.payment_method}</p> */}
         </div>
         <div className="w-full">
-        <CustomSelect
-          options={mappedSuppliers}
-          name="supplier_id"
-          handleChange={handleCustomSelectChange}
-          value={receiptDetails.supplier_id ? receiptDetails.supplier_id : null}
-          placeholder="Select Supplier"
-          editing={editing}
-          styles={{
-            optionStyles: {
-              background: "white",
-            },
-            controlStyles: {
-              background: "white",
-            },
-          }}
-        />
-        <p className="text-red-500 text-xs">{errors.supplier_id}</p>
+          <CustomSelect
+            options={mappedSuppliers}
+            name="supplier_id"
+            handleChange={handleCustomSelectChange}
+            value={
+              receiptDetails.supplier_id ? receiptDetails.supplier_id : null
+            }
+            placeholder="Select Supplier"
+            editing={editing}
+            styles={{
+              optionStyles: {
+                background: "white",
+              },
+              controlStyles: {
+                background: "white",
+              },
+            }}
+          />
+          <p className="text-red-500 text-xs">{errors.supplier_id}</p>
         </div>
       </div>
-      <div className="h-[480px] overflow-y-auto">
+      <div className="md:h-[480px] overflow-y-auto">
         <table className="w-full border-collapse border border-1 border-slate-500">
           <thead>
             <tr>
@@ -247,22 +252,28 @@ const AddReceipt = ({ setIsAddReceiptSection, editing = false }) => {
       <div className="flex justify-end gap-3">
         <button
           onClick={() => setIsAddReceiptSection(false)}
-          className="mt-3 bg-[#61dafb] text-[#222] py-1 px-3 rounded-md flex items-center gap-1"
+          className="mt-3 bg-[#61dafb] text-[#222] py-1 px-3 rounded-md"
         >
-          <ArrowLeft className="w-4 h-4" /> Go Back
+          <span className="flex items-center gap-1 whitespace-nowrap">
+            <ArrowLeft className="w-4 h-4" /> Go Back
+          </span>
         </button>
         <button
           onClick={handleAddRow}
-          className="mt-3 bg-orange-300 text-[#222] py-1 px-3 rounded-md flex items-center gap-1"
+          className="mt-3 bg-orange-300 text-[#222] py-1 px-3 rounded-md gap-1"
         >
-          <Plus className="w-4 h-4" /> Add Row
+          <span className="flex items-center gap-1 whitespace-nowrap">
+            <Plus className="w-4 h-4" /> Add Row
+          </span>
         </button>
         <button
           onClick={handleSubmit}
-          className="mt-3 bg-green-700 text-[#fff] py-1 px-3 rounded-md flex items-center gap-1 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="mt-3 bg-green-700 text-[#fff] py-1 px-3 rounded-md gap-1 disabled:opacity-50 disabled:cursor-not-allowed"
           disabled={Object.values(errors).some((err) => err !== "")}
         >
-          <ReceiptIcon /> Add Receipt
+          <span className="flex items-center gap-1 whitespace-nowrap">
+            <ReceiptIcon /> Add Receipt
+          </span>
         </button>
       </div>
     </div>
