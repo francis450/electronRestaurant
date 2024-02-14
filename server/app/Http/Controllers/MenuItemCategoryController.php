@@ -7,11 +7,26 @@ use Illuminate\Http\Request;
 
 class MenuItemCategoryController extends Controller
 {
+    function getChildCategories($category, &$allCategories = [])
+    {
+        if ($category->child_categories->isNotEmpty()) {
+            foreach ($category->child_categories as $child) {
+                $allCategories[] = $child;
+                $this->getChildCategories($child, $allCategories);
+            }
+        }
+    }
+
     public function index()
     {
         $categories = MenuItemCategory::with('parent_category', 'child_categories', 'menu_items')->whereNull('parent_category_id')->get();
 
-        return response()->json([ "data" => $categories], 200);
+        $allCategories = [];
+        foreach ($categories as $category) {
+            $this->getChildCategories($category, $allCategories);
+        }
+
+        return response()->json(["data" => $categories], 200);
     }
 
     public function indexAll()
@@ -23,7 +38,7 @@ class MenuItemCategoryController extends Controller
             unset($category->parent_category);
         }
 
-        return response()->json([ "data" => $categories], 200);
+        return response()->json(["data" => $categories], 200);
     }
 
     public function show($id)
@@ -80,7 +95,7 @@ class MenuItemCategoryController extends Controller
 
         $category->update($request->all());
 
-        return response()->json(["data"=>$category], 200);
+        return response()->json(["data" => $category], 200);
     }
 
     public function destroy($id)
