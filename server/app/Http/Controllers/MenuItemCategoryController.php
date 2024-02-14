@@ -9,7 +9,7 @@ class MenuItemCategoryController extends Controller
 {
     public function index()
     {
-        $categories = MenuItemCategory::with('parent_category', 'child_categories', 'menu_items')->get();
+        $categories = MenuItemCategory::with('parent_category', 'child_categories', 'menu_items')->whereNull('parent_category_id')->get();
 
         return response()->json([ "data" => $categories], 200);
     }
