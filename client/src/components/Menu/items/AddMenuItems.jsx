@@ -223,7 +223,7 @@ const AddMenuItems = () => {
             </label>
           </div>
         </section>
-        <section className="ingredients-section px-2">
+        <section className="ingredients-section">
           <div className="flex flex-col gap-1 items-start w-full">
             <label htmlFor="category" className="text-[black]">
               Menu Category
@@ -245,15 +245,10 @@ const AddMenuItems = () => {
               placeholder="Select Menu Category"
             />
           </div>
-          <div className="w-full flex items-start mt-3">
-            <label
-              htmlFor="category"
-              className="w-full text-left  text-[black]"
-            >
+          <div className="flex flex-col gap-1 items-start w-full">
+            <label htmlFor="category" className="text-[black]">
               Ingredients
             </label>
-          </div>
-          <div className="h-[450px] w-full overflow-y-auto">
             <AddIngredients
               ingredients={ingredients}
               setIngredients={setIngredients}
@@ -266,7 +261,8 @@ const AddMenuItems = () => {
               type="button"
             >
               <span className="flex items-center gap-1 whitespace-nowrap">
-                <ArrowLeft className="w-4 h-4" /> Go Back{" "}
+                <ArrowLeft className="w-4 h-4" />{" "}
+                <span className="hidden md:inline-block">Go</span> Back{" "}
               </span>
             </button>
             <button
@@ -275,7 +271,8 @@ const AddMenuItems = () => {
               className="mt-3 bg-orange-300 text-[#222] py-1 px-3 rounded-md"
             >
               <span className="flex items-center gap-1 whitespace-nowrap">
-                <Plus className="w-4 h-4" /> Add Ingredient
+                <Plus className="w-4 h-4" />{" "}
+                <span className="hidden md:inline-block">Add</span> Ingredient
               </span>
             </button>
             <button
