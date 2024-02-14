@@ -44,7 +44,7 @@ export const Login = () => {
   };
 
   return (
-    <>
+    <div className="min-h-screen bg-[#282c34] px-4">
       <section className="logo-section flex flex-col items-center justify-center gap-4 pt-12">
         <img
           src={ChefHat}
@@ -100,6 +100,6 @@ export const Login = () => {
           </div>
         </form>
       </section>
-    </>
+    </div>
   );
 };
