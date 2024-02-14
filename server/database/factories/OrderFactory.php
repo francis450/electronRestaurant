@@ -21,9 +21,7 @@ class OrderFactory extends Factory
             'table_id' => $this->faker->numberBetween(1, 10),
             'status' => $this->faker->randomElement(['pending', 'completed', 'canceled']),
             'total_price' => $this->faker->randomFloat(2, 10, 100),
-            'note' => $this->faker->sentence,
-            // 'completed_at' => $this->faker->dateTimeThisYear(),
-            // 'canceled_at' => $this->faker->dateTimeThisYear()
+            'note' => $this->faker->sentence
         ];
     }
 }
