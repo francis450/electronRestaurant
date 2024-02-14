@@ -56,6 +56,11 @@ This API serves as the core engine for managing menus, inventory, orders, and mo
         2. [To List All Orders](#list-all-orders)
         3. [To Get a Specific Order](#show-details-of-specfic-order)
         4. [To Delete a Specific Order](#delete-a-particular-order)
+    10. [Payment Of Pending Orders](#order-payment-transations)
+        1. [Adding a new Payment Transaction](#to-add-a-new-payment-transation)
+        2. [To List all Payment Transactions](#to-display-all-payment-transactions)
+        3. [To Get a Specific Payment Transaction](#to-retrieve-details-of-a-specific-payment-transaction)
+        4. [To Delete a Specific Payment Transaction](#to-delete-a-specific-payment-transaction)
 
 3. [Authentication](#authentication)
 
@@ -570,6 +575,30 @@ This API serves as the core engine for managing menus, inventory, orders, and mo
 ### Delete a Particular order
 - **URL:** `/order/{id}`
 - **HTTP Method:** `DELETE`
+
+## Order Payment Transations
+### To Add a New Payment Transation
+- **URL:** `/payment`
+- **HTTP:** `POST`
+- **Payload Options**:
+  ```json
+        {
+          "order_id": 1,
+          "user_id": 4,
+          "amount": 569143.34,
+          "payment_method": "cash"
+        }
+    ```
+### To Display all Payment Transactions
+- **URL:** `/payments`
+- **HTTP:** `GET`
+### To Retrieve Details of a specific Payment Transaction
+- **URL:** `/payment`
+- **HTTP:** `GET`
+### To Delete a specific Payment Transaction
+- **URL:** `/payment`
+- **HTTP:** `DELETE`
+
 
 ## Authentication
   - **URL** `/authenticate`
