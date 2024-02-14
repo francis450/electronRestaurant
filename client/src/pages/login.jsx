@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { channels } from "../shared/constants";
 
 export const Login = () => {
-  const ipcRenderer = window?.ipcRenderer
+  const ipcRenderer = window?.ipcRenderer;
   const { postData } = useAxios();
   const { setAuth } = useContext(AuthContext);
   const navigate = useNavigate();
@@ -22,10 +22,9 @@ export const Login = () => {
     };
     setAuth(auth);
     sessionStorage.setItem("auth", JSON.stringify(auth));
-    ipcRenderer && ipcRenderer.send(channels.LOGIN, { product: 'notebook' });
+    ipcRenderer && ipcRenderer.send(channels.LOGIN, { product: "notebook" });
 
     navigate("/dashboard");
-    
   };
 
   const [credentials, setCredentials] = React.useState({
@@ -44,7 +43,7 @@ export const Login = () => {
   };
 
   return (
-    <>
+    <div className="min-h-screen bg-[#282c34] px-4">
       <section className="logo-section flex flex-col items-center justify-center gap-4 pt-12">
         <img
           src={ChefHat}
@@ -100,6 +99,6 @@ export const Login = () => {
           </div>
         </form>
       </section>
-    </>
+    </div>
   );
 };
