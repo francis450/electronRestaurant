@@ -7,6 +7,7 @@ use App\Http\Controllers\InventoryPurchasesController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\MenuItemCategoryController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\RegController;
 use App\Http\Controllers\SectionController;
 use App\Http\Controllers\SuppliersController;
@@ -169,7 +170,13 @@ Route::controller(OrderController::class)->group(function () {
     Route::delete('/order/{id}', 'destroy');
 });
 
-// method not allowed
+Route::controller(PaymentController::class)->group(function () {
+    Route::get('/payments', 'index');
+    Route::get('/payment/{id}', 'show');
+    Route::post('/payment', 'store');
+    Route::delete('/payment/{id}', 'destroy');
+});
+
 Route::fallback(function () {
     return response()->json([
         'message' => 'Method not allowed',
