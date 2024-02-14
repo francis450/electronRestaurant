@@ -6,6 +6,7 @@ use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\InventoryPurchasesController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\MenuItemCategoryController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\RegController;
 use App\Http\Controllers\SectionController;
 use App\Http\Controllers\SuppliersController;
@@ -159,6 +160,13 @@ Route::controller(TablesController::class)->group(function () {
     Route::post('/table', 'store');
     Route::delete('/table/{id}', 'destroy');
     Route::put('/table/{id}', 'update');
+});
+
+Route::controller(OrderController::class)->group(function () {
+    Route::get('/orders', 'index');
+    Route::get('/order/{id}', 'show');
+    Route::post('/order', 'store');
+    Route::delete('/order/{id}', 'destroy');
 });
 
 // method not allowed

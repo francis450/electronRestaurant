@@ -51,6 +51,12 @@ This API serves as the core engine for managing menus, inventory, orders, and mo
         3. [To Update A specific Section](#edit-a-particular-table-section)
         4. [To Add A New Table Section](#create-a-new-table-section)
         5. [To Delete A Table Sections](#delete-a-particular-table-section)
+    9. [Orders Endpoints](#orders-endpoints)
+        1. [Adding a New Order](#create-a-new-order)
+        2. [To List All Orders](#list-all-orders)
+        3. [To Get a Specific Order](#show-details-of-specfic-order)
+        4. [To Delete a Specific Order](#delete-a-particular-order)
+
 3. [Authentication](#authentication)
 
 
@@ -526,6 +532,44 @@ This API serves as the core engine for managing menus, inventory, orders, and mo
   - **HTTP Method:** `DELETE`
 
 
+
+## Orders Endpoints
+### Create a New Order
+- **URL:** `/order`
+- **HTTP:** `POST`
+- **Payload Options**:
+  ```json
+        {
+          "table_id": 1,
+          "user_id": 2,
+          "order_items": [
+              {
+                "menu_item_id": 2,
+                "quantity": 3,
+                "unit_price": 100
+              },
+              {
+                "menu_item_id": 5,
+                "quantity": 3,
+                "unit_price": 233
+              }
+            ]
+        }
+    ```
+
+### List all Orders
+- **URL:** `/orders`
+- **HTTP Method:** `GET`
+- **Description:** Retrieve a list of all orders.
+
+### Show Details of specfic Order
+- **URL:** `/order/{id}`
+- **HTTP Method:** `GET`
+- **Description:** Retrieve details of specific orders.
+
+### Delete a Particular order
+- **URL:** `/order/{id}`
+- **HTTP Method:** `DELETE`
 
 ## Authentication
   - **URL** `/authenticate`
