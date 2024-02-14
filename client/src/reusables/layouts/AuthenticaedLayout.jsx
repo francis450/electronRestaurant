@@ -3,8 +3,11 @@ import ApplicationLogo from "../ApplicationLogo";
 import Dropdown from "../Dropdown";
 import { useNavigate } from "react-router-dom";
 import MenuList from "../MenuList";
+import Sidebar from "../navigation/sidebar";
 
 export default function Authenticated({ header, children }) {
+  const [showingNavigationDropdown, setShowingNavigationDropdown] =
+    useState(false);
   const [showingSidebar, setShowingSidebar] = useState(false);
   const [user, setUser] = useState("Admin");
   const navigate = useNavigate();
@@ -29,13 +32,13 @@ export default function Authenticated({ header, children }) {
 
   return (
     <div className="min-h-screen">
-      <nav className="bg-[#222222] border-b border-gray-100">
+      <nav className="bg-[#222222] border-b border-gray-100 fixed top-0 w-full z-30">
         <div className="md:max-w-[95%] mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-[8vh]">
+          <div className="flex justify-between h-[70px]">
             <div className="flex">
               <div className="shrink-0 flex items-center gap-4">
                 <a href="/">
-                  <ApplicationLogo className="block h-9 w-auto fill-current text-gray-800" />
+                  <ApplicationLogo className="block h-5 md:h-9 w-auto fill-current text-gray-800" />
                 </a>
                 {header}
               </div>
@@ -77,15 +80,26 @@ export default function Authenticated({ header, children }) {
                 </Dropdown>
               </div>
             </div>
+            <div className="-mr-2 flex items-center sm:hidden">
+              <Sidebar
+                showingNavigationDropdown={showingNavigationDropdown}
+                setShowingNavigationDropdown={setShowingNavigationDropdown}
+              />
+            </div>
           </div>
         </div>
       </nav>
-      <div data-theme="cupcake" className="block min-h-[90vh] text-[#D3D3D3]">
+      <div
+        data-theme="cupcake"
+        className="block min-h-[90vh] text-[#D3D3D3] mt-[70px]"
+      >
         <div className="w-full grid grid-cols-10 gap-2">
           <div className="hidden md:grid md:col-span-3 lg:col-span-2 bg-[#222222] min-h-[91.75vh] pt-10">
             <MenuList />
           </div>
-          <div className="col-span-10 md:col-span-7 lg:col-span-8 w-full px-1 md:px-3">{children}</div>
+          <div className="col-span-10 md:col-span-7 lg:col-span-8 w-full px-1 md:px-3">
+            {children}
+          </div>
         </div>
       </div>
     </div>
