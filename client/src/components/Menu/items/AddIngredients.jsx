@@ -80,24 +80,25 @@ const AddIngredients = ({
 
   useEffect(() => {
     setInventoryOptions(formatOptions(inventory?.Items, "id", "item_name"));
+    console.log(inventory);
   }, [inventory]);
 
   return (
-    <div className="w-1/3 overflow-x-auto bg-fuchsia-600 px-1">
-      <table className="w-full bg-[#333] text-left border-collapse border border-1 border-slate-500 overflow-x-scroll">
+    <div className="overflow-x-auto  h-[450px] overflow-y-auto">
+      <table className="bg-[#333] text-left border-collapse border border-1 border-slate-500 overflow-y-auto">
         <thead>
           <tr>
-            <th className="border border-gray-300 px-3 py-1.5">
+            <th className="border border-gray-300 w-[200px]">
               Item
             </th>
-            <th className="border border-gray-300 px-3 py-1.5">Quantity</th>
-            <th className="border border-gray-300 px-3 py-1.5 text-nowrap">
+            <th className="border border-gray-300 ">Quantity</th>
+            <th className="border border-gray-300">
               Unit of Measurement
             </th>
-            <th className="border border-grauy-300 px-3 py-1.5">Action</th>
+            <th className="border border-grauy-300 ">Action</th>
           </tr>
         </thead>
-        <tbody className="bg-white text-[#222] overflow-x-scroll">
+        <tbody className="bg-white text-[#222] overflow-x-scroll min overflow-y-auto">
           {ingredients.map((ingredient) => {
             return (
               <tr key={ingredient.id}>

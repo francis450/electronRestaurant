@@ -31,7 +31,7 @@ export default function Authenticated({ header, children }) {
   }, []);
 
   return (
-    <div className="min-h-screen">
+    <div className="">
       <nav className="bg-[#222222] border-b border-gray-100 fixed top-0 w-full z-30">
         <div className="md:max-w-[95%] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-[70px]">

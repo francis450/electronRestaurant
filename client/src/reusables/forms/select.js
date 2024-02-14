@@ -81,7 +81,7 @@ const CustomSelect = ({
   }, [options, value]);
 
   return (
-    <div className="rounded-md">
+    <div className="rounded-md w-full">
       {editing || value ? (
         <Select
           name={name}

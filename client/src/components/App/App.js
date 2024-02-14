@@ -117,7 +117,7 @@ function App() {
 
   return (
     <StatusModalContext.Provider value={{ statusData, setStatusData }}>
-      <div className="App bg-[whitesmoke] min-h-screen">
+      <div className="App bg-[whitesmoke]">
         {statusData.status && (
           <StatusModal statusData={statusData} setStatusData={setStatusData} />
         )}
